@@ -1,14 +1,11 @@
-import express from 'express';
+import pino from 'pino';
+import application from './app';
+import config from '../config/environment';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+const logger = pino({});
 
-const app = express();
+const app = application(logger, config);
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello API' });
-});
-
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
+app.listen(config.port, () => {
+  logger.info(`API listening on ${config.port}`);
 });
