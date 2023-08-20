@@ -22,7 +22,16 @@
         "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.app.json",
         "assets": [
-
+          {
+            "glob": "**/*",
+            "input": "apps/api/db",
+            "output": "./db"
+          },
+          {
+            "glob": "**/knexfile.js",
+            "input": "apps/api",
+            "output": "./"
+          }
         ],
         "commonChunk": false,
         "isolatedConfig": true,
