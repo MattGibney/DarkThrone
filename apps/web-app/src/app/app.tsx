@@ -1,6 +1,17 @@
+import axios from 'axios';
+import { useEffect } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 
 export function App() {
+  useEffect(() => {
+    const fetchHealthcheck = async () => {
+      const response = await axios.get('/healthcheck', {
+        baseURL: 'http://localhost:3000',
+      });
+      console.log(response.data);
+    }
+    fetchHealthcheck();
+  }, []);
   return (
     <div>
       {/* START: routes */}
