@@ -21,8 +21,8 @@ export function App() {
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<div>Register</div>} />
-        {/* <Route path="/forgot-password" element={<div>Forgot Password</div>} />
-        <Route path="/reset-password" element={<div>Reset Password</div>} />
+        <Route path="/forgot-password" element={<div>Forgot Password</div>} />
+        {/* <Route path="/reset-password" element={<div>Reset Password</div>} />
         <Route path="/verify-email" element={<div>Verify Email</div>} /> */}
       </Route>
 

@@ -43,11 +43,15 @@ export function Alert(props: AlertProps) {
         <div className="ml-3">
           <h3 className={title()}>{props.title}</h3>
           <div className={messageBody()}>
-            <ul className="list-disc space-y-1 pl-5">
-              {props.messages.map((message, index) => (
-                <li key={index}>{message}</li>
-              ))}
-            </ul>
+            {props.messages.length === 1 ? (
+              <p>{props.messages[0]}</p>
+            ) : (
+              <ul className="list-disc space-y-1 pl-5">
+                {props.messages.map((message, index) => (
+                  <li key={index}>{message}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
