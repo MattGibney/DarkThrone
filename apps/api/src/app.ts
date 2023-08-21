@@ -3,15 +3,21 @@ import cors from 'cors';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
 import { Config } from '../config/environment';
+import ModelFactory from './modelFactory';
+import DaoFactory from './daoFactory';
 
 export type Context = {
   requestID: string;
   config: Config;
   logger: Logger;
+  modelFactory: ModelFactory;
+  daoFactory: DaoFactory;
 };
 
-const application = (logger: Logger, config: Config) => {
+const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => {
   const app = express();
+
+  app.use(express.json());
 
   app.use(cors({
     origin: config.webApp.origin,
@@ -25,6 +31,8 @@ const application = (logger: Logger, config: Config) => {
       requestID,
       config,
       logger: logger.child({ requestID }),
+      modelFactory: new ModelFactory(),
+      daoFactory
     };
 
     res.setHeader('X-Powered-By', 'Dark Throne');

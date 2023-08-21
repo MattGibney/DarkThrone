@@ -2,6 +2,8 @@ import { Alert, Button, InputCheckbox, InputField } from '@darkthrone/react-comp
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { login } from '@darkthrone/client-library';
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,8 +11,18 @@ export default function LoginPage() {
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const result = await login(email, password, rememberMe);
+
+    if (result.status === 'fail') {
+      setErrorMessages(result.data.map((err) => err.title));
+      return;
+    }
+
+    console.log(result.data);
+
 
     console.log("Form submitted!");
   }
