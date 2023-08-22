@@ -5,6 +5,8 @@ import { ulid } from 'ulid';
 import { Config } from '../config/environment';
 import ModelFactory from './modelFactory';
 import DaoFactory from './daoFactory';
+import e from 'express';
+import router from './router';
 
 export type Context = {
   requestID: string;
@@ -19,10 +21,16 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
 
   app.use(express.json());
 
-  app.use(cors({
-    origin: config.webApp.origin,
-    optionsSuccessStatus: 200,
-  }));
+  const allowlist = [config.webApp.origin]
+  const corsOptionsDelegate = function (req, callback) {
+    let corsOptions = { origin: false, credentials: false };
+    if (allowlist.indexOf(req.header('Origin')) !== -1) {
+      corsOptions = { origin: true, credentials: true }
+    }
+    callback(null, corsOptions)
+  }
+
+  app.use(cors(corsOptionsDelegate));
 
   app.use((req, res, next) => {
     const requestID = ulid();
@@ -51,6 +59,13 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
   app.get('/healthcheck', (req, res) => {
     logger.info('Healthcheck');
     res.send({ message: 'OK' });
+  });
+
+  app.use(router);
+
+  app.use((err, req, res, next) => {
+    logger.error(err);
+    res.status(500).send({ message: 'Internal Server Error' });
   });
 
   return app;

@@ -12,28 +12,53 @@ export type APIError = {
   detail?: string;
 };
 
+type APIResponse<S, T> = {
+  status: S;
+  data: T;
+}
+
 export default class DarkThroneClient {
   private http: AxiosInstance;
 
+  public authenticatedUser: UserObject | undefined;
+
   constructor() {
     this.http = axios.create({
-      baseURL: 'http://localhost:3333',
+      baseURL: 'http://localhost:3000',
       withCredentials: true,
     });
   }
 
-  async login(email: string, password: string, rememberMe: boolean): Promise<{ status: 'ok', data: UserObject } | { status: 'fail', data: APIError[] }> {
-    const response = await this.http.post<UserObject>(
-      '/auth/login',
-      {
-        email,
-        password,
-        rememberMe,
-      }
-    );
-    if (response.status !== 200) return { status: 'fail', data: response.data as unknown as APIError[] };
+  async login(email: string, password: string, rememberMe: boolean): Promise<APIResponse<'ok', UserObject> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.http.post<UserObject>(
+        '/auth/login',
+        { email, password, rememberMe }
+      );
 
-    return { status: 'ok', data: response.data as UserObject };
+      this.authenticatedUser = response.data;
+
+      return { status: 'ok', data: response.data as UserObject };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
+  }
+
+  async register(email: string, password: string): Promise<APIResponse<'ok', UserObject> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.http.post<UserObject>(
+        '/auth/register',
+        { email, password }
+      );
+
+      this.authenticatedUser = response.data;
+
+      return { status: 'ok', data: response.data as UserObject };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
   }
 
 }

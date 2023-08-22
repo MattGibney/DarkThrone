@@ -24,6 +24,20 @@ export default class UserSessionModel {
   }
 
   static async create(ctx: Context, user: UserModel, rememberMe: boolean): Promise<UserSessionModel> {
-    return null;
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + (rememberMe ? 30 : 1));
+
+    // TODO: JWT
+    const token = '';
+
+    const userSessionRow = await ctx.daoFactory.userSession.create(ctx.logger, {
+      user_id: user.id,
+      token,
+      expires_at: expiresAt,
+    });
+
+    if (!userSessionRow) return null;
+
+    return new UserSessionModel(ctx, userSessionRow);
   }
 }

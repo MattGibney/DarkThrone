@@ -3,7 +3,7 @@ import { APIError } from '@darkthrone/client-library';
 
 export default {
   POST_login: async (req: Request, res: Response) => {
-    const { username: email, password, rememberMe } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     const apiErrors: APIError[] = [];
     if (!email) {
@@ -64,5 +64,69 @@ export default {
     });
 
     res.status(200).send(user.serialise());
+  },
+
+  POST_register: async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    const apiErrors: APIError[] = [];
+    if (!email) {
+      apiErrors.push({
+        code: 'register_email_required',
+        title: 'Email required',
+      });
+    }
+    if (!password) {
+      apiErrors.push({
+        code: 'register_password_required',
+        title: 'Password required',
+      });
+    }
+
+    if (apiErrors.length > 0) {
+      res.status(400).send({ errors: apiErrors });
+      return;
+    }
+
+    const existingUser = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
+    if (existingUser) {
+      res.status(400).send({
+        errors: [{
+          code: 'register_email_taken',
+          title: 'Email taken',
+        }],
+      });
+      return;
+    }
+
+    const newUser = await req.ctx.modelFactory.user.create(req.ctx, email, password);
+    if (!newUser) {
+      res.status(500).send({
+        errors: [{
+          code: 'register_failed',
+          title: 'Registration failed',
+        }],
+      });
+      return;
+    }
+
+    const newSession = await req.ctx.modelFactory.userSession.create(req.ctx, newUser, false);
+    if (!newSession) {
+      res.status(500).send({
+        errors: [{
+          code: 'register_failed',
+          title: 'Registration failed',
+        }],
+      });
+      return;
+    }
+
+    res.cookie('DTAC', newSession.token, {
+      httpOnly: true,
+      secure: true,
+      expires: newSession.expiresAt,
+    });
+
+    res.status(200).send(newUser.serialise());
   }
 }

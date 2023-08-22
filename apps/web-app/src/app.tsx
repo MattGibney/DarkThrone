@@ -1,34 +1,27 @@
-import axios from 'axios';
-import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AuthLayout from './authLayout';
 import MainLayout from './mainLayout';
 import LoginPage from './pages/login';
 
-export function App() {
-  useEffect(() => {
-    const fetchHealthcheck = async () => {
-      const response = await axios.get('/healthcheck', {
-        baseURL: 'http://localhost:3000',
-      });
-      console.log(response.data);
-    }
-    fetchHealthcheck();
-  }, []);
+import DarkThroneClient from '@darkthrone/client-library';
+import RegisterPage from './pages/register';
 
+const client = new DarkThroneClient();
+
+export function App() {
   return (
     <Routes>
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<div>Register</div>} />
+      <Route element={<AuthLayout client={client} />}>
+        <Route path="/login" element={<LoginPage client={client} />} />
+        <Route path="/register" element={<RegisterPage client={client} />} />
         <Route path="/forgot-password" element={<div>Forgot Password</div>} />
         {/* <Route path="/reset-password" element={<div>Reset Password</div>} />
         <Route path="/verify-email" element={<div>Verify Email</div>} /> */}
       </Route>
 
-      <Route element={<MainLayout />}>
+      <Route element={<MainLayout client={client} />}>
         {/* Home */}
-        <Route path="/" element={<div>Overview</div>} />
+        <Route path="/overview" element={<div>Overview</div>} />
         {/* <Route path="/news" element={<div>News</div>} />
         <Route path="/levels" element={<div>Levels</div>} />
         <Route path="/profile" element={<div>Profile</div>} />
