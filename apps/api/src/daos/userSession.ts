@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { Logger } from 'pino';
+import { ulid } from 'ulid';
 
 export type UserSessionRow = {
   id: string;
@@ -18,9 +19,13 @@ export default class UserSessionDao {
   }
 
   async create(logger: Logger, userSession: Partial<UserSessionRow>): Promise<UserSessionRow | null> {
+    const userID = `SES-${ulid()}`
     try {
       const [createdUserSession] = await this.database<UserSessionRow>('user_sessions')
-        .insert(userSession)
+        .insert({
+          id: userID,
+          ...userSession,
+        })
         .returning('*');
 
       return createdUserSession;

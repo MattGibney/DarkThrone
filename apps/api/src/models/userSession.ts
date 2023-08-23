@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import { Context } from '../app';
 import { UserSessionRow } from '../daos/userSession';
 import UserModel from './user';
@@ -27,8 +29,9 @@ export default class UserSessionModel {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (rememberMe ? 30 : 1));
 
-    // TODO: JWT
-    const token = '';
+    const token = jwt.sign({ userID: user.id }, ctx.config.jwtSecret, {
+      expiresIn: `${rememberMe ? 30 : 1}d`,
+    });
 
     const userSessionRow = await ctx.daoFactory.userSession.create(ctx.logger, {
       user_id: user.id,

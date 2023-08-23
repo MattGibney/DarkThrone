@@ -3,6 +3,7 @@ export type Config = {
   webApp: {
     origin: string;
   }
+  jwtSecret: string;
 };
 
 const config: Config = {
@@ -10,6 +11,7 @@ const config: Config = {
   webApp: {
     origin: process.env.WEBAPP_ORIGIN,
   },
+  jwtSecret: process.env.JWT_SECRET,
 }
 
 export default config;
