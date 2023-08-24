@@ -1,3 +1,4 @@
+export * from './lib/avatar/avatar';
 export * from './lib/alert/alert';
 export * from './lib/button/button';
 export * from './lib/button/button';

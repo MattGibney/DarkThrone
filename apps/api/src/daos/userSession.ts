@@ -34,4 +34,31 @@ export default class UserSessionDao {
       return null;
     }
   }
+
+  async fetchValidByToken(
+    logger: Logger,
+    token: string,
+  ): Promise<UserSessionRow | undefined> {
+    try {
+      const [userSession] = await this.database<UserSessionRow>('user_sessions')
+        .select('*')
+        .where({ token })
+        .andWhere('expires_at', '>', new Date());
+
+      return userSession;
+    } catch (err) {
+      logger.error(err);
+      return undefined;
+    }
+  }
+
+  async invalidate(logger: Logger, id: string): Promise<void> {
+    try {
+      await this.database<UserSessionRow>('user_sessions')
+        .update({ expires_at: new Date() })
+        .where({ id });
+    } catch (err) {
+      logger.error(err);
+    }
+  }
 }

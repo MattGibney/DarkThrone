@@ -42,6 +42,13 @@ export default class UserModel {
     return new UserModel(ctx, userRow);
   }
 
+  static async fetchByID(ctx: Context, id: string): Promise<UserModel | null> {
+    const userData = await ctx.daoFactory.user.fetchByID(ctx.logger, id);
+    if (!userData) return null;
+
+    return new UserModel(ctx, userData);
+  }
+
   static async create(ctx: Context, email: string, password: string): Promise<UserModel | null> {
     const passwordHash = await bcrypt.hash(password, 10);
     const userRow = await ctx.daoFactory.user.create(ctx.logger, email, passwordHash);

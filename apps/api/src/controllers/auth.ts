@@ -128,5 +128,47 @@ export default {
     });
 
     res.status(200).send(newUser.serialise());
+  },
+
+  GET_currentUser: async (req: Request, res: Response) => {
+    if (!req.ctx.authedUser) {
+      res.status(401).send({
+        errors: [{
+          code: 'not_authenticated',
+          title: 'Not authenticated',
+        }],
+      });
+      return;
+    }
+    res.status(200).json({
+      ...req.ctx.authedUser.model.serialise(),
+    });
+  },
+
+  POST_logout: async (req: Request, res: Response) => {
+    if (!req.ctx.authedUser) {
+      res.status(401).send({
+        errors: [{
+          code: 'not_authenticated',
+          title: 'Not authenticated',
+        }],
+      });
+      return;
+    }
+
+    const { session } = req.ctx.authedUser;
+    if (!session) {
+      res.status(500).send({
+        errors: [{
+          code: 'logout_failed',
+          title: 'Logout failed',
+        }],
+      });
+      return;
+    }
+
+    await session.invalidate();
+    res.clearCookie('DTAC');
+    res.status(200).send({});
   }
 }

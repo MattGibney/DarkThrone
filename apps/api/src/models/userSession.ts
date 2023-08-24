@@ -43,4 +43,21 @@ export default class UserSessionModel {
 
     return new UserSessionModel(ctx, userSessionRow);
   }
+
+  static async fetchValidByToken(
+    ctx: Context,
+    token: string,
+  ): Promise<UserSessionModel | null> {
+    const userSessionData = await ctx.daoFactory.userSession.fetchValidByToken(
+      ctx.logger,
+      token,
+    );
+    if (!userSessionData) return null;
+
+    return new UserSessionModel(ctx, userSessionData);
+  }
+
+  async invalidate(): Promise<void> {
+    await this.ctx.daoFactory.userSession.invalidate(this.ctx.logger, this.id);
+  }
 }

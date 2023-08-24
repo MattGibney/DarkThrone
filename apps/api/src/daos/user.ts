@@ -30,6 +30,19 @@ export default class UserDao {
     }
   }
 
+  async fetchByID(logger: Logger, id: string): Promise<UserRow | undefined> {
+    try {
+      const user = await this.database<UserRow>('users')
+        .first('*')
+        .where({ id });
+
+      return user;
+    } catch (err) {
+      logger.error(err);
+      return undefined;
+    }
+  }
+
   async create(logger: Logger, email: string, passwordHash: string): Promise<UserRow | null> {
     const userID = `USR-${ulid()}`
     try {

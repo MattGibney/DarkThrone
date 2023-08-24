@@ -1,13 +1,36 @@
+import { tv } from "tailwind-variants";
+
+const styles = tv({
+  slots: {
+    body: "flex w-full justify-center rounded-md px-3 py-3 text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+  },
+  variants: {
+    style: {
+      primary: {
+        body: 'bg-yellow-600 hover:bg-yellow-500 focus-visible:outline-yellow-600 text-white'
+      },
+      secondary: {
+        body: 'bg-gray-700/50 hover:bg-gray-700 text-gray-400 focus-visible:outline-gray-600'
+      }
+    },
+  },
+});
+
 export interface ButtonProps {
   type?: "button" | "submit" | "reset";
   text: string;
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary';
 }
 
 export function Button(props: ButtonProps) {
+  const { body } = styles({ style: props.variant || 'primary' });
+
   return (
     <button
       type={props.type}
-      className="flex w-full justify-center rounded-md bg-yellow-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+      onClick={props.onClick}
+      className={body()}
     >
       {props.text}
     </button>

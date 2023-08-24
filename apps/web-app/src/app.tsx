@@ -1,22 +1,52 @@
-import { Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import AuthLayout from './authLayout';
 import MainLayout from './mainLayout';
 import LoginPage from './pages/login';
 
-import DarkThroneClient from '@darkthrone/client-library';
+import DarkThroneClient, { UserSessionObject } from '@darkthrone/client-library';
 import RegisterPage from './pages/register';
+import PlayerSelectPage from './pages/playerSelect';
+import PlayerSelectLayout from './playerSelectLayout';
 
 const client = new DarkThroneClient();
 
 export function App() {
+  const [currentUser, setCurrentUser] = useState<UserSessionObject | null | undefined>(undefined);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const userFetch = await client.getCurrentUser();
+
+      client.on('userLogout', () => {
+        setCurrentUser(null);
+      });
+
+      if (userFetch.status === 'fail') {
+        setCurrentUser(null);
+        return;
+      }
+      setCurrentUser(userFetch.data);
+    }
+
+    fetchCurrentUser();
+  }, []);
+
+  if (currentUser === undefined) return null;
+
   return (
     <Routes>
       <Route element={<AuthLayout client={client} />}>
+        <Route path="/" element={<RedirectToLogin />} />
         <Route path="/login" element={<LoginPage client={client} />} />
         <Route path="/register" element={<RegisterPage client={client} />} />
         <Route path="/forgot-password" element={<div>Forgot Password</div>} />
         {/* <Route path="/reset-password" element={<div>Reset Password</div>} />
         <Route path="/verify-email" element={<div>Verify Email</div>} /> */}
+      </Route>
+
+      <Route element={<PlayerSelectLayout client={client} />}>
+        <Route path="/player-select" element={<PlayerSelectPage client={client} />} />
       </Route>
 
       <Route element={<MainLayout client={client} />}>
@@ -58,6 +88,16 @@ export function App() {
       </Route>
     </Routes>
   );
+}
+
+function RedirectToLogin() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/login');
+  }, [navigate]);
+
+  return null;
 }
 
 export default App;
