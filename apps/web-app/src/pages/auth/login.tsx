@@ -1,31 +1,24 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Alert, Button, InputCheckbox, InputField } from '@darkthrone/react-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-interface RegisterPageProps {
+interface LoginPageProps {
   client: DarkThroneClient;
 }
-export default function RegisterPage(props: RegisterPageProps) {
+export default function LoginPage(props: LoginPageProps) {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
-  const [shouldCheckPasswords, setShouldCheckPasswords] = useState(false);
-  const [doPasswordsMatch, setDoPasswordsMatch] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!email || !password || !doPasswordsMatch) return;
-
-    console.log('Register');
-
-    const result = await props.client.register(email, password);
+    const result = await props.client.auth.login(email, password, rememberMe);
 
     if (result.status === 'fail') {
       setErrorMessages(result.data.map((err) => err.title));
@@ -34,11 +27,6 @@ export default function RegisterPage(props: RegisterPageProps) {
 
     navigate('/overview');
   }
-
-  useEffect(() => {
-    if (!shouldCheckPasswords) return;
-    setDoPasswordsMatch(password === confirmPassword);
-  }, [password, confirmPassword, shouldCheckPasswords]);
 
   return (
     <main>
@@ -49,7 +37,7 @@ export default function RegisterPage(props: RegisterPageProps) {
           alt="Your Company"
         />
         <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-200">
-          Create your account
+          Login to your account
         </h2>
       </div>
 
@@ -74,41 +62,45 @@ export default function RegisterPage(props: RegisterPageProps) {
               setValue={(newVal) => setEmail(newVal)}
             />
 
-            <InputField
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              displayName="Password"
-              invalidMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
-              value={password}
-              setValue={(newVal) => setPassword(newVal)}
-            />
+            <div>
+              <InputField
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                displayName="Password"
+                value={password}
+                setValue={(newVal) => setPassword(newVal)}
+              />
+            </div>
 
-            <InputField
-              id="confirm-password"
-              name="confirm-password"
-              type="password"
-              autoComplete="new-password"
-              onBlur={() => setShouldCheckPasswords(true)}
-              required
-              displayName="Confirm Password"
-              invalidMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
-              value={confirmPassword}
-              setValue={(newVal) => setConfirmPassword(newVal)}
-            />
+            <div className="flex items-center justify-between">
+              <InputCheckbox
+                id="remember-me"
+                name="remember-me"
+                displayName="Remember me"
+                value={rememberMe}
+                setValue={(newVal) => setRememberMe(newVal)}
+              />
+
+              <div className="text-sm leading-6">
+                <Link to="/forgot-password" className="font-semibold text-yellow-600 hover:text-yellow-500">
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
 
             <div>
-              <Button type='submit' text='Create Account' />
+              <Button type='submit' text='Login' />
             </div>
           </form>
         </div>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          Already a member?{' '}
-          <Link to="/login" className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500">
-            Login now
+          Not a member?{' '}
+          <Link to="/register" className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500">
+            Create an account now
           </Link>
         </p>
       </div>

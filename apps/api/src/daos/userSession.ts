@@ -61,4 +61,14 @@ export default class UserSessionDao {
       logger.error(err);
     }
   }
+
+  async assumePlayer(logger: Logger, id: string, playerID: string): Promise<void> {
+    try {
+      await this.database<UserSessionRow>('user_sessions')
+        .update({ player_id: playerID })
+        .where({ id });
+    } catch (err) {
+      logger.error(err);
+    }
+  }
 }

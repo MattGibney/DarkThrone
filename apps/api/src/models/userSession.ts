@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import { Context } from '../app';
 import { UserSessionRow } from '../daos/userSession';
 import UserModel from './user';
+import PlayerModel from './player';
+
+import { UserSessionObject } from '@darkthrone/client-library';
 
 export default class UserSessionModel {
   private ctx: Context;
@@ -59,5 +62,20 @@ export default class UserSessionModel {
 
   async invalidate(): Promise<void> {
     await this.ctx.daoFactory.userSession.invalidate(this.ctx.logger, this.id);
+  }
+
+  async assumePlayer(player: PlayerModel): Promise<void> {
+    await this.ctx.daoFactory.userSession.assumePlayer(this.ctx.logger, this.id, player.id);
+    this.playerID = player.id;
+  }
+
+  async serialise(): Promise<UserSessionObject> {
+    const user = await this.ctx.modelFactory.user.fetchByID(this.ctx, this.userID);
+    return {
+      id: this.id,
+      email: user.email,
+      playerID: this.playerID,
+      hasConfirmedEmail: !!user.confirmedEmailAt,
+    };
   }
 }

@@ -2,8 +2,6 @@ import bcrypt from 'bcrypt';
 import { Context } from '../app';
 import { UserRow } from '../daos/user';
 
-import { UserObject } from '@darkthrone/client-library';
-
 export default class UserModel {
   private ctx: Context;
 
@@ -27,7 +25,7 @@ export default class UserModel {
     return bcrypt.compare(password, this.passwordHash);
   }
 
-  serialise(): UserObject {
+  serialise() {
     return {
       id: this.id,
       email: this.email,

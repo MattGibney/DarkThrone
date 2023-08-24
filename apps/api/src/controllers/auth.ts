@@ -63,7 +63,7 @@ export default {
       expires: newSession.expiresAt,
     });
 
-    res.status(200).send(user.serialise());
+    res.status(200).send(await newSession.serialise());
   },
 
   POST_register: async (req: Request, res: Response) => {
@@ -127,7 +127,7 @@ export default {
       expires: newSession.expiresAt,
     });
 
-    res.status(200).send(newUser.serialise());
+    res.status(200).send(await newSession.serialise());
   },
 
   GET_currentUser: async (req: Request, res: Response) => {
@@ -140,9 +140,7 @@ export default {
       });
       return;
     }
-    res.status(200).json({
-      ...req.ctx.authedUser.model.serialise(),
-    });
+    res.status(200).json(await req.ctx.authedUser.session.serialise());
   },
 
   POST_logout: async (req: Request, res: Response) => {
@@ -170,5 +168,37 @@ export default {
     await session.invalidate();
     res.clearCookie('DTAC');
     res.status(200).send({});
-  }
+  },
+
+  POST_assumePlayer: async (req: Request, res: Response) => {
+    const { playerId } = req.body;
+
+    const apiErrors: APIError[] = [];
+    if (!playerId) {
+      apiErrors.push({
+        code: 'assume_player_player_id_required',
+        title: 'Player ID required',
+      });
+    }
+
+    if (apiErrors.length > 0) {
+      res.status(400).send({ errors: apiErrors });
+      return;
+    }
+
+    const player = await req.ctx.modelFactory.player.fetchByID(req.ctx, playerId);
+    if (!player) {
+      res.status(404).send({
+        errors: [{
+          code: 'assume_player_player_not_found',
+          title: 'Player not found',
+        }],
+      });
+      return;
+    }
+
+    await req.ctx.authedUser.session.assumePlayer(player);
+
+    res.status(200).send(await req.ctx.authedUser.session.serialise());
+  },
 }

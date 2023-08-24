@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import AuthLayout from './authLayout';
 import MainLayout from './mainLayout';
-import LoginPage from './pages/login';
+import LoginPage from './pages/auth/login';
 
 import DarkThroneClient, { UserSessionObject } from '@darkthrone/client-library';
-import RegisterPage from './pages/register';
-import PlayerSelectPage from './pages/playerSelect';
+import RegisterPage from './pages/auth/register';
+import PlayerSelectListPage from './pages/playerSelect/list';
 import PlayerSelectLayout from './playerSelectLayout';
 
 const client = new DarkThroneClient();
@@ -16,7 +16,7 @@ export function App() {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const userFetch = await client.getCurrentUser();
+      const userFetch = await client.auth.getCurrentUser();
 
       client.on('userLogout', () => {
         setCurrentUser(null);
@@ -46,7 +46,7 @@ export function App() {
       </Route>
 
       <Route element={<PlayerSelectLayout client={client} />}>
-        <Route path="/player-select" element={<PlayerSelectPage client={client} />} />
+        <Route path="/player-select" element={<PlayerSelectListPage client={client} />} />
       </Route>
 
       <Route element={<MainLayout client={client} />}>

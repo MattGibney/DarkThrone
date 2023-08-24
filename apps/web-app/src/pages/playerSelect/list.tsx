@@ -1,62 +1,37 @@
-import DarkThroneClient from '@darkthrone/client-library';
+import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
 import { Alert, Avatar, Button, InputCheckbox, InputField } from '@darkthrone/react-components';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-interface RegisterPageProps {
+interface PlayerSelectListPageProps {
   client: DarkThroneClient;
 }
-export default function PlayerSelectPage(props: RegisterPageProps) {
+export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
   const navigate = useNavigate();
 
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
+  const [players, setPlayers] = useState<PlayerObject[]>([]);
 
-  // const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  useEffect(() => {
+    const getPlayers = async () => {
+      const playersFetch = await props.client.players.fetchAllPlayers();
 
-  // const [shouldCheckPasswords, setShouldCheckPasswords] = useState(false);
-  // const [doPasswordsMatch, setDoPasswordsMatch] = useState(false);
+      if (playersFetch.status === 'fail') {
+        console.error('Failed to fetch players', playersFetch.data);
+        return;
+      }
 
-  // async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault();
+      setPlayers(playersFetch.data);
+    };
 
-  //   if (!email || !password || !doPasswordsMatch) return;
+    getPlayers();
+  }, [props.client.players]);
 
-  //   console.log('Register');
+  async function handleChoosePlayer(player: PlayerObject) {
+    await props.client.auth.assumePlayer(player.id);
 
-  //   const result = await props.client.register(email, password);
-
-  //   if (result.status === 'fail') {
-  //     setErrorMessages(result.data.map((err) => err.title));
-  //     return;
-  //   }
-
-  //   navigate('/overview');
-  // }
-
-  // useEffect(() => {
-  //   if (!shouldCheckPasswords) return;
-  //   setDoPasswordsMatch(password === confirmPassword);
-  // }, [password, confirmPassword, shouldCheckPasswords]);
-
-  const players = [
-    {
-      id: 'ID1',
-      name: 'Evil Overlord',
-      avatarURL: undefined,
-      race: 'Undead',
-      class: 'Fighter',
-    },
-    {
-      id: 'ID2',
-      name: 'Boundless Wind',
-      avatarURL: undefined,
-      race: 'Elf',
-      class: 'Cleric',
-    }
-  ];
+    navigate('/overview');
+  }
 
   return (
     <main className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -81,7 +56,7 @@ export default function PlayerSelectPage(props: RegisterPageProps) {
                   <button
                     key={player.id}
                     className="w-full text-left relative flex justify-between items-center gap-x-6 px-4 py-5 hover:bg-gray-700/50 rounded-lg sm:px-6"
-                    onClick={() => console.log('Select player', player.id)}
+                    onClick={() => handleChoosePlayer(player)}
                   >
                     <div className="flex items-center min-w-0 gap-x-4">
 
@@ -137,7 +112,7 @@ export default function PlayerSelectPage(props: RegisterPageProps) {
               text={'Logout'}
               variant='secondary'
               type='button'
-              onClick={() => props.client.logout()}
+              onClick={() => props.client.auth.logout()}
             />
           </div>
 
