@@ -10,6 +10,7 @@ import e from 'express';
 import router from './router';
 import UserModel from './models/user';
 import UserSessionModel from './models/userSession';
+import PlayerModel from './models/player';
 
 export type Context = {
   requestID: string;
@@ -21,6 +22,7 @@ export type Context = {
     model: UserModel;
     session: UserSessionModel;
   };
+  authedPlayer?: PlayerModel;
 };
 
 const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => {
@@ -92,6 +94,16 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
       model: user,
       session: userSession,
     };
+
+    if (userSession.playerID) {
+      const player = await req.ctx.modelFactory.player.fetchByID(
+        req.ctx,
+        userSession.playerID,
+      );
+
+      req.ctx.logger.debug({ playerID: player.id }, 'Found player');
+      req.ctx.authedPlayer = player;
+    }
 
     next();
   });

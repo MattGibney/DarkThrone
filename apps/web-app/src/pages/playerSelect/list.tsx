@@ -10,11 +10,14 @@ interface PlayerSelectListPageProps {
 export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
   const navigate = useNavigate();
 
+  const [didLoad, setDidLoad] = useState(false);
   const [players, setPlayers] = useState<PlayerObject[]>([]);
 
   useEffect(() => {
     const getPlayers = async () => {
       const playersFetch = await props.client.players.fetchAllPlayers();
+
+      setDidLoad(true);
 
       if (playersFetch.status === 'fail') {
         console.error('Failed to fetch players', playersFetch.data);
@@ -32,6 +35,8 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
     navigate('/overview');
   }
+
+  if (!didLoad) return null;
 
   return (
     <main>
@@ -63,10 +68,10 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
                       <Avatar url={player.avatarURL} race={player.race} />
 
                       <div className="min-w-0 flex-auto">
-                        <p className="text-sm font-semibold leading-6 text-gray-200">
+                        <p className="text-sm font-semibold leading-6 text-gray-200 capitalize">
                           {player.name}
                         </p>
-                        <p className="flex text-sm leading-5 text-gray-500">
+                        <p className="flex text-sm leading-5 text-gray-500 capitalize">
                           {player.race} {player.class}
                         </p>
                       </div>

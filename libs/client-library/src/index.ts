@@ -20,6 +20,7 @@ export default class DarkThroneClient {
   public events: { [event: string]: EventListener[] } = {};
 
   public authenticatedUser: UserSessionObject | undefined;
+  public authenticatedPlayer: PlayerObject | undefined;
 
   public auth: AuthController;
   public players: PlayersController;

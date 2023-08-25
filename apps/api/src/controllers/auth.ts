@@ -140,7 +140,10 @@ export default {
       });
       return;
     }
-    res.status(200).json(await req.ctx.authedUser.session.serialise());
+    res.status(200).json({
+      user: await req.ctx.authedUser.session.serialise(),
+      player: req.ctx.authedPlayer ? await req.ctx.authedPlayer.serialise() : undefined,
+    });
   },
 
   POST_logout: async (req: Request, res: Response) => {
@@ -156,7 +159,7 @@ export default {
 
     const { session } = req.ctx.authedUser;
     if (!session) {
-      res.status(500).send({
+      res.status(500).json({
         errors: [{
           code: 'logout_failed',
           title: 'Logout failed',
@@ -167,7 +170,7 @@ export default {
 
     await session.invalidate();
     res.clearCookie('DTAC');
-    res.status(200).send({});
+    res.status(200).json({});
   },
 
   POST_assumePlayer: async (req: Request, res: Response) => {
@@ -182,13 +185,13 @@ export default {
     }
 
     if (apiErrors.length > 0) {
-      res.status(400).send({ errors: apiErrors });
+      res.status(400).json({ errors: apiErrors });
       return;
     }
 
     const player = await req.ctx.modelFactory.player.fetchByID(req.ctx, playerId);
     if (!player) {
-      res.status(404).send({
+      res.status(404).json({
         errors: [{
           code: 'assume_player_player_not_found',
           title: 'Player not found',
@@ -199,6 +202,20 @@ export default {
 
     await req.ctx.authedUser.session.assumePlayer(player);
 
-    res.status(200).send(await req.ctx.authedUser.session.serialise());
+    res.status(200).json({
+      user: await req.ctx.authedUser.session.serialise(),
+      player: await player.serialise(),
+    });
+  },
+
+  POST_unassumePlayer: async (req: Request, res: Response) => {
+    req.ctx.logger.debug('POST_unassumePlayer');
+    await req.ctx.authedUser.session.unassumePlayer();
+
+    res.status(200).json({
+      user: await req.ctx.authedUser.session.serialise(),
+      player: undefined,
+    });
+    return;
   },
 }

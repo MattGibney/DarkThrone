@@ -22,6 +22,9 @@ export function App() {
       client.on('userLogout', () => {
         setCurrentUser(null);
       });
+      client.on('playerChange', (UserSessionObject) => {
+        setCurrentUser(UserSessionObject);
+      });
 
       if (userFetch.status === 'fail') {
         setCurrentUser(null);

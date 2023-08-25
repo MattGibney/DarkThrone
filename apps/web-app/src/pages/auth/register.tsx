@@ -20,10 +20,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     if (!email || !password || !doPasswordsMatch) return;
-
-    console.log('Register');
 
     const result = await props.client.auth.register(email, password);
 
@@ -81,7 +78,8 @@ export default function RegisterPage(props: RegisterPageProps) {
               autoComplete="new-password"
               required
               displayName="Password"
-              invalidMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
+              validationMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
+              validationState={shouldCheckPasswords && !doPasswordsMatch ? 'invalid' : 'neutral'}
               value={password}
               setValue={(newVal) => setPassword(newVal)}
             />
@@ -94,7 +92,8 @@ export default function RegisterPage(props: RegisterPageProps) {
               onBlur={() => setShouldCheckPasswords(true)}
               required
               displayName="Confirm Password"
-              invalidMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
+              validationMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
+              validationState={shouldCheckPasswords && !doPasswordsMatch ? 'invalid' : 'neutral'}
               value={confirmPassword}
               setValue={(newVal) => setConfirmPassword(newVal)}
             />

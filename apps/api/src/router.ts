@@ -23,6 +23,7 @@ router.post('/auth/register', AuthController.POST_register);
 router.get('/auth/current-user', AuthController.GET_currentUser);
 router.post('/auth/logout', AuthController.POST_logout);
 authedRouter.post('/auth/assume-player', AuthController.POST_assumePlayer);
+authedRouter.post('/auth/unassume-player', AuthController.POST_unassumePlayer);
 
 // Players
 authedRouter.get('/players', PlayersController.GET_fetchAllPlayers);

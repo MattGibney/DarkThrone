@@ -69,6 +69,11 @@ export default class UserSessionModel {
     this.playerID = player.id;
   }
 
+  async unassumePlayer(): Promise<void> {
+    await this.ctx.daoFactory.userSession.unassumePlayer(this.ctx.logger, this.id);
+    this.playerID = null;
+  }
+
   async serialise(): Promise<UserSessionObject> {
     const user = await this.ctx.modelFactory.user.fetchByID(this.ctx, this.userID);
     return {

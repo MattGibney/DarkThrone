@@ -1,4 +1,4 @@
-import DarkThroneClient, { APIError, APIResponse } from '..';
+import DarkThroneClient, { APIError, APIResponse, PlayerObject } from '..';
 
 export type UserSessionObject = {
   id: string;
@@ -16,11 +16,12 @@ export default class AuthController {
 
   async getCurrentUser(): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
     try {
-      const response = await this.root.http.get<UserSessionObject>('/auth/current-user');
+      const response = await this.root.http.get<{user: UserSessionObject, player?: PlayerObject }>('/auth/current-user');
 
-      this.root.authenticatedUser = response.data;
+      this.root.authenticatedUser = response.data.user;
+      this.root.authenticatedPlayer = response.data.player;
 
-      return { status: 'ok', data: response.data as UserSessionObject };
+      return { status: 'ok', data: response.data.user as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
       return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
@@ -75,14 +76,33 @@ export default class AuthController {
 
   async assumePlayer(playerId: string): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
     try {
-      const response = await this.root.http.post<UserSessionObject>(
+      const response = await this.root.http.post<{ user: UserSessionObject, player: PlayerObject }>(
         '/auth/assume-player',
         { playerId }
       );
 
-      this.root.authenticatedUser = response.data;
+      this.root.authenticatedUser = response.data.user;
+      this.root.authenticatedPlayer = response.data.player;
+      this.root.emit('playerChange', response.data.user);
 
-      return { status: 'ok', data: response.data as UserSessionObject };
+      return { status: 'ok', data: response.data.user as UserSessionObject };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
+  }
+
+  async unassumePlayer(): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.root.http.post<{ user: UserSessionObject, player: PlayerObject }>(
+        '/auth/unassume-player'
+      );
+
+      this.root.authenticatedUser = response.data.user;
+      this.root.authenticatedPlayer = undefined;
+      this.root.emit('playerChange', response.data.user);
+
+      return { status: 'ok', data: response.data.user as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
       return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
