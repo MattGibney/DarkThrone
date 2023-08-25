@@ -34,7 +34,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <main>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img
           className="mx-auto h-10 w-auto"
@@ -60,7 +60,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
                   >
                     <div className="flex items-center min-w-0 gap-x-4">
 
-                      <Avatar url={player.avatarURL} />
+                      <Avatar url={player.avatarURL} race={player.race} />
 
                       <div className="min-w-0 flex-auto">
                         <p className="text-sm font-semibold leading-6 text-gray-200">
@@ -92,7 +92,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
           <Button
             type='button'
             text={'Create a new player'}
-            onClick={() => console.log('Create a new player')}
+            onClick={() => navigate('/player-select/create')}
             variant={players.length > 0 ? 'secondary' : 'primary'}
           />
           {/* <button className=' w-full p-6 rounded-lg'>

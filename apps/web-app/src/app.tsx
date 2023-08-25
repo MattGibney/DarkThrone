@@ -8,6 +8,7 @@ import DarkThroneClient, { UserSessionObject } from '@darkthrone/client-library'
 import RegisterPage from './pages/auth/register';
 import PlayerSelectListPage from './pages/playerSelect/list';
 import PlayerSelectLayout from './playerSelectLayout';
+import CreatePlayerPage from './pages/playerSelect/create';
 
 const client = new DarkThroneClient();
 
@@ -47,6 +48,7 @@ export function App() {
 
       <Route element={<PlayerSelectLayout client={client} />}>
         <Route path="/player-select" element={<PlayerSelectListPage client={client} />} />
+        <Route path="/player-select/create" element={<CreatePlayerPage client={client} />} />
       </Route>
 
       <Route element={<MainLayout client={client} />}>

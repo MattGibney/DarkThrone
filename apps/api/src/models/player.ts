@@ -41,8 +41,22 @@ export default class PlayerModel {
     return playerRows.map((row) => new PlayerModel(ctx, row));
   }
 
-  static async fetchByID(ctx: Context, id: string) {
+  static async fetchByID(ctx: Context, id: string): Promise<PlayerModel | null> {
     const playerRow = await ctx.daoFactory.player.fetchByID(ctx.logger, id);
+    if (!playerRow) return null;
+
+    return new PlayerModel(ctx, playerRow);
+  }
+
+  static async fetchByDisplayName(ctx: Context, displayName: string): Promise<PlayerModel | null> {
+    const playerRow = await ctx.daoFactory.player.fetchByDisplayName(ctx.logger, displayName);
+    if (!playerRow) return null;
+
+    return new PlayerModel(ctx, playerRow);
+  }
+
+  static async create(ctx: Context, displayName: string, selectedRace: string, selectedClass: string): Promise<PlayerModel> {
+    const playerRow = await ctx.daoFactory.player.create(ctx.logger, ctx.authedUser.model.id, displayName, selectedRace, selectedClass);
     return new PlayerModel(ctx, playerRow);
   }
 }

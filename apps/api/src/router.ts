@@ -26,6 +26,8 @@ authedRouter.post('/auth/assume-player', AuthController.POST_assumePlayer);
 
 // Players
 authedRouter.get('/players', PlayersController.GET_fetchAllPlayers);
+authedRouter.post('/players', PlayersController.POST_createPlayer);
+authedRouter.post('/players/validate-name', PlayersController.POST_validatePlayerName);
 
 router.use(authedRouter);
 

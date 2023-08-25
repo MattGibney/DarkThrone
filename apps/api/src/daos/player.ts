@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { Logger } from 'pino';
+import { ulid } from 'ulid';
 
 export type PlayerRow = {
   id: string;
@@ -40,6 +41,39 @@ export default class PlayerDao {
       return player;
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch player by ID');
+      return null;
+    }
+  }
+
+  async fetchByDisplayName(logger: Logger, displayName: string): Promise<PlayerRow | null> {
+    try {
+      const player = await this.database<PlayerRow>('players')
+        .where({ display_name: displayName })
+        .first();
+
+      return player;
+    } catch (error) {
+      logger.error(error, 'DAO: Failed to fetch player by display name');
+      return null;
+    }
+  }
+
+  async create(logger: Logger, userID: string, displayName: string, selectedRace: string, selectedClass: string): Promise<PlayerRow> {
+    const playerID = `PLR-${ulid()}`
+    try {
+      const player = await this.database<PlayerRow>('players')
+        .insert({
+          id: playerID,
+          user_id: userID,
+          display_name: displayName,
+          race: selectedRace,
+          class: selectedClass,
+        })
+        .returning('*');
+
+      return player[0];
+    } catch (error) {
+      logger.error(error, 'DAO: Failed to create player');
       return null;
     }
   }

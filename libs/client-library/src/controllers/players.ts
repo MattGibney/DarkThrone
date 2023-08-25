@@ -4,7 +4,7 @@ export type PlayerObject = {
   id: string;
   name: string;
   avatarURL?: string;
-  race: string;
+  race: 'human' | 'elf' | 'goblin' | 'undead';
   class: string;
 };
 
@@ -20,6 +20,32 @@ export default class PlayersController {
       const response = await this.root.http.get<PlayerObject[]>('/players');
 
       return { status: 'ok', data: response.data as PlayerObject[] };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
+  }
+
+  async validatePlayerName(name: string): Promise<APIResponse<'ok', boolean> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.root.http.post<boolean>('/players/validate-name', { displayName: name });
+
+      return { status: 'ok', data: response.data as boolean };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
+  }
+
+  async create(name: string, selectedRace: string, selectedClass: string): Promise<APIResponse<'ok', PlayerObject> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.root.http.post<PlayerObject>('/players', {
+        displayName: name,
+        selectedRace: selectedRace,
+        selectedClass: selectedClass,
+      });
+
+      return { status: 'ok', data: response.data as PlayerObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
       return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
