@@ -1,11 +1,62 @@
 import { NavLink } from 'react-router-dom';
 import { classNames } from '../../utils';
-import { ChevronRightIcon, PhoneIcon } from '@heroicons/react/20/solid';
-import { Disclosure } from '@headlessui/react';
 
-const navigation = [
+// const navigation = [
+//   {
+//     name: 'Home',
+//     children: [
+//       { name: 'Overview', to: '/overview' },
+//       { name: 'News', to: '/news' },
+//       { name: 'Levels', to: '/levels' },
+//       { name: 'Settings', to: '/settings' },
+//       { name: 'FAQ', to: '/faq' },
+//       { name: 'Support', to: '/support' },
+//     ],
+//   },
+//   {
+//     name: 'Battle',
+//     children: [
+//       { name: 'Attack', to: '/attack' },
+//       { name: 'Training', to: '/training' },
+//       { name: 'Mercenaries', to: '/mercenaries' },
+//       { name: 'Upgrades', to: '/upgrades' },
+//       { name: 'War History', to: '/war-history' },
+//     ]
+//   },
+//   {
+//     name: 'Structures',
+//     children: [
+//       { name: 'Bank', to: '/bank' },
+//       { name: 'Armory', to: '/armory' },
+//       { name: 'Upgrades', to: '/upgrades' },
+//       { name: 'Housing', to: '/housing' },
+//       { name: 'Repair', to: '/repair' },
+//     ]
+//   },
+//   {
+//     name: 'Alliances',
+//     children: [
+//       { name: 'My Alliances', to: '/my-alliances' },
+//       { name: 'Alliance Listing', to: '/alliance-listing' },
+//     ]
+//   },
+//   {
+//     name: 'Community',
+//     children: [
+//       // { name: 'Downloads', to: '/downloads' },
+//       { name: 'Friends', to: '/friends' },
+//       { name: 'Rankings', to: '/rankings' },
+//       // { name: 'Forum', to: '/forum' },
+//       { name: 'Messaging', to: '/messaging' },
+//       { name: 'Recruiter', to: '/recruiter' },
+//     ]
+//   },
+// ];
+
+export const navigation = [
   {
     name: 'Home',
+    href: '/overview',
     children: [
       { name: 'Overview', to: '/overview' },
       { name: 'News', to: '/news' },
@@ -13,45 +64,23 @@ const navigation = [
       { name: 'Settings', to: '/settings' },
       { name: 'FAQ', to: '/faq' },
       { name: 'Support', to: '/support' },
-    ],
+    ]
   },
   {
     name: 'Battle',
-    children: [
-      { name: 'Attack', to: '/attack' },
-      { name: 'Training', to: '/training' },
-      { name: 'Mercenaries', to: '/mercenaries' },
-      { name: 'Upgrades', to: '/upgrades' },
-      { name: 'War History', to: '/war-history' },
-    ]
+    href: '/attack'
   },
   {
     name: 'Structures',
-    children: [
-      { name: 'Bank', to: '/bank' },
-      { name: 'Armory', to: '/armory' },
-      { name: 'Upgrades', to: '/upgrades' },
-      { name: 'Housing', to: '/housing' },
-      { name: 'Repair', to: '/repair' },
-    ]
+    href: '/bank'
   },
   {
     name: 'Alliances',
-    children: [
-      { name: 'My Alliances', to: '/my-alliances' },
-      { name: 'Alliance Listing', to: '/alliance-listing' },
-    ]
+    href: '/my-alliances'
   },
   {
     name: 'Community',
-    children: [
-      // { name: 'Downloads', to: '/downloads' },
-      { name: 'Friends', to: '/friends' },
-      { name: 'Rankings', to: '/rankings' },
-      // { name: 'Forum', to: '/forum' },
-      { name: 'Messaging', to: '/messaging' },
-      { name: 'Recruiter', to: '/recruiter' },
-    ]
+    href: '/friends'
   },
 ];
 
@@ -59,7 +88,7 @@ export default function Navigation() {
   return (
     <nav className="flex flex-1 flex-col">
       <ul className="flex flex-1 flex-col gap-y-7">
-        {/* <li>
+        <li>
           <ul className="-mx-2 space-y-1">
             {navigation.map((item, itemIdx) => (
               <li key={itemIdx}>
@@ -67,8 +96,8 @@ export default function Navigation() {
                   className={({ isActive }) =>
                     classNames(
                       isActive
-                        ? 'bg-gray-50 text-primary-600'
-                        : 'text-gray-300 hover:text-primary-600 hover:bg-gray-700',
+                        ? 'bg-yellow-700/25 text-yellow-600'
+                        : 'text-gray-300 hover:text-primary-600 hover:bg-gray-700/50',
                       'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
                     )
                   }
@@ -76,15 +105,6 @@ export default function Navigation() {
                 >
                   {({ isActive }) => (
                     <>
-                      <item.icon
-                        className={classNames(
-                          isActive
-                            ? 'text-primary-600'
-                            : 'text-gray-400 group-hover:text-primary-400',
-                          'h-6 w-6 shrink-0',
-                        )}
-                        aria-hidden="true"
-                      />
                       {item.name}
                     </>
                   )}
@@ -92,9 +112,9 @@ export default function Navigation() {
               </li>
             ))}
           </ul>
-        </li> */}
+        </li>
 
-        <li>
+        {/* <li>
           <ul role="list" className="-mx-2 space-y-1">
             {navigation.map((item) => (
               <li key={item.name}>
@@ -141,7 +161,7 @@ export default function Navigation() {
                             >
                               {subItem.name}
                             </Disclosure.Button> */}
-                          </li>
+                          {/* </li>
                         ))}
                       </Disclosure.Panel>
                     </>
@@ -150,7 +170,7 @@ export default function Navigation() {
               </li>
             ))}
           </ul>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

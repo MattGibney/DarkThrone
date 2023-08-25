@@ -9,6 +9,7 @@ import RegisterPage from './pages/auth/register';
 import PlayerSelectListPage from './pages/playerSelect/list';
 import PlayerSelectLayout from './playerSelectLayout';
 import CreatePlayerPage from './pages/playerSelect/create';
+import OverviewPage from './pages/main/overview';
 
 const client = new DarkThroneClient();
 
@@ -56,7 +57,7 @@ export function App() {
 
       <Route element={<MainLayout client={client} />}>
         {/* Home */}
-        <Route path="/overview" element={<div>Overview</div>} />
+        <Route path="/overview" element={<OverviewPage />} />
         {/* <Route path="/news" element={<div>News</div>} />
         <Route path="/levels" element={<div>Levels</div>} />
         <Route path="/profile" element={<div>Profile</div>} />
