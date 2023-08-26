@@ -1,3 +1,4 @@
+import { PlayerRace } from '@darkthrone/client-library';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
@@ -6,7 +7,7 @@ export type PlayerRow = {
   id: string;
   user_id: string;
   display_name: string;
-  race: string;
+  race: PlayerRace;
   class: string;
   avatar_url?: string;
   created_at: Date;
@@ -58,7 +59,7 @@ export default class PlayerDao {
     }
   }
 
-  async create(logger: Logger, userID: string, displayName: string, selectedRace: string, selectedClass: string): Promise<PlayerRow> {
+  async create(logger: Logger, userID: string, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerRow> {
     const playerID = `PLR-${ulid()}`
     try {
       const player = await this.database<PlayerRow>('players')

@@ -1,4 +1,4 @@
-import DarkThroneClient from '@darkthrone/client-library';
+import DarkThroneClient, { PlayerRace } from '@darkthrone/client-library';
 import { Button, InputField } from '@darkthrone/react-components';
 import { useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
@@ -14,7 +14,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
   const [playerName, setPlayerName] = useState<string>('');
   const [playerNameStatus, setPlayerNameStatus] = useState<{ isValid: boolean, message: string } | undefined>();
 
-  const [selectedRace, setSelectedRace] = useState<'human' | 'elf' | 'goblin' | 'undead' | undefined>(undefined);
+  const [selectedRace, setSelectedRace] = useState<PlayerRace | undefined>(undefined);
 
   const [selectedClass, setSelectedClass] = useState<'fighter' | 'cleric' | 'thief' | 'assassin' | undefined>(undefined);
 

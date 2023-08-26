@@ -13,6 +13,8 @@ export type APIResponse<S, T> = {
   data: T;
 }
 
+type PlayerRace = 'human' | 'elf' | 'goblin' | 'undead';
+
 type EventListener = (...args: any[]) => void;
 
 export default class DarkThroneClient {
@@ -52,4 +54,4 @@ export default class DarkThroneClient {
   }
 }
 
-export type { PlayerObject, UserSessionObject }
+export type { PlayerObject, UserSessionObject, PlayerRace }

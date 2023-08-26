@@ -1,4 +1,4 @@
-import { PlayerObject } from '@darkthrone/client-library';
+import { PlayerObject, PlayerRace } from '@darkthrone/client-library';
 import { Context } from '../app';
 import { PlayerRow } from '../daos/player';
 import UserModel from './user';
@@ -9,7 +9,7 @@ export default class PlayerModel {
   public id: string;
   public userID: string;
   public displayName: string;
-  public race: string;
+  public race: PlayerRace;
   public class: string;
   public avatarURL?: string;
   public createdAt: Date;
@@ -55,7 +55,7 @@ export default class PlayerModel {
     return new PlayerModel(ctx, playerRow);
   }
 
-  static async create(ctx: Context, displayName: string, selectedRace: string, selectedClass: string): Promise<PlayerModel> {
+  static async create(ctx: Context, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerModel> {
     const playerRow = await ctx.daoFactory.player.create(ctx.logger, ctx.authedUser.model.id, displayName, selectedRace, selectedClass);
     return new PlayerModel(ctx, playerRow);
   }

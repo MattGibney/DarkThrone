@@ -1,10 +1,10 @@
-import DarkThroneClient, { APIError, APIResponse, UserSessionObject } from '..';
+import DarkThroneClient, { APIError, APIResponse, PlayerRace } from '..';
 
 export type PlayerObject = {
   id: string;
   name: string;
   avatarURL?: string;
-  race: 'human' | 'elf' | 'goblin' | 'undead';
+  race: PlayerRace;
   class: string;
 };
 

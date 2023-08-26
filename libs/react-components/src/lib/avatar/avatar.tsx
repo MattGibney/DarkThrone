@@ -1,4 +1,5 @@
 import { tv } from 'tailwind-variants';
+import { PlayerRace } from '@darkthrone/client-library';
 
 const styles = tv({
   slots: {
@@ -22,7 +23,7 @@ const styles = tv({
 /* eslint-disable-next-line */
 export interface AvatarProps {
   url?: string;
-  race?: 'human' | 'elf' | 'goblin' | 'undead';
+  race?: PlayerRace;
   size?: 'small';
 }
 

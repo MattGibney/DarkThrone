@@ -1,3 +1,4 @@
+import { PlayerRace } from '@darkthrone/client-library';
 import { tv } from "tailwind-variants";
 
 const styles = tv({
@@ -38,8 +39,8 @@ const styles = tv({
 
 export interface RaceCardProps {
   name: string;
-  race: 'human' | 'elf' | 'goblin' | 'undead';
-  selectedRace?: 'human' | 'elf' | 'goblin' | 'undead';
+  race: PlayerRace;
+  selectedRace?: PlayerRace;
   icon: () => JSX.Element;
   bonusText: string;
 }
