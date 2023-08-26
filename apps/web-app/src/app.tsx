@@ -10,6 +10,8 @@ import PlayerSelectListPage from './pages/playerSelect/list';
 import PlayerSelectLayout from './playerSelectLayout';
 import CreatePlayerPage from './pages/playerSelect/create';
 import OverviewPage from './pages/main/overview';
+import AttackListPage from './pages/main/attack/list';
+import BattlePage from './pages/main/attack';
 
 const client = new DarkThroneClient();
 
@@ -66,11 +68,13 @@ export function App() {
         <Route path="/support" element={<div>Support</div>} /> */}
 
         {/* Battle */}
-        {/* <Route path="/attack" element={<div>Training</div>} />
-        <Route path="/training" element={<div>Training</div>} />
-        <Route path="/mercenaries" element={<div>Mercenaries</div>} />
-        <Route path="/upgrades" element={<div>Upgrades</div>} />
-        <Route path="/war-history" element={<div>War History</div>} /> */}
+        <Route element={<BattlePage />}>
+          <Route path="/attack" element={<AttackListPage client={client} />} />
+          {/* <Route path="/training" element={<div>Training</div>} />
+          <Route path="/mercenaries" element={<div>Mercenaries</div>} />
+          <Route path="/upgrades" element={<div>Upgrades</div>} />
+          <Route path="/war-history" element={<div>War History</div>} /> */}
+        </Route>
 
         {/* Structures */}
         {/* <Route path="/bank" element={<div>Bank</div>} />

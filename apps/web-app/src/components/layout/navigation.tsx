@@ -68,7 +68,14 @@ export const navigation = [
   },
   {
     name: 'Battle',
-    href: '/attack'
+    href: '/attack',
+    children: [
+      { name: 'Attack', to: '/attack' },
+      { name: 'Training', to: '/training' },
+      { name: 'Mercenaries', to: '/mercenaries' },
+      { name: 'Upgrades', to: '/upgrades' },
+      { name: 'War History', to: '/war-history' },
+    ]
   },
   {
     name: 'Structures',
