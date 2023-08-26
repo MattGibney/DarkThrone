@@ -14,10 +14,10 @@ const styles = tv({
         container: 'border-emerald-400',
       },
       goblin: {
-        container: 'border-red-400',
+        container: 'border-zinc-400',
       },
       undead: {
-        container: 'border-gray-400',
+        container: 'border-zinc-400',
       },
     },
     selectedRace: {
@@ -28,10 +28,10 @@ const styles = tv({
         container: 'bg-emerald-600/25',
       },
       goblin: {
-        container: 'bg-red-600/25',
+        container: 'bg-zinc-600/25',
       },
       undead: {
-        container: 'bg-gray-600/75',
+        container: 'bg-zinc-600/75',
       },
     }
   }
@@ -52,7 +52,7 @@ export default function RaceCard(props: RaceCardProps) {
         {props.icon()}
       </div>
       <h3 className='font-bold'>{props.name}</h3>
-      <p className='text-sm text-gray-400'>{props.bonusText}</p>
+      <p className='text-sm text-zinc-400'>{props.bonusText}</p>
     </div>
   );
 }

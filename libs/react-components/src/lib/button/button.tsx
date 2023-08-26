@@ -10,7 +10,7 @@ const styles = tv({
         body: 'bg-yellow-600 hover:bg-yellow-500 focus-visible:outline-yellow-600 text-white'
       },
       secondary: {
-        body: 'bg-gray-700/50 hover:bg-gray-700 text-gray-400 focus-visible:outline-gray-600'
+        body: 'bg-zinc-700/50 hover:bg-zinc-700 text-zinc-400 focus-visible:outline-zinc-600'
       }
     },
   },

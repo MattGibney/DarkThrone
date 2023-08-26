@@ -46,13 +46,13 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
           src="https://tailwindui.com/img/logos/mark.svg?color=yellow&shade=600"
           alt="Your Company"
         />
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-200">
+        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-200">
           Player Select
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div className="bg-gray-800 sm:rounded-t-lg px-6 py-12 sm:px-12">
+        <div className="bg-zinc-800 sm:rounded-t-lg px-6 py-12 sm:px-12">
 
           {players.length > 0 ? (
             <>
@@ -60,7 +60,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
                 {players.map((player) => (
                   <button
                     key={player.id}
-                    className="w-full text-left relative flex justify-between items-center gap-x-6 px-4 py-5 hover:bg-gray-700/50 rounded-lg sm:px-6"
+                    className="w-full text-left relative flex justify-between items-center gap-x-6 px-4 py-5 hover:bg-zinc-700/50 rounded-lg sm:px-6"
                     onClick={() => handleChoosePlayer(player)}
                   >
                     <div className="flex items-center min-w-0 gap-x-4">
@@ -68,16 +68,16 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
                       <Avatar url={player.avatarURL} race={player.race} />
 
                       <div className="min-w-0 flex-auto">
-                        <p className="text-sm font-semibold leading-6 text-gray-200 capitalize">
+                        <p className="text-sm font-semibold leading-6 text-zinc-200 capitalize">
                           {player.name}
                         </p>
-                        <p className="flex text-sm leading-5 text-gray-500 capitalize">
+                        <p className="flex text-sm leading-5 text-zinc-500 capitalize">
                           {player.race} {player.class}
                         </p>
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-x-4">
-                      <ChevronRightIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+                      <ChevronRightIcon className="h-5 w-5 flex-none text-zinc-400" aria-hidden="true" />
                     </div>
                   </button>
                 ))}
@@ -85,10 +85,10 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                  <div className="w-full border-t border-gray-700" />
+                  <div className="w-full border-t border-zinc-700" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-gray-800 px-2 text-sm text-gray-500">Or</span>
+                  <span className="bg-zinc-800 px-2 text-sm text-zinc-500">Or</span>
                 </div>
               </div>
             </>
@@ -108,8 +108,8 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
         <div className="bg-black/25 sm:rounded-b-lg p-6 sm:px-12 flex justify-between items-center">
 
           <div>
-            <p className="text-sm text-gray-400">Signed in as</p>
-            <p className="truncate text-sm font-bold text-gray-200">{props.client.authenticatedUser?.email}</p>
+            <p className="text-sm text-zinc-400">Signed in as</p>
+            <p className="truncate text-sm font-bold text-zinc-200">{props.client.authenticatedUser?.email}</p>
           </div>
 
           <div>

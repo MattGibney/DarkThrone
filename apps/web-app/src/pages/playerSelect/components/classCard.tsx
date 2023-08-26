@@ -2,7 +2,7 @@ import { tv } from "tailwind-variants";
 
 const styles = tv({
   slots: {
-    container: 'text-center p-2 border-2 border-gray-600 rounded-lg flex flex-col cursor-pointer',
+    container: 'text-center p-2 border-2 border-zinc-600 rounded-lg flex flex-col cursor-pointer',
   },
   variants: {
     selected: {
@@ -27,7 +27,7 @@ export default function ClassCard(props: ClassCardProps) {
         {props.icon()}
       </div> */}
       <h3 className='font-bold'>{props.name}</h3>
-      <p className='text-sm text-gray-400'>{props.bonusText}</p>
+      <p className='text-sm text-zinc-400'>{props.bonusText}</p>
     </div>
   );
 }

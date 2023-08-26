@@ -20,7 +20,7 @@ export default function MobileSidebar(props: MobileSidebarProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-900/80" />
+          <div className="fixed inset-0 bg-zinc-900/80" />
         </Transition.Child>
 
         <div className="fixed inset-0 flex">
@@ -51,7 +51,7 @@ export default function MobileSidebar(props: MobileSidebarProps) {
                 </div>
               </Transition.Child>
               {/* Sidebar component, swap this element with another sidebar if you like */}
-              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-800 px-6 pb-4 ring-1 ring-white/10">
+              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-800 px-6 pb-4 ring-1 ring-white/10">
                 <div className="flex h-16 shrink-0 items-center">
                   <img
                     className="h-8 w-auto"

@@ -50,13 +50,13 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     {
       name: 'Goblins',
       bonusText: '+5% Defense bonus',
-      icon: () => (<svg className='fill-red-400' xmlns="http://www.w3.org/2000/svg" height="3rem" viewBox="0 0 384 512"><path d="M346.74 32.44L224 52.9V16c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v36.9L37.26 32.44C17.76 29.19 0 44.23 0 64.01v191.98c0 19.77 17.76 34.81 37.26 31.56L192 261.77l154.74 25.79C366.25 290.81 384 275.77 384 256V64.01c0-19.78-17.76-34.82-37.26-31.57zM160 299.54V496c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V299.54l-32-5.33-32 5.33z"/></svg>),
+      icon: () => (<svg className='fill-zinc-400' xmlns="http://www.w3.org/2000/svg" height="3rem" viewBox="0 0 384 512"><path d="M346.74 32.44L224 52.9V16c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v36.9L37.26 32.44C17.76 29.19 0 44.23 0 64.01v191.98c0 19.77 17.76 34.81 37.26 31.56L192 261.77l154.74 25.79C366.25 290.81 384 275.77 384 256V64.01c0-19.78-17.76-34.82-37.26-31.57zM160 299.54V496c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V299.54l-32-5.33-32 5.33z"/></svg>),
       race: 'goblin'
     },
     {
       name: 'Undead',
       bonusText: '+5% Offense bonus',
-      icon: () => (<svg className='fill-gray-400' xmlns="http://www.w3.org/2000/svg" height="3rem" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 100.3 0 224c0 70.1 36.9 132.6 94.5 173.7 9.6 6.9 15.2 18.1 13.5 29.9l-9.4 66.2c-1.4 9.6 6 18.2 15.7 18.2H192v-56c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v56h64v-56c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v56h77.7c9.7 0 17.1-8.6 15.7-18.2l-9.4-66.2c-1.7-11.7 3.8-23 13.5-29.9C475.1 356.6 512 294.1 512 224 512 100.3 397.4 0 256 0zm-96 320c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64zm192 0c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z"/></svg>),
+      icon: () => (<svg className='fill-zinc-400' xmlns="http://www.w3.org/2000/svg" height="3rem" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 100.3 0 224c0 70.1 36.9 132.6 94.5 173.7 9.6 6.9 15.2 18.1 13.5 29.9l-9.4 66.2c-1.4 9.6 6 18.2 15.7 18.2H192v-56c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v56h64v-56c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v56h77.7c9.7 0 17.1-8.6 15.7-18.2l-9.4-66.2c-1.7-11.7 3.8-23 13.5-29.9C475.1 356.6 512 294.1 512 224 512 100.3 397.4 0 256 0zm-96 320c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64zm192 0c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z"/></svg>),
       race: 'undead'
     }
   ]
@@ -102,13 +102,13 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
         src="https://tailwindui.com/img/logos/mark.svg?color=yellow&shade=600"
         alt="Your Company"
       />
-      <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-200">
+      <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-200">
         Create new player
       </h2>
     </div>
 
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-      <div className="bg-gray-800 sm:rounded-lg px-6 py-12 sm:px-12">
+      <div className="bg-zinc-800 sm:rounded-lg px-6 py-12 sm:px-12">
         <form className='space-y-12' onSubmit={handleCreatePlayer}>
           <InputField
             displayName='Player Name'
@@ -121,7 +121,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
           />
 
           <section>
-            <h2 className='text-sm font-medium leading-6 text-gray-200 mb-2'>Race</h2>
+            <h2 className='text-sm font-medium leading-6 text-zinc-200 mb-2'>Race</h2>
             <div className="grid grid-cols-2 gap-6">
 
               {raceOptions.map((option, optionIdx) => (
@@ -137,7 +137,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
           </section>
 
           <section>
-            <h2 className='text-sm font-medium leading-6 text-gray-200 mb-2'>Class</h2>
+            <h2 className='text-sm font-medium leading-6 text-zinc-200 mb-2'>Class</h2>
             <div className="flex flex-col gap-6">
 
               {classOptions.map((option, optionIdx) => (

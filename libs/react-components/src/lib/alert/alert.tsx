@@ -11,10 +11,10 @@ const styles = tv({
   variants: {
     type: {
       error: {
-        container: "bg-red-800/25",
-        icon: "text-red-400",
-        title: "text-red-400",
-        messageBody: "text-red-300",
+        container: "bg-zinc-800/25",
+        icon: "text-zinc-400",
+        title: "text-zinc-400",
+        messageBody: "text-zinc-300",
       },
       warning: {
         container: "bg-yellow-800/25",

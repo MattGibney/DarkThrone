@@ -3,10 +3,10 @@ import { PlayerRace } from '@darkthrone/client-library';
 
 const styles = tv({
   slots: {
-    image: 'h-12 w-12 flex-none rounded-full bg-gray-600',
-    racePlaceholder: 'h-12 w-12 rounded-full bg-gray-700 flex justify-center items-center',
+    image: 'h-12 w-12 flex-none rounded-full bg-zinc-600',
+    racePlaceholder: 'h-12 w-12 rounded-full bg-zinc-700 flex justify-center items-center',
     raceIcon: 'h-8',
-    defaultPlaceholder: 'inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-700',
+    defaultPlaceholder: 'inline-block h-12 w-12 overflow-hidden rounded-full bg-zinc-700',
   },
   variants: {
     size: {
@@ -47,7 +47,7 @@ export function Avatar(props: AvatarProps) {
     }
     return (
       <span className={defaultPlaceholder()}>
-        <svg className="h-full w-full text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-full w-full text-zinc-500" fill="currentColor" viewBox="0 0 24 24">
           <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       </span>

@@ -97,7 +97,7 @@ export default function Navigation() {
                     classNames(
                       isActive
                         ? 'bg-yellow-700/25 text-yellow-600'
-                        : 'text-gray-300 hover:text-primary-600 hover:bg-gray-700/50',
+                        : 'text-zinc-300 hover:text-primary-600 hover:bg-zinc-700/50',
                       'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
                     )
                   }
@@ -123,13 +123,13 @@ export default function Navigation() {
                     <>
                       <Disclosure.Button
                         className={classNames(
-                          open ? 'bg-gray-700/50' : '',
-                          'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-400'
+                          open ? 'bg-zinc-700/50' : '',
+                          'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-zinc-400'
                         )}
                       >
                         <ChevronRightIcon
                           className={classNames(
-                            open ? 'rotate-90 text-gray-500' : 'text-gray-400',
+                            open ? 'rotate-90 text-zinc-500' : 'text-zinc-400',
                             'h-5 w-5 shrink-0'
                           )}
                           aria-hidden="true"
@@ -144,8 +144,8 @@ export default function Navigation() {
                               className={({ isActive }) =>
                                 classNames(
                                   isActive
-                                    ? 'bg-gray-700' : '',
-                                  'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-400',
+                                    ? 'bg-zinc-700' : '',
+                                  'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-zinc-400',
                                 )
                               }
                             >
@@ -155,8 +155,8 @@ export default function Navigation() {
                               as="a"
                               href={subItem.href}
                               className={classNames(
-                                subItem.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                                'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-400'
+                                subItem.current ? 'bg-zinc-50' : 'hover:bg-zinc-50',
+                                'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-zinc-400'
                               )}
                             >
                               {subItem.name}

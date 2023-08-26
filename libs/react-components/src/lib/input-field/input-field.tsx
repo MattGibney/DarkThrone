@@ -2,18 +2,18 @@ import { tv } from "tailwind-variants";
 
 const styles = tv({
   slots: {
-    label: "block text-sm font-medium leading-6 text-gray-200",
-    input: "block w-full rounded-md border-0 py-1.5 bg-gray-700 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+    label: "block text-sm font-medium leading-6 text-zinc-200",
+    input: "block w-full rounded-md border-0 py-1.5 bg-zinc-700 shadow-sm ring-1 ring-inset placeholder:text-zinc-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
     feedback: "mt-2 text-sm"
   },
   variants: {
     style: {
       neutral: {
-        input: 'ring-gray-700 focus:ring-yellow-600'
+        input: 'ring-zinc-700 focus:ring-yellow-600'
       },
       invalid: {
-        input: 'ring-red-500 focus:ring-red-600',
-        feedback: 'text-red-300'
+        input: 'ring-zinc-500 focus:ring-zinc-600',
+        feedback: 'text-zinc-300'
       },
       valid: {
         input: 'ring-green-500 focus:ring-green-600',

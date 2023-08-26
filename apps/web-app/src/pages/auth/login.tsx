@@ -36,13 +36,13 @@ export default function LoginPage(props: LoginPageProps) {
           src="https://tailwindui.com/img/logos/mark.svg?color=yellow&shade=600"
           alt="Your Company"
         />
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-200">
+        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-200">
           Login to your account
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div className="bg-gray-800 px-6 py-12 shadow sm:rounded-lg sm:px-12">
+        <div className="bg-zinc-800 px-6 py-12 shadow sm:rounded-lg sm:px-12">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {errorMessages.length > 0 ? (
               <Alert
@@ -97,7 +97,7 @@ export default function LoginPage(props: LoginPageProps) {
           </form>
         </div>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-10 text-center text-sm text-zinc-500">
           Not a member?{' '}
           <Link to="/register" className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500">
             Create an account now

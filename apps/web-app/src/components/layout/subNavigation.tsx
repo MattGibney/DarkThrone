@@ -5,7 +5,7 @@ interface SubNavigationProps {
 }
 export default function SubNavigation(props: SubNavigationProps) {
   return (
-    <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+    <div className="bg-zinc-900 px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="sm:hidden">
           <label htmlFor="tabs" className="sr-only">
@@ -25,7 +25,7 @@ export default function SubNavigation(props: SubNavigationProps) {
         <div className="hidden sm:block">
           <nav className="flex border-b border-white/10 py-4">
             <ul
-              className="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-gray-400"
+              className="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-zinc-400"
             >
               {props.tabs.map((tab) => (
                 <li key={tab.name}>
