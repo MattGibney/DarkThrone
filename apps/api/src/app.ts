@@ -6,7 +6,6 @@ import { ulid } from 'ulid';
 import { Config } from '../config/environment';
 import ModelFactory from './modelFactory';
 import DaoFactory from './daoFactory';
-import e from 'express';
 import router from './router';
 import UserModel from './models/user';
 import UserSessionModel from './models/userSession';
@@ -115,6 +114,7 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
 
   app.use(router);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err, req, res, next) => {
     logger.error(err);
     res.status(500).send({ message: 'Internal Server Error' });
