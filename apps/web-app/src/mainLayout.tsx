@@ -33,7 +33,7 @@ export default function MainLayout(props: MainLayoutProps) {
         <HeaderBar setSidebarOpen={setSidebarOpen} client={props.client} />
 
         <main className="py-4">
-          <div className="px-4 sm:px-6 lg:px-8">
+          <div className="px-4 sm:px-6 lg:px-8 lg:py-4">
 
             <Outlet />
 

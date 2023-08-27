@@ -16,6 +16,20 @@ const styles = tv({
         raceIcon: 'h-5',
         defaultPlaceholder: 'h-8 w-8',
       },
+      fill: {
+        image: 'h-full w-full',
+        racePlaceholder: 'h-full w-full p-12',
+      }
+    },
+    variant: {
+      square: {
+        image: 'rounded-md',
+        racePlaceholder: 'rounded-md',
+        raceIcon: 'h-full',
+      },
+      circle: {
+
+      }
     }
   }
 });
@@ -24,7 +38,8 @@ const styles = tv({
 export interface AvatarProps {
   url?: string;
   race?: PlayerRace;
-  size?: 'small';
+  size?: 'small' | 'fill';
+  variant?: 'circle' | 'square';
 }
 
 const raceIcons = {
@@ -35,7 +50,7 @@ const raceIcons = {
 };
 
 export function Avatar(props: AvatarProps) {
-  const { image, racePlaceholder, raceIcon, defaultPlaceholder } = styles({ size: props.size });
+  const { image, racePlaceholder, raceIcon, defaultPlaceholder } = styles({ size: props.size, variant: props.variant });
 
   if (!props.url) {
     if (props.race) {

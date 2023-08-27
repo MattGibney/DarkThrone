@@ -7,6 +7,21 @@ export default {
     res.status(200).json(players.map((player) => player.serialise()));
   },
 
+  GET_fetchPlayerByID: async (req: Request, res: Response) => {
+    const player = await req.ctx.modelFactory.player.fetchByID(req.ctx, req.params.id);
+    if (!player) {
+      res.status(404).json({
+        errors: [{
+          code: 'player_not_found',
+          title: 'Player not found',
+        }]
+      });
+      return;
+    }
+
+    res.status(200).json(player.serialise());
+  },
+
   POST_validatePlayerName: async (req: Request, res: Response) => {
     const { displayName } = req.body;
 

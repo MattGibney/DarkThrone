@@ -1,12 +1,13 @@
 import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
-import { classNames } from '../../../utils';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@darkthrone/react-components';
+import { useNavigate } from 'react-router-dom';
 
 interface AttackListPageProps {
   client: DarkThroneClient;
 }
 export default function AttackListPage(props: AttackListPageProps) {
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<PlayerObject[]>([]);
 
   useEffect(() => {
@@ -42,7 +43,10 @@ export default function AttackListPage(props: AttackListPageProps) {
                 {players.map((player, playerIdx) => (
                   <tr
                     key={playerIdx}
-                    className='even:bg-zinc-800/50'
+                    className='even:bg-zinc-800/50 cursor-pointer'
+                    onClick={() => {
+                      navigate(`/player/${player.id}`)
+                    }}
                   >
                     <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                       {player.name}

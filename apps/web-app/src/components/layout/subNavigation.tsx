@@ -6,7 +6,7 @@ interface SubNavigationProps {
 export default function SubNavigation(props: SubNavigationProps) {
   return (
     <div className="bg-zinc-900 mb-6">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto">
         <div className="sm:hidden">
           <label htmlFor="tabs" className="sr-only">
             Select a tab

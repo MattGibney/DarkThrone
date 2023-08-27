@@ -12,6 +12,7 @@ import CreatePlayerPage from './pages/playerSelect/create';
 import OverviewPage from './pages/main/overview';
 import AttackListPage from './pages/main/attack/list';
 import BattlePage from './pages/main/attack';
+import AttackViewPlayerPage from './pages/main/attack/viewPlayer';
 
 const client = new DarkThroneClient();
 
@@ -75,6 +76,8 @@ export function App() {
           <Route path="/upgrades" element={<div>Upgrades</div>} />
           <Route path="/war-history" element={<div>War History</div>} /> */}
         </Route>
+
+        <Route path="/player/:playerID" element={<AttackViewPlayerPage client={client} />} />
 
         {/* Structures */}
         {/* <Route path="/bank" element={<div>Bank</div>} />
