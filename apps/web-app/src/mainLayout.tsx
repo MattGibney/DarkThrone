@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import MobileSidebar from './components/layout/mobileSidebar';
 import DesktopSidebar from './components/layout/desktopSidebar';
 import HeaderBar from './components/layout/headerBar';
+import Footer from './components/layout/footer';
 
 interface MainLayoutProps {
   client: DarkThroneClient;
@@ -39,6 +40,8 @@ export default function MainLayout(props: MainLayoutProps) {
 
           </div>
         </main>
+
+        <Footer />
       </div>
     </div>
   )

@@ -3,6 +3,7 @@ import { Logger } from 'pino';
 import PlayerDao from './daos/player';
 import UserDao from './daos/user';
 import UserSessionDao from './daos/userSession';
+import WarHistoryDao from './daos/warHistory';
 
 export default class DaoFactory {
   private database: Knex;
@@ -10,6 +11,7 @@ export default class DaoFactory {
   public player: PlayerDao;
   public user: UserDao;
   public userSession: UserSessionDao;
+  public warHistory: WarHistoryDao;
 
   constructor(database: Knex) {
     this.database = database;
@@ -17,6 +19,7 @@ export default class DaoFactory {
     this.player = new PlayerDao(this.database);
     this.user = new UserDao(this.database);
     this.userSession = new UserSessionDao(this.database);
+    this.warHistory = new WarHistoryDao(this.database);
   }
 
   async hasDatabaseConnection(logger: Logger): Promise<boolean> {

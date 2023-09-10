@@ -11,6 +11,8 @@ export type PlayerRow = {
   class: string;
   avatar_url?: string;
   created_at: Date;
+  attack_turns: number;
+  gold: number;
 };
 
 export default class PlayerDao {
@@ -75,6 +77,20 @@ export default class PlayerDao {
       return player[0];
     } catch (error) {
       logger.error(error, 'DAO: Failed to create player');
+      return null;
+    }
+  }
+
+  async update(logger: Logger, playerID: string, update: Partial<PlayerRow>): Promise<PlayerRow> {
+    try {
+      const player = await this.database<PlayerRow>('players')
+        .where({ id: playerID })
+        .update(update)
+        .returning('*');
+
+      return player[0];
+    } catch (error) {
+      logger.error(error, 'DAO: Failed to update player');
       return null;
     }
   }

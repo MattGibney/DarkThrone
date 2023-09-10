@@ -1,12 +1,14 @@
 import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
 import { Avatar } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface AttackViewPlayerPageProps {
   client: DarkThroneClient;
 }
 export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
+  const navigate = useNavigate();
+
   const { playerID } = useParams<{ playerID: string }>();
 
   const [player, setPlayer] = useState<PlayerObject | null | undefined>(undefined);
@@ -28,21 +30,24 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
       setPlayer(playerFetch.data);
     };
     fetchPlayer();
-  }, [playerID]);
+  }, [playerID, props.client.players]);
 
   if (player === undefined) return;
 
   if (player === null) return (<div>Player not found</div>);
 
   const items = [
-    { name: 'Attack' },
+    {
+      name: 'Attack',
+      navigate: `/attack/${player.id}`
+    },
     { name: 'Message Player' },
     { name: 'Report' },
   ]
 
   return (
-    <div className='mx-auto max-w-7xl flex'>
-      <div className="w-80 flex flex-col gap-y-6">
+    <div className='mx-auto max-w-2xl flex gap-x-6'>
+      <div className="w-1/2 flex flex-col gap-y-6">
         <section>
           <div className="aspect-square">
             <Avatar
@@ -66,15 +71,34 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
 
         <section>
           <p className='text-sm text-zinc-400 flex gap-x-2'>
-            <p><span className='font-semibold text-zinc-200'>10</span> Friends</p>
+            <span><span className='font-semibold text-zinc-200'>10</span> Friends</span>
             &middot;
-            <p><span className='font-semibold text-zinc-200'>5</span> Enemies</p>
+            <span><span className='font-semibold text-zinc-200'>5</span> Enemies</span>
           </p>
         </section>
 
         <hr className='border-zinc-700' />
       </div>
 
+      <div className="w-1/2 flex flex-col gap-y-6">
+        <nav className='bg-zinc-800 rounded-lg overflow-hidden'>
+          <ul className='flex flex-col divide-y divide-zinc-700'>
+            {items.map((item, index) => (
+              <li key={index}>
+                <button
+                  className='w-full text-sm text-zinc-300 hover:bg-zinc-700 px-4 py-3 flex justify-between items-center'
+                  onClick={() => {
+                    if (item.navigate) navigate(item.navigate);
+                  }}
+                >
+                  <div>{item.name}</div>
+                  <svg xmlns="http://www.w3.org/2000/svg" className='fill-zinc-600' height="1.3em" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 }

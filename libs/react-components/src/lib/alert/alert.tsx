@@ -5,16 +5,16 @@ const styles = tv({
   slots: {
     container: "rounded-md p-4",
     icon: "h-5 w-5",
-    title: "text-sm font-medium ",
-    messageBody: "mt-2 text-sm",
+    title: "text-sm font-medium mb-2",
+    messageBody: "text-sm",
   },
   variants: {
     type: {
       error: {
-        container: "bg-zinc-800/25",
-        icon: "text-zinc-400",
-        title: "text-zinc-400",
-        messageBody: "text-zinc-300",
+        container: "bg-red-800/25",
+        icon: "text-red-400",
+        title: "text-red-400",
+        messageBody: "text-red-200",
       },
       warning: {
         container: "bg-yellow-800/25",
@@ -27,7 +27,7 @@ const styles = tv({
 });
 
 export interface AlertProps {
-  title: string;
+  title?: string;
   messages: string[];
   type: "error" | "warning";
 }
@@ -41,7 +41,7 @@ export function Alert(props: AlertProps) {
           <XCircleIcon className={icon()} aria-hidden="true" />
         </div>
         <div className="ml-3">
-          <h3 className={title()}>{props.title}</h3>
+          {props.title ? <h3 className={title()}>{props.title}</h3> : null}
           <div className={messageBody()}>
             {props.messages.length === 1 ? (
               <p>{props.messages[0]}</p>

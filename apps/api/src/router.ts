@@ -1,6 +1,8 @@
 import Router from 'express';
+import AttackController from './controllers/attack';
 import AuthController from './controllers/auth';
 import PlayersController from './controllers/player';
+import WarHistoryController from './controllers/warHistory';
 
 const router = Router();
 const authedRouter = Router();
@@ -17,6 +19,9 @@ authedRouter.use((req, res, next) => {
   next();
 });
 
+// Attack
+authedRouter.post('/attack', AttackController.POST_attackPlayer);
+
 // Auth
 router.post('/auth/login', AuthController.POST_login);
 router.post('/auth/register', AuthController.POST_register);
@@ -30,6 +35,9 @@ authedRouter.get('/players', PlayersController.GET_fetchAllPlayers);
 authedRouter.post('/players', PlayersController.POST_createPlayer);
 authedRouter.post('/players/validate-name', PlayersController.POST_validatePlayerName);
 authedRouter.get('/players/:id', PlayersController.GET_fetchPlayerByID);
+
+// War History
+authedRouter.get('/war-history/:id', WarHistoryController.GET_fetchByID);
 
 router.use(authedRouter);
 

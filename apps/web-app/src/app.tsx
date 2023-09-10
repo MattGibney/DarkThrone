@@ -10,9 +10,11 @@ import PlayerSelectListPage from './pages/playerSelect/list';
 import PlayerSelectLayout from './playerSelectLayout';
 import CreatePlayerPage from './pages/playerSelect/create';
 import OverviewPage from './pages/main/overview';
-import AttackListPage from './pages/main/attack/list';
-import BattlePage from './pages/main/attack';
-import AttackViewPlayerPage from './pages/main/attack/viewPlayer';
+import AttackListPage from './pages/main/battle/attack/list';
+import BattlePage from './pages/main/battle';
+import AttackViewPlayerPage from './pages/main/battle/attack/viewPlayer';
+import AttackPlayerPage from './pages/main/battle/attack/attackPlayer';
+import WarHistoryView from './pages/main/battle/warHistory/viewHistory';
 
 const client = new DarkThroneClient();
 
@@ -71,10 +73,12 @@ export function App() {
         {/* Battle */}
         <Route element={<BattlePage />}>
           <Route path="/attack" element={<AttackListPage client={client} />} />
+          <Route path="/attack/:playerID" element={<AttackPlayerPage client={client} />} />
           {/* <Route path="/training" element={<div>Training</div>} />
           <Route path="/mercenaries" element={<div>Mercenaries</div>} />
-          <Route path="/upgrades" element={<div>Upgrades</div>} />
-          <Route path="/war-history" element={<div>War History</div>} /> */}
+          <Route path="/upgrades" element={<div>Upgrades</div>} /> */}
+          <Route path="/war-history" element={<div>War History</div>} />
+          <Route path="/war-history/:historyID" element={<WarHistoryView client={client} />} />
         </Route>
 
         <Route path="/player/:playerID" element={<AttackViewPlayerPage client={client} />} />

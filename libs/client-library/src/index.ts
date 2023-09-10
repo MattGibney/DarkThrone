@@ -1,6 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 import AuthController, { UserSessionObject } from './controllers/auth';
 import PlayersController, { PlayerObject } from './controllers/players';
+import AttackController from './controllers/attack';
+import WarHistoryController, { WarHistoryObject } from './controllers/warHistory';
 
 export type APIError = {
   code: string;
@@ -24,8 +26,10 @@ export default class DarkThroneClient {
   public authenticatedUser: UserSessionObject | undefined;
   public authenticatedPlayer: PlayerObject | undefined;
 
+  public attack: AttackController;
   public auth: AuthController;
   public players: PlayersController;
+  public warHistory: WarHistoryController;
 
   constructor() {
     this.http = axios.create({
@@ -33,8 +37,10 @@ export default class DarkThroneClient {
       withCredentials: true,
     });
 
+    this.attack = new AttackController(this);
     this.auth = new AuthController(this);
     this.players = new PlayersController(this);
+    this.warHistory = new WarHistoryController(this);
   }
 
   on(event: string, listener: EventListener) {
@@ -54,4 +60,4 @@ export default class DarkThroneClient {
   }
 }
 
-export type { PlayerObject, UserSessionObject, PlayerRace }
+export type { WarHistoryObject, PlayerObject, UserSessionObject, PlayerRace }

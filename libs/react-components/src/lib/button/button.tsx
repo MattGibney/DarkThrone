@@ -2,7 +2,7 @@ import { tv } from "tailwind-variants";
 
 const styles = tv({
   slots: {
-    body: "flex w-full justify-center rounded-md px-3 py-3 text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+    body: "flex w-full justify-center rounded-md px-8 py-3 text-sm font-semibold leading-6 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
   },
   variants: {
     style: {
