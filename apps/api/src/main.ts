@@ -5,9 +5,12 @@ import pg from 'pg';
 import Knex from 'knex';
 import knexConfig from '../knexfile';
 import pino from 'pino';
+
+
 import application from './app';
 import config from '../config/environment';
 import DaoFactory from './daoFactory';
+import CronApp from './cron';
 
 const logger = pino({});
 
@@ -19,3 +22,6 @@ const app = application(logger, config, daoFactory);
 app.listen(config.port, () => {
   logger.info(`API listening on ${config.port}`);
 });
+
+const cron = CronApp(logger, config, daoFactory);
+cron.start();

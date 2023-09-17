@@ -35,6 +35,18 @@ export default class PlayerDao {
     }
   }
 
+  async fetchAll(logger: Logger): Promise<PlayerRow[]> {
+    try {
+      const players = await this.database<PlayerRow>('players')
+        .select('*');
+
+      return players;
+    } catch (error) {
+      logger.error(error, 'DAO: Failed to fetch all players');
+      return [];
+    }
+  }
+
   async fetchByID(logger: Logger, id: string): Promise<PlayerRow | null> {
     try {
       const player = await this.database<PlayerRow>('players')

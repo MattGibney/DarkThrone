@@ -69,7 +69,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
           </div>
           <div className='flex flex-col items-center'>
             <div className='text-sm font-bold text-zinc-400'>Current Turns</div>
-            <div className='text-2xl font-light'>{Intl.NumberFormat('en-GB').format(32420)}</div>
+            <div className='text-2xl font-light'>{Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer?.attackTurns || 0)}</div>
           </div>
         </div>
 

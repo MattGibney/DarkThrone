@@ -136,6 +136,11 @@ export default class PlayerModel {
     return playerRows.map((row) => new PlayerModel(ctx, row));
   }
 
+  static async fetchAll(ctx: Context): Promise<PlayerModel[]> {
+    const playerRows = await ctx.daoFactory.player.fetchAll(ctx.logger);
+    return playerRows.map((row) => new PlayerModel(ctx, row));
+  }
+
   static async fetchByID(ctx: Context, id: string): Promise<PlayerModel | null> {
     const playerRow = await ctx.daoFactory.player.fetchByID(ctx.logger, id);
     if (!playerRow) return null;
