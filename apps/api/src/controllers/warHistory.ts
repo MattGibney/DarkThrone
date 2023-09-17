@@ -19,7 +19,10 @@ export default {
       return
     }
 
-    const warHistory = await req.ctx.modelFactory.warHistory.fetchByID(req.ctx, id)
+    const warHistory = await req.ctx.modelFactory.warHistory.fetchByID(
+      req.ctx,
+      id
+    );
     if (!warHistory) {
       res.status(404).send({
         errors: [{
@@ -31,5 +34,14 @@ export default {
     }
 
     res.status(200).send(warHistory.serialise());
+  },
+
+  GET_fetchAll: async (req: Request, res: Response) => {
+    const warHistory = await req.ctx.modelFactory.warHistory.fetchAllForPlayer(
+      req.ctx,
+      req.ctx.authedPlayer
+    );
+
+    res.status(200).send(warHistory.map(warHistory => warHistory.serialise()));
   }
 }

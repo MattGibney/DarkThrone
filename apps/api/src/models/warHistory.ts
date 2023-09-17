@@ -1,6 +1,7 @@
 import { WarHistoryObject } from '@darkthrone/client-library';
 import { Context } from '../app';
 import { WarHistoryRow } from '../daos/warHistory';
+import PlayerModel from './player';
 
 export default class WarHistoryModel {
   private ctx: Context;
@@ -59,5 +60,11 @@ export default class WarHistoryModel {
     if (!warHistoryRow) return null;
 
     return new WarHistoryModel(ctx, warHistoryRow);
+  }
+
+  static async fetchAllForPlayer(ctx: Context, player: PlayerModel): Promise<WarHistoryModel[]> {
+    const warHistoryRows = await ctx.daoFactory.warHistory.fetchAllForPlayer(ctx.logger, player.id);
+
+    return warHistoryRows.map(warHistoryRow => new WarHistoryModel(ctx, warHistoryRow));
   }
 }

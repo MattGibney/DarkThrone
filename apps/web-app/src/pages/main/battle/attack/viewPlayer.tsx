@@ -111,6 +111,10 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
             ))}
           </ul>
         </nav>
+
+        <div className="bg-zinc-800 text-zinc-200 rounded-lg px-4 py-3 text-sm">
+          Statistics
+        </div>
       </div>
     </div>
   );

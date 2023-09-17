@@ -6,13 +6,13 @@ export interface PlayerObject {
   avatarURL?: string;
   race: PlayerRace;
   class: string;
+  gold: number;
 };
 
 export interface AuthedPlayerObject extends PlayerObject {
   attackStrength: number;
   defenceStrength: number;
   attackTurns: number;
-  gold: number;
 };
 
 export default class PlayersController {
@@ -38,6 +38,17 @@ export default class PlayersController {
       const response = await this.root.http.get<PlayerObject>(`/players/${id}`);
 
       return { status: 'ok', data: response.data as PlayerObject };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
+  }
+
+  async fetchAllMatchingIDs(playerIDs: string[]): Promise<APIResponse<'ok', PlayerObject[]> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.root.http.post<PlayerObject[]>('/players/matching-ids', { playerIDs });
+
+      return { status: 'ok', data: response.data as PlayerObject[] };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
       return { status: 'fail', data: axiosError.response.data.errors as APIError[] };

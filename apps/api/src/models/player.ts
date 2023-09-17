@@ -33,6 +33,7 @@ export default class PlayerModel {
       avatarURL: this.avatarURL,
       race: this.race,
       class: this.class,
+      gold: this.gold,
     } as PlayerObject;
 
     if (!isAuthed) return playerObject;
@@ -41,7 +42,6 @@ export default class PlayerModel {
       attackStrength: this.attackStrength,
       defenceStrength: this.defenceStrength,
       attackTurns: this.attackTurns,
-      gold: this.gold,
     });
 
     return authedPlayerObject;
@@ -153,6 +153,11 @@ export default class PlayerModel {
     if (!playerRow) return null;
 
     return new PlayerModel(ctx, playerRow);
+  }
+
+  static async fetchAllMatchingIDs(ctx: Context, playerIDs: string[]): Promise<PlayerModel[]> {
+    const playerRows = await ctx.daoFactory.player.fetchAllMatchingIDs(ctx.logger, playerIDs);
+    return playerRows.map((row) => new PlayerModel(ctx, row));
   }
 
   static async create(ctx: Context, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerModel> {

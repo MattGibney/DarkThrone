@@ -22,6 +22,13 @@ export default {
     res.status(200).json(player.serialise());
   },
 
+  POST_fetchAllMatchingIDs: async (req: Request, res: Response) => {
+    const { playerIDs } = req.body;
+
+    const players = await req.ctx.modelFactory.player.fetchAllMatchingIDs(req.ctx, playerIDs);
+    res.status(200).json(players.map((player) => player.serialise()));
+  },
+
   POST_validatePlayerName: async (req: Request, res: Response) => {
     const { displayName } = req.body;
 

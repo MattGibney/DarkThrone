@@ -35,9 +35,11 @@ authedRouter.get('/players', PlayersController.GET_fetchAllPlayers);
 authedRouter.post('/players', PlayersController.POST_createPlayer);
 authedRouter.post('/players/validate-name', PlayersController.POST_validatePlayerName);
 authedRouter.get('/players/:id', PlayersController.GET_fetchPlayerByID);
+authedRouter.post('/players/matching-ids', PlayersController.POST_fetchAllMatchingIDs);
 
 // War History
 authedRouter.get('/war-history/:id', WarHistoryController.GET_fetchByID);
+authedRouter.get('/war-history', WarHistoryController.GET_fetchAll);
 
 router.use(authedRouter);
 

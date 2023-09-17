@@ -45,4 +45,19 @@ export default class WarHistoryDao {
       return null;
     }
   }
+
+  async fetchAllForPlayer(logger: Logger, playerID: string): Promise<WarHistoryRow[]> {
+    try {
+      const warHistory = await this.database<WarHistoryRow>('war_history')
+        .select('*')
+        .where({ attacker_id: playerID })
+        .orWhere({ defender_id: playerID })
+        .orderBy('created_at', 'desc');
+
+      return warHistory;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
 }

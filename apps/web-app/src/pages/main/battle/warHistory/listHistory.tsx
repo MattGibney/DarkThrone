@@ -1,29 +1,47 @@
-import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
-import { useEffect, useState } from 'react';
-import { Avatar } from '@darkthrone/react-components';
-import { useNavigate } from 'react-router-dom';
-import SubNavigation from '../../../../components/layout/subNavigation';
+import DarkThroneClient, { PlayerObject, WarHistoryObject } from '@darkthrone/client-library';
 import { navigation } from '../../../../components/layout/navigation';
+import SubNavigation from '../../../../components/layout/subNavigation';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-interface AttackListPageProps {
+interface ListWarHistoryProps {
   client: DarkThroneClient;
 }
-export default function AttackListPage(props: AttackListPageProps) {
+export default function ListWarHistory(props: ListWarHistoryProps) {
   const navigate = useNavigate();
+
+  const [historyItems, setHistoryItems] = useState<WarHistoryObject[]>([]);
   const [players, setPlayers] = useState<PlayerObject[]>([]);
 
   useEffect(() => {
-    const fetchPlayers = async () => {
-      const playersFetch = await props.client.players.fetchAllPlayers();
+    const fetchData = async () => {
+      const historyFetch = await props.client.warHistory.fetchAll();
+      if (historyFetch.status === 'fail') {
+        console.error(historyFetch.data);
+        return;
+      }
+      setHistoryItems(historyFetch.data);
+
+      const attackerIDs = historyFetch.data.map((historyItem) => historyItem.attackerID);
+      const defenderIDs = historyFetch.data.map((historyItem) => historyItem.defenderID);
+      const playerIDs = [...attackerIDs, ...defenderIDs];
+      const playerIDsUnique = [...new Set(playerIDs)];
+
+      const playersFetch = await props.client.players.fetchAllMatchingIDs(playerIDsUnique);
       if (playersFetch.status === 'fail') {
         console.error(playersFetch.data);
         return;
       }
       setPlayers(playersFetch.data);
     }
-    fetchPlayers();
-  }, [props.client.players]);
+    fetchData();
+  }, [props.client.warHistory]);
 
+  function getNameForID(id: string) {
+    const player = players.find((player) => player.id === id);
+    if (!player) return 'Unknown';
+    return player.name;
+  }
 
   return (
     <main>
@@ -38,36 +56,33 @@ export default function AttackListPage(props: AttackListPageProps) {
                 <thead>
                 <tr>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500">
-                    Name
+                    Description
                   </th>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                    Gold
+                    Gold Stolen
                   </th>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                    Race
+                    Date
                   </th>
                 </tr>
                 </thead>
                 <tbody>
-                  {players.map((player, playerIdx) => (
+                  {historyItems.map((historyItem, historyItemIdx) => (
                     <tr
-                      key={playerIdx}
+                      key={historyItemIdx}
                       className='even:bg-zinc-800/50 cursor-pointer'
                       onClick={() => {
-                        navigate(`/player/${player.id}`)
+                        navigate(`/war-history/${historyItem.id}`)
                       }}
                     >
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        {player.name}
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-400">
+                        <span className='font-bold text-white'>{getNameForID(historyItem.attackerID)}</span> attacks <span className='font-bold text-white'>{getNameForID(historyItem.defenderID)}</span>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        {new Intl.NumberFormat('en-GB').format(player.gold)}
+                        {new Intl.NumberFormat('en-GB').format(historyItem.goldStolen)}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        <Avatar
-                          race={player.race}
-                          size='small'
-                        />
+                        {new Date(historyItem.createdAt).toLocaleString()}
                       </td>
                     </tr>
                   ))}
