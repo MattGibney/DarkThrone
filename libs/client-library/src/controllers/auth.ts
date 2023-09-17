@@ -1,4 +1,4 @@
-import DarkThroneClient, { APIError, APIResponse, PlayerObject } from '..';
+import DarkThroneClient, { APIError, APIResponse, AuthedPlayerObject, PlayerObject } from '..';
 
 export type UserSessionObject = {
   id: string;
@@ -16,7 +16,7 @@ export default class AuthController {
 
   async getCurrentUser(): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
     try {
-      const response = await this.root.http.get<{user: UserSessionObject, player?: PlayerObject }>('/auth/current-user');
+      const response = await this.root.http.get<{user: UserSessionObject, player?: AuthedPlayerObject }>('/auth/current-user');
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
@@ -76,7 +76,7 @@ export default class AuthController {
 
   async assumePlayer(playerId: string): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
     try {
-      const response = await this.root.http.post<{ user: UserSessionObject, player: PlayerObject }>(
+      const response = await this.root.http.post<{ user: UserSessionObject, player: AuthedPlayerObject }>(
         '/auth/assume-player',
         { playerId }
       );

@@ -62,7 +62,7 @@ export function App() {
 
       <Route element={<MainLayout client={client} />}>
         {/* Home */}
-        <Route path="/overview" element={<OverviewPage />} />
+        <Route path="/overview" element={<OverviewPage client={client} />} />
         {/* <Route path="/news" element={<div>News</div>} />
         <Route path="/levels" element={<div>Levels</div>} />
         <Route path="/profile" element={<div>Profile</div>} />

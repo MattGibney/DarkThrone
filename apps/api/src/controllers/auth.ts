@@ -201,6 +201,7 @@ export default {
     }
 
     await req.ctx.authedUser.session.assumePlayer(player);
+    req.ctx.authedPlayer = player;
 
     res.status(200).json({
       user: await req.ctx.authedUser.session.serialise(),

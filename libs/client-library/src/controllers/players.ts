@@ -1,11 +1,18 @@
 import DarkThroneClient, { APIError, APIResponse, PlayerRace } from '..';
 
-export type PlayerObject = {
+export interface PlayerObject {
   id: string;
   name: string;
   avatarURL?: string;
   race: PlayerRace;
   class: string;
+};
+
+export interface AuthedPlayerObject extends PlayerObject {
+  attackStrength: number;
+  defenceStrength: number;
+  attackTurns: number;
+  gold: number;
 };
 
 export default class PlayersController {

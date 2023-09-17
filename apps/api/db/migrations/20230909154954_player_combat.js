@@ -5,8 +5,8 @@
 exports.up = function(knex) {
   return knex.schema
     .alterTable('players', table => {
-      table.integer('combat').defaultTo(1000);
       table.integer('gold').defaultTo(10000);
+      table.integer('attack_turns').defaultTo(1000);
     })
     .createTable('war_history', table => {
       table.text('id').primary();
@@ -26,10 +26,10 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-  return knex.schems
+  return knex.schema
     .alterTable('players', table => {
-      table.dropColumn('combat');
       table.dropColumn('gold');
+      table.dropColumn('attack_turns');
     })
     .dropTable('war_history');
 };

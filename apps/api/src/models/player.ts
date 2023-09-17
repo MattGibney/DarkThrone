@@ -1,4 +1,4 @@
-import { PlayerObject, PlayerRace } from '@darkthrone/client-library';
+import { AuthedPlayerObject, PlayerObject, PlayerRace } from '@darkthrone/client-library';
 import { Context } from '../app';
 import { PlayerRow } from '../daos/player';
 import UserModel from './user';
@@ -24,14 +24,27 @@ export default class PlayerModel {
     this.populateFromRow(data);
   }
 
-  serialise(): PlayerObject {
-    return {
+  serialise(): PlayerObject | AuthedPlayerObject {
+    const isAuthed = this.ctx.authedPlayer?.id === this.id;
+
+    const playerObject = {
       id: this.id,
       name: this.displayName,
       avatarURL: this.avatarURL,
       race: this.race,
       class: this.class,
-    };
+    } as PlayerObject;
+
+    if (!isAuthed) return playerObject;
+
+    const authedPlayerObject: AuthedPlayerObject = Object.assign(playerObject, {
+      attackStrength: this.attackStrength,
+      defenceStrength: this.defenceStrength,
+      attackTurns: this.attackTurns,
+      gold: this.gold,
+    });
+
+    return authedPlayerObject;
   }
 
   get attackStrength(): number {

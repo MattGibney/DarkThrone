@@ -14,7 +14,7 @@ const styles = tv({
         container: 'border-emerald-400',
       },
       goblin: {
-        container: 'border-zinc-400',
+        container: 'border-red-400',
       },
       undead: {
         container: 'border-zinc-400',
@@ -28,7 +28,7 @@ const styles = tv({
         container: 'bg-emerald-600/25',
       },
       goblin: {
-        container: 'bg-zinc-600/25',
+        container: 'bg-red-600/25',
       },
       undead: {
         container: 'bg-zinc-600/75',

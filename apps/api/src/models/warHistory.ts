@@ -11,7 +11,7 @@ export default class WarHistoryModel {
   public attackTurnsUsed: number;
   public isAttackerVictor: boolean;
   public attackerStrength: number;
-  public defenderStrength: number;
+  public defenderStrength: number | undefined;
   public goldStolen: number;
   public createdAt: Date;
 
@@ -26,6 +26,7 @@ export default class WarHistoryModel {
       id: this.id,
       attackerID: this.attackerID,
       defenderID: this.defenderID,
+      isAttackerVictor: this.isAttackerVictor,
       attackTurnsUsed: this.attackTurnsUsed,
       attackerStrength: this.attackerStrength,
       defenderStrength: this.isAttackerVictor ? this.defenderStrength : undefined,

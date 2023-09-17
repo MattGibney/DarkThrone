@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import AuthController, { UserSessionObject } from './controllers/auth';
-import PlayersController, { PlayerObject } from './controllers/players';
+import PlayersController, { AuthedPlayerObject, PlayerObject } from './controllers/players';
 import AttackController from './controllers/attack';
 import WarHistoryController, { WarHistoryObject } from './controllers/warHistory';
 
@@ -24,7 +24,7 @@ export default class DarkThroneClient {
   public events: { [event: string]: EventListener[] } = {};
 
   public authenticatedUser: UserSessionObject | undefined;
-  public authenticatedPlayer: PlayerObject | undefined;
+  public authenticatedPlayer: AuthedPlayerObject | undefined;
 
   public attack: AttackController;
   public auth: AuthController;
@@ -60,4 +60,4 @@ export default class DarkThroneClient {
   }
 }
 
-export type { WarHistoryObject, PlayerObject, UserSessionObject, PlayerRace }
+export type { WarHistoryObject, AuthedPlayerObject, PlayerObject, UserSessionObject, PlayerRace }
