@@ -56,6 +56,14 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
   if (player === null) return (<div>Player not found</div>);
 
+  const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
+
+  if (isViewingSelf) {
+    return (
+      <div>You cannot attack yourself</div>
+    );
+  }
+
   return (
     <div className='my-12 w-full max-w-2xl mx-auto rounded-xl'>
       <div className='bg-zinc-800/50 p-8'>

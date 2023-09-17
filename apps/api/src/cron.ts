@@ -16,7 +16,7 @@ export default (logger: Logger, config: Config, daoFactory: DaoFactory) => {
     modelFactory: new ModelFactory(),
   } as Context;
 
-  cron.schedule('0/30 * * * *', () => addAttackTurns(ctx));
+  cron.schedule('0,30 * * * *', () => addAttackTurns(ctx));
 
   return cron;
 };

@@ -110,74 +110,12 @@ export default function Navigation() {
                   }
                   to={item.href}
                 >
-                  {({ isActive }) => (
-                    <>
-                      {item.name}
-                    </>
-                  )}
+                  {item.name}
                 </NavLink>
               </li>
             ))}
           </ul>
         </li>
-
-        {/* <li>
-          <ul role="list" className="-mx-2 space-y-1">
-            {navigation.map((item) => (
-              <li key={item.name}>
-                <Disclosure as="div">
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button
-                        className={classNames(
-                          open ? 'bg-zinc-700/50' : '',
-                          'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-zinc-400'
-                        )}
-                      >
-                        <ChevronRightIcon
-                          className={classNames(
-                            open ? 'rotate-90 text-zinc-500' : 'text-zinc-400',
-                            'h-5 w-5 shrink-0'
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </Disclosure.Button>
-                      <Disclosure.Panel as="ul" className="mt-1 px-2">
-                        {item.children.map((subItem) => (
-                          <li key={subItem.name}>
-                            <NavLink
-                              to={subItem.to}
-                              className={({ isActive }) =>
-                                classNames(
-                                  isActive
-                                    ? 'bg-zinc-700' : '',
-                                  'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-zinc-400',
-                                )
-                              }
-                            >
-                              {subItem.name}
-                            </NavLink>
-                            {/* <Disclosure.Button
-                              as="a"
-                              href={subItem.href}
-                              className={classNames(
-                                subItem.current ? 'bg-zinc-50' : 'hover:bg-zinc-50',
-                                'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-zinc-400'
-                              )}
-                            >
-                              {subItem.name}
-                            </Disclosure.Button> */}
-                          {/* </li>
-                        ))}
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              </li>
-            ))}
-          </ul>
-        </li> */}
       </ul>
     </nav>
   );
