@@ -171,6 +171,7 @@ export default class PlayerModel {
 
   static async create(ctx: Context, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerModel> {
     const playerRow = await ctx.daoFactory.player.create(ctx.logger, ctx.authedUser.model.id, displayName, selectedRace, selectedClass);
+    await ctx.daoFactory.playerUnits.create(ctx.logger, playerRow.id, 'citizen', 100);
     return new PlayerModel(ctx, playerRow);
   }
 }

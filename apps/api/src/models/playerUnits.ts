@@ -40,10 +40,13 @@ export default class PlayerUnitsModel {
     this.populateFromRow(data);
   }
 
-  static async fetchUnitsForPlayer(ctx: Context, playerID: string): Promise<PlayerUnitsModel[]> {
-    const rows = await ctx.daoFactory.playerUnits.fetchUnitsForPlayer(playerID);
-
-    return rows.map((row) => new PlayerUnitsModel(ctx, row));
+  save(): Promise<void> {
+    return this.ctx.daoFactory.playerUnits.update({
+      id: this.id,
+      player_id: this.playerID,
+      unit_type: this.unitType as string,
+      quantity: this.quantity,
+    });
   }
 
   calculateAttackStrength(): number {
@@ -52,6 +55,25 @@ export default class PlayerUnitsModel {
 
   calculateDefenceStrength(): number {
     return UnitTypes[this.unitType].defence * this.quantity;
+  }
+
+  static async fetchUnitsForPlayer(ctx: Context, playerID: string): Promise<PlayerUnitsModel[]> {
+    const rows = await ctx.daoFactory.playerUnits.fetchUnitsForPlayer(playerID);
+
+    return rows.map((row) => new PlayerUnitsModel(ctx, row));
+  }
+
+  static async fetchUnitsForPlayerByType(ctx: Context, playerID: string, type: string): Promise<PlayerUnitsModel | null> {
+    const row = await ctx.daoFactory.playerUnits.fetchUnitsForPlayerByType(playerID, type);
+    if (!row) return null;
+
+    return new PlayerUnitsModel(ctx, row);
+  }
+
+  static async create(ctx: Context, playerID: string, type: string, quantity: number): Promise<PlayerUnitsModel> {
+    const row = await ctx.daoFactory.playerUnits.create(ctx.logger, playerID, type, quantity);
+
+    return new PlayerUnitsModel(ctx, row);
   }
 
   private populateFromRow(data: PlayerUnitsRow) {
