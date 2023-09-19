@@ -15,8 +15,8 @@ export default function OverviewPage(props: OverviewPageProps) {
   const stats = [
     { name: 'Attack Turns', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.attackTurns) },
     { name: 'Gold', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.gold) },
-    // { name: 'Outstanding invoices', value: '$245,988.00' },
-    // { name: 'Expenses', value: '$30,156.00' },
+    { name: 'Attack Strength', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.attackStrength) },
+    { name: 'Defence Strength', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.defenceStrength) },
   ]
 
   return (
@@ -26,7 +26,7 @@ export default function OverviewPage(props: OverviewPageProps) {
       />
 
       {/* lg:grid-cols-4 */}
-      <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 rounded-xl overflow-hidden">
+      <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 md:grid-cols-4 rounded-xl overflow-hidden">
         {stats.map((stat) => (
           <div
             key={stat.name}

@@ -24,7 +24,7 @@ export default class PlayerModel {
     this.populateFromRow(data);
   }
 
-  serialise(): PlayerObject | AuthedPlayerObject {
+  async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
     const isAuthed = this.ctx.authedPlayer?.id === this.id;
 
     const playerObject = {
@@ -38,26 +38,35 @@ export default class PlayerModel {
 
     if (!isAuthed) return playerObject;
 
+    const attackStrength = await this.calculateAttackStrength();
+    const defenceStrength = await this.calculateDefenceStrength();
+
     const authedPlayerObject: AuthedPlayerObject = Object.assign(playerObject, {
-      attackStrength: this.attackStrength,
-      defenceStrength: this.defenceStrength,
+      attackStrength: attackStrength,
+      defenceStrength: defenceStrength,
       attackTurns: this.attackTurns,
     });
 
     return authedPlayerObject;
   }
 
-  get attackStrength(): number {
-    return 0;
+  async calculateAttackStrength(): Promise<number> {
+    const playerUnits = await this.ctx.modelFactory.playerUnits.fetchUnitsForPlayer(this.ctx, this.id);
+    return playerUnits.reduce((acc, unit) => acc + unit.calculateAttackStrength(), 0);
   }
 
-  get defenceStrength(): number {
-    return 0;
+  async calculateDefenceStrength(): Promise<number> {
+    const playerUnits = await this.ctx.modelFactory.playerUnits.fetchUnitsForPlayer(this.ctx, this.id);
+    return playerUnits.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
   }
 
   async attackPlayer(targetPlayer: PlayerModel, attackTurns: number): Promise<WarHistoryModel> {
     const warHistoryID = `WRH-${ulid()}`;
-    const isVictor = this.attackStrength > targetPlayer.defenceStrength;
+
+    const playerAttackStrength = await this.calculateAttackStrength();
+    const targetPlayerDefenceStrength = await targetPlayer.calculateDefenceStrength();
+
+    const isVictor = playerAttackStrength > targetPlayerDefenceStrength;
 
     if (!isVictor) {
       // Create War History
@@ -69,8 +78,8 @@ export default class PlayerModel {
           defender_id: targetPlayer.id,
           attack_turns_used: attackTurns,
           is_attacker_victor: false,
-          attacker_strength: this.attackStrength,
-          defender_strength: targetPlayer.defenceStrength,
+          attacker_strength: playerAttackStrength,
+          defender_strength: targetPlayerDefenceStrength,
           gold_stolen: 0,
           created_at: new Date(),
         }
@@ -101,8 +110,8 @@ export default class PlayerModel {
         defender_id: targetPlayer.id,
         attack_turns_used: attackTurns,
         is_attacker_victor: true,
-        attacker_strength: this.attackStrength,
-        defender_strength: targetPlayer.defenceStrength,
+        attacker_strength: playerAttackStrength,
+        defender_strength: targetPlayerDefenceStrength,
         gold_stolen: winnings,
         created_at: new Date(),
       }
