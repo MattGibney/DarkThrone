@@ -5,6 +5,8 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@swc/helpers": "~0.5.0",
@@ -15,6 +17,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "~4.18.1",
+    "font-awesome-pro": "file:vendor/font-awesome-pro-5.15.4.tgz",
     "jsonwebtoken": "^9.0.1",
     "knex": "^2.5.1",
     "node-cron": "^3.0.2",

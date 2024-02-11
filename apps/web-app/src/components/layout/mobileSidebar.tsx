@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { Fragment } from 'react';
 import Navigation from './navigation';
+import { Logo } from '@darkthrone/react-components';
 
 interface MobileSidebarProps {
   sidebarOpen: boolean;
@@ -53,11 +54,7 @@ export default function MobileSidebar(props: MobileSidebarProps) {
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-zinc-800 px-6 pb-4 ring-1 ring-white/10">
                 <div className="flex h-16 shrink-0 items-center">
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=yellow&shade=500"
-                    alt="Your Company"
-                  />
+                  <Logo />
                 </div>
 
                 <Navigation />
