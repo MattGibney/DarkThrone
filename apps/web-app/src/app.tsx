@@ -27,7 +27,7 @@ export const globalNavigation = [
     shouldRender: true,
     children: [
       { name: 'Overview', to: '/overview', shouldRender: true, component: OverviewPage },
-      { name: 'News', to: '/news', shouldRender: true, component: NewsPage },
+      // { name: 'News', to: '/news', shouldRender: true, component: NewsPage },
       // { name: 'Levels', to: '/levels' },
       // { name: 'Settings', to: '/settings' },
       // { name: 'FAQ', to: '/faq' },
@@ -46,7 +46,7 @@ export const globalNavigation = [
       // { name: 'Mercenaries', to: '/mercenaries' },
       // { name: 'Upgrades', to: '/upgrades' },
       { name: 'War History', to: '/war-history', shouldRender: true, component: ListWarHistory },
-      { name: 'View War History', to: '/war-history/:id', shouldRender: false, component: WarHistoryView },
+      { name: 'View War History', to: '/war-history/:historyID', shouldRender: false, component: WarHistoryView },
     ]
   },
   {

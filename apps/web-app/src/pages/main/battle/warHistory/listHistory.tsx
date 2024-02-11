@@ -1,5 +1,4 @@
 import DarkThroneClient, { PlayerObject, WarHistoryObject } from '@darkthrone/client-library';
-import { globalNavigation } from '../../../../app';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +34,7 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
       setPlayers(playersFetch.data);
     }
     fetchData();
-  }, [props.client.warHistory]);
+  }, [props.client.players, props.client.warHistory]);
 
   function getNameForID(id: string) {
     const player = players.find((player) => player.id === id);

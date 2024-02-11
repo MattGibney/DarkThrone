@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Avatar } from '@darkthrone/react-components';
 import { useNavigate } from 'react-router-dom';
 import SubNavigation from '../../../../components/layout/subNavigation';
-import { globalNavigation } from '../../../../app';
 
 interface AttackListPageProps {
   client: DarkThroneClient;

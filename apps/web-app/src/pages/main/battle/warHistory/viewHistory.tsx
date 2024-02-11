@@ -1,6 +1,5 @@
 import DarkThroneClient, { PlayerObject, WarHistoryObject } from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
-import { globalNavigation } from '../../../../app';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@darkthrone/react-components';

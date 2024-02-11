@@ -1,14 +1,10 @@
-import { useLocation } from 'react-router-dom';
 import SubNavigation from '../../../components/layout/subNavigation';
-import { globalNavigation } from '../../../app';
 import DarkThroneClient from '@darkthrone/client-library';
 
 interface OverviewPageProps {
   client: DarkThroneClient;
 }
 export default function OverviewPage(props: OverviewPageProps) {
-  const location = useLocation();
-
   if (!props.client.authenticatedPlayer) return null;
 
   const stats = [

@@ -18,7 +18,7 @@ const styles = tv({
       },
       fill: {
         image: 'h-full w-full',
-        racePlaceholder: 'h-full w-full p-12',
+        racePlaceholder: 'h-full w-full p-12 aspect-square',
       }
     },
     variant: {

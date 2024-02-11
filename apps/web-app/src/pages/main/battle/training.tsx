@@ -1,6 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../components/layout/subNavigation';
-import { globalNavigation } from '../../../app';
 
 interface TrainingScreenProps {
   client: DarkThroneClient;

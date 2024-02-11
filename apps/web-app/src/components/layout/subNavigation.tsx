@@ -7,6 +7,8 @@ export default function SubNavigation() {
   const [tabs, setTabs] = useState<{ name: string; to: string; shouldRender: boolean; }[]>([]);
 
   useEffect(() => {
+    console.log(location.pathname);
+
     const activeParent = globalNavigation.find((nav) => nav.children?.some((child) => child.to === location.pathname));
     setTabs(activeParent?.children?.filter((tab) => tab.shouldRender !== false) || []);
   }, [location]);
