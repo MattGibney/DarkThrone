@@ -1,6 +1,6 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../components/layout/subNavigation';
-import { navigation } from '../../../components/layout/navigation';
+import { globalNavigation } from '../../../app';
 
 interface TrainingScreenProps {
   client: DarkThroneClient;
@@ -8,9 +8,7 @@ interface TrainingScreenProps {
 export default function TrainingScreen(props: TrainingScreenProps) {
   return (
     <main>
-      <SubNavigation
-        tabs={navigation[1].children || []}
-      />
+      <SubNavigation />
 
       {/* <div className="table border-collapse table-auto w-full">
         <div className="table-header-group">

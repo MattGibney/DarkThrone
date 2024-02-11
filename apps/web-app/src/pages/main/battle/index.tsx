@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 // import SubNavigation from '../../../components/layout/subNavigation';
-import { navigation } from '../../../components/layout/navigation';
+// import { navigation } from '../../../components/layout/navigation';
 
 export default function BattlePage() {
   const location = useLocation();

@@ -1,8 +1,7 @@
 import { useLocation } from 'react-router-dom';
-import SubNavigation from '../../components/layout/subNavigation';
-import { navigation } from '../../components/layout/navigation';
+import SubNavigation from '../../../components/layout/subNavigation';
+import { globalNavigation } from '../../../app';
 import DarkThroneClient from '@darkthrone/client-library';
-import { classNames } from '../../utils';
 
 interface OverviewPageProps {
   client: DarkThroneClient;
@@ -21,9 +20,7 @@ export default function OverviewPage(props: OverviewPageProps) {
 
   return (
     <div>
-      <SubNavigation
-        tabs={navigation.find((nav) => nav.children?.some((child) => child.to === location.pathname))?.children || []}
-      />
+      <SubNavigation />
 
       {/* lg:grid-cols-4 */}
       <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 md:grid-cols-4 rounded-xl overflow-hidden">

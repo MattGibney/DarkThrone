@@ -1,9 +1,16 @@
-import { NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { globalNavigation } from '../../app';
 
-interface SubNavigationProps {
-  tabs: { name: string; to: string; }[]
-}
-export default function SubNavigation(props: SubNavigationProps) {
+export default function SubNavigation() {
+  const location = useLocation();
+  const [tabs, setTabs] = useState<{ name: string; to: string; shouldRender: boolean; }[]>([]);
+
+  useEffect(() => {
+    const activeParent = globalNavigation.find((nav) => nav.children?.some((child) => child.to === location.pathname));
+    setTabs(activeParent?.children?.filter((tab) => tab.shouldRender !== false) || []);
+  }, [location]);
+
   return (
     <div className="bg-zinc-900 mb-6">
       <div className="mx-auto">
@@ -17,7 +24,7 @@ export default function SubNavigation(props: SubNavigationProps) {
             className="block w-full rounded-md border-none bg-white/5 py-2 pl-3 pr-10 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-yellow-500 sm:text-sm"
             // defaultValue={props.tabs.find((tab) => tab.current).name}
           >
-            {props.tabs.map((tab) => (
+            {tabs.map((tab) => (
               <option key={tab.name}>{tab.name}</option>
             ))}
           </select>
@@ -27,7 +34,7 @@ export default function SubNavigation(props: SubNavigationProps) {
             <ul
               className="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-zinc-400"
             >
-              {props.tabs.map((tab) => (
+              {tabs.map((tab) => (
                 <li key={tab.name}>
                   <NavLink
                     to={tab.to}

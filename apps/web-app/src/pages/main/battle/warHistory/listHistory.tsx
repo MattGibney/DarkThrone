@@ -1,5 +1,5 @@
 import DarkThroneClient, { PlayerObject, WarHistoryObject } from '@darkthrone/client-library';
-import { navigation } from '../../../../components/layout/navigation';
+import { globalNavigation } from '../../../../app';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -45,9 +45,7 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
 
   return (
     <main>
-      <SubNavigation
-        tabs={navigation[1].children || []}
-      />
+      <SubNavigation />
       <div className="sm:px-6 lg:px-8">
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
