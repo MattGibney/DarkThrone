@@ -16,6 +16,7 @@ import AttackViewPlayerPage from './pages/main/battle/attack/viewPlayer';
 import AttackPlayerPage from './pages/main/battle/attack/attackPlayer';
 import WarHistoryView from './pages/main/battle/warHistory/viewHistory';
 import ListWarHistory from './pages/main/battle/warHistory/listHistory';
+import TrainingScreen from './pages/main/battle/training';
 
 const client = new DarkThroneClient();
 
@@ -75,8 +76,8 @@ export function App() {
         <Route element={<BattlePage />}>
           <Route path="/attack" element={<AttackListPage client={client} />} />
           <Route path="/attack/:playerID" element={<AttackPlayerPage client={client} />} />
-          {/* <Route path="/training" element={<div>Training</div>} />
-          <Route path="/mercenaries" element={<div>Mercenaries</div>} />
+          <Route path="/training" element={<TrainingScreen client={client} />} />
+          {/* <Route path="/mercenaries" element={<div>Mercenaries</div>} />
           <Route path="/upgrades" element={<div>Upgrades</div>} /> */}
           <Route path="/war-history" element={<ListWarHistory client={client} />} />
           <Route path="/war-history/:historyID" element={<WarHistoryView client={client} />} />

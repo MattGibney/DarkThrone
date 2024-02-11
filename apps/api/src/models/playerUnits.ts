@@ -5,6 +5,7 @@ type UnitType = {
   [k: string]: {
     attack: number;
     defence: number;
+    cost?: number;
   };
 };
 
@@ -14,12 +15,14 @@ const UnitTypes: UnitType = {
     defence: 0,
   },
   soldier: {
-    attack: 10,
+    attack: 3,
     defence: 0,
+    cost: 1500,
   },
   guard: {
     attack: 0,
-    defence: 10,
+    defence: 3,
+    cost: 1500,
   },
 }
 
