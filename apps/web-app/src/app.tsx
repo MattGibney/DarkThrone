@@ -78,6 +78,9 @@ export function App() {
     const fetchCurrentUser = async () => {
       const userFetch = await client.auth.getCurrentUser();
 
+      client.on('userLogin', (user) => {
+        setCurrentUser(user);
+      });
       client.on('userLogout', () => {
         setCurrentUser(null);
       });
@@ -97,17 +100,25 @@ export function App() {
 
   if (currentUser === undefined) return null;
 
+  if (currentUser === null) {
+    return (
+      <Routes>
+        <Route element={<AuthLayout client={client} />}>
+          {/* <Route path="/" element={<RedirectTo path />} /> */}
+          <Route path="/login" element={<LoginPage client={client} />} />
+          <Route path="/register" element={<RegisterPage client={client} />} />
+          <Route path="/forgot-password" element={<div>Forgot Password</div>} />
+          {/* <Route path="/reset-password" element={<div>Reset Password</div>} />
+          <Route path="/verify-email" element={<div>Verify Email</div>} /> */}
+        </Route>
+
+        <Route path="*" element={<RedirectTo path={'/login'} />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
-      <Route element={<AuthLayout client={client} />}>
-        <Route path="/" element={<RedirectToLogin />} />
-        <Route path="/login" element={<LoginPage client={client} />} />
-        <Route path="/register" element={<RegisterPage client={client} />} />
-        <Route path="/forgot-password" element={<div>Forgot Password</div>} />
-        {/* <Route path="/reset-password" element={<div>Reset Password</div>} />
-        <Route path="/verify-email" element={<div>Verify Email</div>} /> */}
-      </Route>
-
       <Route element={<PlayerSelectLayout client={client} />}>
         <Route path="/player-select" element={<PlayerSelectListPage client={client} />} />
         <Route path="/player-select/create" element={<CreatePlayerPage client={client} />} />
@@ -167,16 +178,18 @@ export function App() {
 
 
       </Route>
+
+      <Route path="*" element={<RedirectTo path={'/overview'} />} />
     </Routes>
   );
 }
 
-function RedirectToLogin() {
+function RedirectTo(props: { path: string }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate('/login');
-  }, [navigate]);
+    navigate(props.path);
+  }, [navigate, props.path]);
 
   return null;
 }

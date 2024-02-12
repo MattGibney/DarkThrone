@@ -35,6 +35,7 @@ export default class AuthController {
         { email, password, rememberMe }
       );
 
+      this.root.emit('userLogin', response.data);
       this.root.authenticatedUser = response.data;
 
       return { status: 'ok', data: response.data as UserSessionObject };
