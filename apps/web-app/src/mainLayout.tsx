@@ -15,9 +15,6 @@ export default function MainLayout(props: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
-    if (!props.client.authenticatedUser) {
-      navigate('/login');
-    }
     if (props.client.authenticatedUser && !props.client.authenticatedUser.playerID) {
       navigate('/player-select');
     }
