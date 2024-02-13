@@ -27,7 +27,15 @@ export default function HeaderBar(props: HeaderBarProps) {
       {/* Separator */}
       <div className="h-6 w-px bg-zinc-900/10 lg:hidden" aria-hidden="true" />
 
-      <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+      <div className="flex flex-1 items-center gap-x-6 self-stretch lg:gap-x-6">
+        <div className='flex gap-x-4 text-sm text-zinc-300'>
+          <div>
+            <span className='text-white font-bold'>{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.gold || 0)}</span> Gold
+          </div>
+          <div>
+            <span className='text-white font-bold'>{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.attackTurns || 0)}</span> Attack Turns
+          </div>
+        </div>
         <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
           {/* <button type="button" className="-m-2.5 p-2.5 text-zinc-300 hover:text-zinc-400">
             <span className="sr-only">View notifications</span>
