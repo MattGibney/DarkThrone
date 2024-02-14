@@ -46,7 +46,7 @@ export function InputField(props: InputFieldProps) {
           {props.displayName}
         </label>
       ) : null}
-      <div className="mt-2">
+      <div className={props.displayName ? "mt-2" : ""}>
         <input
           id={props.id}
           name={props.name}
