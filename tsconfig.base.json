@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@darkthrone/client-library": ["libs/client-library/src/index.ts"],
+      "@darkthrone/game-data": ["libs/game-data/src/index.ts"],
       "@darkthrone/react-components": ["libs/react-components/src/index.ts"]
     }
   },

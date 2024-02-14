@@ -1,0 +1,16 @@
+{
+  "name": "game-data",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/game-data/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/game-data/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
