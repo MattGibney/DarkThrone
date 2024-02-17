@@ -29,7 +29,8 @@
       "configurations": {
         "development": {
           "buildTarget": "website:build:development",
-          "hmr": true
+          "hmr": true,
+          "port": 4201
         },
         "production": {
           "buildTarget": "website:build:production",

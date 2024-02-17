@@ -11,7 +11,12 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        display: ['Marcellus SC', 'serif'],
+        // sans: ['Roboto Condensed', 'sans-serif']
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

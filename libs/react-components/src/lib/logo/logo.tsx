@@ -1,12 +1,9 @@
 import { tv } from "tailwind-variants";
-import { faSwords } from "font-awesome-pro/js-packages/@fortawesome/pro-light-svg-icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const styles = tv({
   slots: {
     body: 'flex items-center gap-x-3',
-    icon: 'h-8 w-8 text-yellow-600',
-    text: 'text-2xl font-bold text-white',
+    text: 'text-3xl font-bold text-white font-display',
   },
   variants: {
     style: {
@@ -22,12 +19,11 @@ export interface LogoProps {
 }
 
 export function Logo(props: LogoProps) {
-  const { body, icon, text } = styles({ style: props.variant || 'primary' });
+  const { body, text } = styles({ style: props.variant || 'primary' });
 
   return (
     <div className={body()}>
-      <FontAwesomeIcon icon={faSwords} className={icon()} />
-      <p className={text()}>Dark Throne</p>
+      <h1 className={text()}>DarkThrone</h1>
     </div>
   );
 }
