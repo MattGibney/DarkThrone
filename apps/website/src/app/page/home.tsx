@@ -1,4 +1,6 @@
 import { DevicePhoneMobileIcon, TrophyIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
+import { environment } from '../../environments/environment';
 
 export default function HomePage() {
   return (
@@ -12,7 +14,8 @@ export default function HomePage() {
       >
         <video className='absolute w-full h-full object-cover' autoPlay muted loop src='/background.mp4' />
         <div className='absolute w-full h-full bg-black/50' />
-        <button
+        <Link
+          to={environment.webAppUrl}
           className='
             relative
             bg-zinc-800
@@ -28,7 +31,7 @@ export default function HomePage() {
           '
         >
           Play
-        </button>
+        </Link>
       </div>
 
       <div className="
