@@ -36,6 +36,10 @@ export default class PlayerUnitsModel {
     return UnitTypes[this.unitType].defence * this.quantity;
   }
 
+  calculateGoldPerTurn(): number {
+    return UnitTypes[this.unitType].goldPerTurn * this.quantity;
+  }
+
   static async fetchUnitsForPlayer(ctx: Context, playerID: string): Promise<PlayerUnitsModel[]> {
     const rows = await ctx.daoFactory.playerUnits.fetchUnitsForPlayer(playerID);
 

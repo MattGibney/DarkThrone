@@ -67,6 +67,10 @@ export default class PlayerModel {
     return this.units.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
   }
 
+  async calculateGoldPerTurn(): Promise<number> {
+    return this.units.reduce((acc, unit) => acc + unit.calculateGoldPerTurn(), 0);
+  }
+
   async attackPlayer(targetPlayer: PlayerModel, attackTurns: number): Promise<WarHistoryModel> {
     const warHistoryID = `WRH-${ulid()}`;
 

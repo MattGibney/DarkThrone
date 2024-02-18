@@ -6,6 +6,7 @@ import ModelFactory from './modelFactory';
 import addAttackTurns from './scripts/addAttackTurns';
 import { Context } from './app';
 import addCitizens from './scripts/addCitizens';
+import addGold from './scripts/addGold';
 
 export default (logger: Logger, config: Config, daoFactory: DaoFactory) => {
   const cron = cronManager();
@@ -19,6 +20,7 @@ export default (logger: Logger, config: Config, daoFactory: DaoFactory) => {
 
   // At the 0th and 30th minute of every hour
   cron.schedule('0,30 * * * *', () => addAttackTurns(ctx));
+  cron.schedule('0,30 * * * *', () => addGold(ctx));
   // At 00:00 every day
   cron.schedule('0 0 * * *', () => addCitizens(ctx));
 
