@@ -1,8 +1,9 @@
-import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
+import DarkThroneClient from '@darkthrone/client-library';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@darkthrone/react-components';
 import { useNavigate } from 'react-router-dom';
 import SubNavigation from '../../../../components/layout/subNavigation';
+import { PlayerObject } from '@darkthrone/interfaces';
 
 interface AttackListPageProps {
   client: DarkThroneClient;

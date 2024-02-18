@@ -1,4 +1,5 @@
-import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
+import DarkThroneClient from '@darkthrone/client-library';
+import { PlayerObject } from '@darkthrone/interfaces';
 import { Alert, Avatar, Button, InputCheckbox, InputField } from '@darkthrone/react-components';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';

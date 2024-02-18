@@ -1,4 +1,5 @@
-import DarkThroneClient, { PlayerObject } from '@darkthrone/client-library';
+import DarkThroneClient from '@darkthrone/client-library';
+import { PlayerObject } from '@darkthrone/interfaces';
 import { Alert, Avatar, Button } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

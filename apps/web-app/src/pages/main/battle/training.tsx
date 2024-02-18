@@ -2,42 +2,34 @@ import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../components/layout/subNavigation';
 import { Button, InputField } from '@darkthrone/react-components';
 import { useState } from 'react';
-
-const unitTypes = [
-  {
-    id: 'worker',
-    name: 'Worker',
-    type: 'support',
-    attributes: [
-      '+ 50 gold per turn',
-    ],
-    cost: 1000,
-  },
-  {
-    id: 'soldier_1',
-    name: 'Soldier',
-    type: 'offense',
-    attributes: [
-      '+ 3 attack',
-    ],
-    cost: 1500,
-  },
-  {
-    id: 'guard_1',
-    name: 'Guard',
-    type: 'defense',
-    attributes: [
-      '+ 3 defense',
-    ],
-    cost: 1500,
-  }
-];
+import { UnitTypes } from '@darkthrone/game-data';
 
 interface TrainingScreenProps {
   client: DarkThroneClient;
 }
 export default function TrainingScreen(props: TrainingScreenProps) {
   const [inpuValues, setInputValuess] = useState<{ [ k: string]: number }>({});
+
+  const renderUnitTypes = ['worker', 'soldier_1', 'guard_1'].map((unitID) => {
+    const typeData = UnitTypes[unitID];
+    const attributes: string[] = [];
+    if (typeData.attack) {
+      attributes.push(`+ ${typeData.attack} attack`);
+    }
+    if (typeData.defence) {
+      attributes.push(`+ ${typeData.defence} defense`);
+    }
+    if (typeData.goldPerTurn) {
+      attributes.push(`+ ${typeData.goldPerTurn} gold per turn`);
+    }
+    return {
+      id: unitID,
+      name: typeData.name,
+      type: typeData.type,
+      attributes: attributes,
+      cost: typeData.cost,
+    };
+  });
 
   function setInputValue(inputID: string, value: string) {
     let sanitisedValue = Number(value);
@@ -62,7 +54,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
 
       <div className='border border-zinc-700/50 bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm'>
         <div>Gold <span className="text-white font-bold text-md">{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.gold || 0)}</span></div>
-        <div>Citizens <span className="text-white font-bold text-md">TODO</span></div>
+        <div>Citizens <span className="text-white font-bold text-md">{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.units.find((unit) => unit.unitType === 'citizen')?.quantity || 0)}</span></div>
       </div>
       <form onSubmit={handleTrain}>
         <div className="sm:px-6 lg:px-8">
@@ -90,7 +82,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                   </tr>
                   </thead>
                   <tbody>
-                    {unitTypes.map((unit, unitIdx) => (
+                    {renderUnitTypes.map((unit, unitIdx) => (
                       <tr
                         key={unitIdx}
                         className='even:bg-zinc-800 odd:bg-zinc-800/50'
@@ -102,7 +94,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                           {unit.attributes.join(', ')}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                          {new Intl.NumberFormat().format(0)}
+                          {new Intl.NumberFormat().format(props.client.authenticatedPlayer?.units.find((playerUnit) => playerUnit.unitType === unit.id)?.quantity || 0)}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                           {new Intl.NumberFormat().format(unit.cost)}

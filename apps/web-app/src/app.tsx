@@ -4,7 +4,7 @@ import AuthLayout from './authLayout';
 import MainLayout from './mainLayout';
 import LoginPage from './pages/auth/login';
 
-import DarkThroneClient, { UserSessionObject } from '@darkthrone/client-library';
+import DarkThroneClient from '@darkthrone/client-library';
 import RegisterPage from './pages/auth/register';
 import PlayerSelectListPage from './pages/playerSelect/list';
 import PlayerSelectLayout from './playerSelectLayout';
@@ -18,6 +18,7 @@ import WarHistoryView from './pages/main/battle/warHistory/viewHistory';
 import ListWarHistory from './pages/main/battle/warHistory/listHistory';
 import TrainingScreen from './pages/main/battle/training';
 import NewsPage from './pages/main/home/news';
+import { UserSessionObject } from '@darkthrone/interfaces';
 
 export const globalNavigation = [
   {

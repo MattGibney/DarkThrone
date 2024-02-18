@@ -8,6 +8,8 @@ export type UnitType = {
   goldPerTurn: number;
   canTrain: boolean;
   canUntrain: boolean;
+  name: string;
+  type: 'support' | 'offense' | 'defense';
 };
 
 export type PlayerRace = 'human' | 'elf' | 'goblin' | 'undead';
