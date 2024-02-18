@@ -1,9 +1,10 @@
-import DarkThroneClient, { PlayerRace } from '@darkthrone/client-library';
+import DarkThroneClient from '@darkthrone/client-library';
 import { Button, InputField } from '@darkthrone/react-components';
 import { useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
 import { useNavigate } from 'react-router-dom';
+import { PlayerRace } from '@darkthrone/interfaces';
 
 interface CreatePlayerPageProps {
   client: DarkThroneClient;

@@ -1,4 +1,5 @@
-import { AuthedPlayerObject, PlayerObject, PlayerRace } from '@darkthrone/client-library';
+import { AuthedPlayerObject, PlayerObject } from '@darkthrone/client-library';
+import { PlayerRace } from '@darkthrone/interfaces';
 import { Context } from '../app';
 import { PlayerRow } from '../daos/player';
 import UserModel from './user';

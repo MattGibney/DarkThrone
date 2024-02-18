@@ -1,19 +1,5 @@
-import DarkThroneClient, { APIError, APIResponse, PlayerRace } from '..';
-
-export interface PlayerObject {
-  id: string;
-  name: string;
-  avatarURL?: string;
-  race: PlayerRace;
-  class: string;
-  gold: number;
-};
-
-export interface AuthedPlayerObject extends PlayerObject {
-  attackStrength: number;
-  defenceStrength: number;
-  attackTurns: number;
-};
+import DarkThroneClient, { APIError, APIResponse } from '..';
+import type { PlayerObject } from '@darkthrone/interfaces';
 
 export default class PlayersController {
   private root: DarkThroneClient;
@@ -80,63 +66,4 @@ export default class PlayersController {
       return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
     }
   }
-
-  // async getCurrentUser(): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
-  //   try {
-  //     const response = await this.root.http.get<UserSessionObject>('/auth/current-user');
-
-  //     this.root.authenticatedUser = response.data;
-
-  //     return { status: 'ok', data: response.data as UserSessionObject };
-  //   } catch (err: unknown) {
-  //     const axiosError = err as { response: { data: { errors: APIError[] } } };
-  //     return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
-  //   }
-  // }
-
-  // async login(email: string, password: string, rememberMe: boolean): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
-  //   try {
-  //     const response = await this.root.http.post<UserSessionObject>(
-  //       '/auth/login',
-  //       { email, password, rememberMe }
-  //     );
-
-  //     this.root.authenticatedUser = response.data;
-
-  //     return { status: 'ok', data: response.data as UserSessionObject };
-  //   } catch (err: unknown) {
-  //     const axiosError = err as { response: { data: { errors: APIError[] } } };
-  //     return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
-  //   }
-  // }
-
-  // async register(email: string, password: string): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
-  //   try {
-  //     const response = await this.root.http.post<UserSessionObject>(
-  //       '/auth/register',
-  //       { email, password }
-  //     );
-
-  //     this.root.authenticatedUser = response.data;
-
-  //     return { status: 'ok', data: response.data as UserSessionObject };
-  //   } catch (err: unknown) {
-  //     const axiosError = err as { response: { data: { errors: APIError[] } } };
-  //     return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
-  //   }
-  // }
-
-  // async logout(): Promise<APIResponse<'ok', null> | APIResponse<'fail', APIError[]>> {
-  //   try {
-  //     await this.root.http.post('/auth/logout');
-
-  //     this.root.authenticatedUser = undefined;
-  //     this.root.emit('userLogout');
-
-  //     return { status: 'ok', data: null };
-  //   } catch (err: unknown) {
-  //     const axiosError = err as { response: { data: { errors: APIError[] } } };
-  //     return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
-  //   }
-  // }
 }

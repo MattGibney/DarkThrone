@@ -1,4 +1,4 @@
-import { PlayerRace } from '@darkthrone/client-library';
+import { PlayerRace } from '@darkthrone/interfaces';
 import { tv } from "tailwind-variants";
 
 const styles = tv({

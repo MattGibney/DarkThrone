@@ -1,4 +1,4 @@
-import { PlayerRace } from '@darkthrone/client-library';
+import { PlayerRace } from '@darkthrone/interfaces';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';

@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
 import AuthController, { UserSessionObject } from './controllers/auth';
-import PlayersController, { AuthedPlayerObject, PlayerObject } from './controllers/players';
+import PlayersController from './controllers/players';
 import AttackController from './controllers/attack';
 import WarHistoryController, { WarHistoryObject } from './controllers/warHistory';
+import type { AuthedPlayerObject, PlayerObject } from '@darkthrone/interfaces';
 
 export type APIError = {
   code: string;
@@ -14,8 +15,6 @@ export type APIResponse<S, T> = {
   status: S;
   data: T;
 }
-
-type PlayerRace = 'human' | 'elf' | 'goblin' | 'undead';
 
 type EventListener = (...args: any[]) => void;
 
@@ -60,4 +59,4 @@ export default class DarkThroneClient {
   }
 }
 
-export type { WarHistoryObject, AuthedPlayerObject, PlayerObject, UserSessionObject, PlayerRace }
+export type { WarHistoryObject, AuthedPlayerObject, PlayerObject, UserSessionObject }
