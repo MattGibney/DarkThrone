@@ -39,13 +39,21 @@ export default function TrainingScreen(props: TrainingScreenProps) {
     setInputValuess({ ...inpuValues, [inputID]: sanitisedValue });
   }
 
-  function handleTrain(e: React.FormEvent<HTMLFormElement>) {
+  async function handleTrain(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log('submit', inpuValues);
+    const desiredUnits = Object.keys(inpuValues).map((unitID) => ({
+      unitType: unitID,
+      quantity: inpuValues[unitID],
+    }));
+    await props.client.training.trainUnits(desiredUnits);
   }
 
-  function handleUnTrain() {
-    console.log('untrain');
+  async function handleUnTrain() {
+    const unwantedUnits = Object.keys(inpuValues).map((unitID) => ({
+      unitType: unitID,
+      quantity: inpuValues[unitID],
+    }));
+    await props.client.training.unTrainUnits(unwantedUnits);
   }
 
   return (

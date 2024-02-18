@@ -1,3 +1,4 @@
+import { UnitTypes } from '@darkthrone/game-data';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
@@ -5,7 +6,7 @@ import { ulid } from 'ulid';
 export type PlayerUnitsRow = {
   id: string;
   player_id: string;
-  unit_type: string;
+  unit_type: keyof typeof UnitTypes;
   quantity: number;
 };
 
@@ -22,14 +23,14 @@ export default class PlayerUnitsDao {
       .where('player_id', playerID);
   }
 
-  async fetchUnitsForPlayerByType(playerID: string, type: string): Promise<PlayerUnitsRow | null> {
+  async fetchUnitsForPlayerByType(playerID: string, type: keyof typeof UnitTypes): Promise<PlayerUnitsRow | null> {
     return await this.database<PlayerUnitsRow>('player_units')
       .first('*')
       .where('player_id', playerID)
       .andWhere('unit_type', type);
   }
 
-  async create(logger: Logger, playerID: string, type: string, quantity: number): Promise<PlayerUnitsRow> {
+  async create(logger: Logger, playerID: string, type: keyof typeof UnitTypes, quantity: number): Promise<PlayerUnitsRow> {
     try {
       const id = `UNT-${ulid()}`;
       const [row] = await this.database<PlayerUnitsRow>('player_units')

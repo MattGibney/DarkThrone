@@ -75,10 +75,17 @@ const client = new DarkThroneClient();
 export function App() {
   const [currentUser, setCurrentUser] = useState<UserSessionObject | null | undefined>(undefined);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const userFetch = await client.auth.getCurrentUser();
+  async function fetchCurrentUser() {
+    const userFetch = await client.auth.getCurrentUser();
+    if (userFetch.status === 'fail') {
+      setCurrentUser(null);
+      return;
+    }
+    setCurrentUser(userFetch.data);
+  }
 
+  useEffect(() => {
+    const initialise = async () => {
       client.on('userLogin', (user) => {
         setCurrentUser(user);
       });
@@ -88,15 +95,12 @@ export function App() {
       client.on('playerChange', (UserSessionObject) => {
         setCurrentUser(UserSessionObject);
       });
+      client.on('playerUpdate', fetchCurrentUser);
 
-      if (userFetch.status === 'fail') {
-        setCurrentUser(null);
-        return;
-      }
-      setCurrentUser(userFetch.data);
+      fetchCurrentUser();
     }
 
-    fetchCurrentUser();
+    initialise();
   }, []);
 
   if (currentUser === undefined) return null;

@@ -1,0 +1,75 @@
+import pino, { P } from 'pino';
+import DaoFactory from '../../../src/daoFactory';
+import app from '../../../src/app';
+import { Config } from '../../../config/environment';
+import { UserRow } from '../../../src/daos/user';
+import { PlayerRow } from '../../../src/daos/player';
+import { UserSessionRow } from '../../../src/daos/userSession';
+
+interface makeMockApplicationProps {
+  config?: Partial<Config>;
+  logger?: Partial<pino.Logger>;
+  daoFactory?: Partial<DaoFactory>;
+  authenticatedUser?: {
+    user: Partial<UserRow>;
+    session: Partial<UserSessionRow>;
+  };
+  authenticatedPlayer?: Partial<PlayerRow>;
+}
+/**
+ * Create a mock application for testing with the ability to override the
+ * config, logger and daoFactory.
+ *
+ * This function returns the application, logger and daoFactory so that they
+ * can be used in tests.
+ */
+export default function makeApplication(
+  options: makeMockApplicationProps = {},
+) {
+  const config = {
+    jwtSecret: 'secret',
+    webApp: {
+      origin: 'http://localhost:3000',
+    },
+    ...options.config,
+  } as Config;
+  const logger = {
+    child: () => logger,
+
+    info: jest.fn(),
+    debug: jest.fn(),
+    error: jest.fn(),
+    fatal: jest.fn(),
+    ...options.logger,
+  } as unknown as pino.Logger;
+  let daoFactory = options.daoFactory as unknown as DaoFactory;
+  if (options.authenticatedUser) {
+    daoFactory = Object.assign(
+      {
+        userSession: {
+          fetchValidByToken: jest.fn().mockResolvedValue(options.authenticatedUser.session),
+        },
+        user: {
+          fetchByID: jest.fn().mockResolvedValue(options.authenticatedUser.user),
+        },
+      },
+      daoFactory,
+    ) as unknown as DaoFactory;
+  }
+  if (options.authenticatedPlayer) {
+    daoFactory = Object.assign(
+      {
+        player: {
+          fetchByID: jest.fn().mockResolvedValue(options.authenticatedPlayer),
+        },
+      },
+      daoFactory,
+    ) as unknown as DaoFactory;
+  }
+
+  return {
+    application: app(logger, config, daoFactory),
+    logger,
+    daoFactory,
+  };
+}

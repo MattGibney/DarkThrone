@@ -2,6 +2,7 @@ import Router from 'express';
 import AttackController from './controllers/attack';
 import AuthController from './controllers/auth';
 import PlayersController from './controllers/player';
+import TrainingController from './controllers/training';
 import WarHistoryController from './controllers/warHistory';
 
 const router = Router();
@@ -40,6 +41,9 @@ authedRouter.post('/players/matching-ids', PlayersController.POST_fetchAllMatchi
 // War History
 authedRouter.get('/war-history/:id', WarHistoryController.GET_fetchByID);
 authedRouter.get('/war-history', WarHistoryController.GET_fetchAll);
+
+authedRouter.post('/training/train', TrainingController.POST_trainUnits);
+authedRouter.post('/training/untrain', TrainingController.POST_unTrainUnits);
 
 router.use(authedRouter);
 

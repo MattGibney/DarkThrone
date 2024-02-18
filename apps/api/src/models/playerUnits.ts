@@ -42,14 +42,14 @@ export default class PlayerUnitsModel {
     return rows.map((row) => new PlayerUnitsModel(ctx, row));
   }
 
-  static async fetchUnitsForPlayerByType(ctx: Context, playerID: string, type: string): Promise<PlayerUnitsModel | null> {
+  static async fetchUnitsForPlayerByType(ctx: Context, playerID: string, type: keyof typeof UnitTypes): Promise<PlayerUnitsModel | null> {
     const row = await ctx.daoFactory.playerUnits.fetchUnitsForPlayerByType(playerID, type);
     if (!row) return null;
 
     return new PlayerUnitsModel(ctx, row);
   }
 
-  static async create(ctx: Context, playerID: string, type: string, quantity: number): Promise<PlayerUnitsModel> {
+  static async create(ctx: Context, playerID: string, type: keyof typeof UnitTypes, quantity: number): Promise<PlayerUnitsModel> {
     const row = await ctx.daoFactory.playerUnits.create(ctx.logger, playerID, type, quantity);
 
     return new PlayerUnitsModel(ctx, row);

@@ -4,6 +4,7 @@ import PlayersController from './controllers/players';
 import AttackController from './controllers/attack';
 import WarHistoryController, { WarHistoryObject } from './controllers/warHistory';
 import type { AuthedPlayerObject, UserSessionObject } from '@darkthrone/interfaces';
+import TrainingController from './controllers/training';
 
 export type APIError = {
   code: string;
@@ -28,6 +29,7 @@ export default class DarkThroneClient {
   public attack: AttackController;
   public auth: AuthController;
   public players: PlayersController;
+  public training: TrainingController;
   public warHistory: WarHistoryController;
 
   constructor() {
@@ -39,6 +41,7 @@ export default class DarkThroneClient {
     this.attack = new AttackController(this);
     this.auth = new AuthController(this);
     this.players = new PlayersController(this);
+    this.training = new TrainingController(this);
     this.warHistory = new WarHistoryController(this);
   }
 
