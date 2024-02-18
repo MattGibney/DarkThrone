@@ -4,8 +4,7 @@ import { Context } from '../app';
 import { UserSessionRow } from '../daos/userSession';
 import UserModel from './user';
 import PlayerModel from './player';
-
-import { UserSessionObject } from '@darkthrone/client-library';
+import { UserSessionObject } from '@darkthrone/interfaces';
 
 export default class UserSessionModel {
   private ctx: Context;

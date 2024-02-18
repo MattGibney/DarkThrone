@@ -1,9 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
-import AuthController, { UserSessionObject } from './controllers/auth';
+import AuthController from './controllers/auth';
 import PlayersController from './controllers/players';
 import AttackController from './controllers/attack';
 import WarHistoryController, { WarHistoryObject } from './controllers/warHistory';
-import type { AuthedPlayerObject, PlayerObject } from '@darkthrone/interfaces';
+import type { AuthedPlayerObject, UserSessionObject } from '@darkthrone/interfaces';
 
 export type APIError = {
   code: string;
@@ -59,4 +59,4 @@ export default class DarkThroneClient {
   }
 }
 
-export type { WarHistoryObject, AuthedPlayerObject, PlayerObject, UserSessionObject }
+export type { WarHistoryObject }

@@ -23,3 +23,10 @@ export interface AuthedPlayerObject extends PlayerObject {
   defenceStrength: number;
   attackTurns: number;
 };
+
+export type UserSessionObject = {
+  id: string;
+  email: string;
+  playerID?: string;
+  hasConfirmedEmail: boolean;
+};

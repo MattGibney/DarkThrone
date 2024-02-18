@@ -1,11 +1,5 @@
-import DarkThroneClient, { APIError, APIResponse, AuthedPlayerObject, PlayerObject } from '..';
-
-export type UserSessionObject = {
-  id: string;
-  email: string;
-  playerID?: string;
-  hasConfirmedEmail: boolean;
-};
+import { AuthedPlayerObject, PlayerObject, UserSessionObject } from '@darkthrone/interfaces';
+import DarkThroneClient, { APIError, APIResponse } from '..';
 
 export default class AuthController {
   private root: DarkThroneClient;
