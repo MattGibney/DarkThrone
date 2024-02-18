@@ -1,3 +1,6 @@
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { UnitTypes } from '@darkthrone/game-data';
+
 export type UnitType = {
   attack: number;
   defence: number;
@@ -22,6 +25,12 @@ export interface AuthedPlayerObject extends PlayerObject {
   attackStrength: number;
   defenceStrength: number;
   attackTurns: number;
+  units: PlayerUnits[];
+};
+
+export interface PlayerUnits {
+  unitType: keyof typeof UnitTypes;
+  quantity: number;
 };
 
 export type UserSessionObject = {

@@ -5,6 +5,7 @@ import { PlayerRow } from '../daos/player';
 import UserModel from './user';
 import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
+import PlayerUnitsModel from './playerUnits';
 
 export default class PlayerModel {
   private ctx: Context;
@@ -19,10 +20,13 @@ export default class PlayerModel {
   public attackTurns: number;
   public gold: number;
 
-  constructor(ctx: Context, data: PlayerRow) {
+  public units: PlayerUnitsModel[];
+
+  constructor(ctx: Context, data: PlayerRow, units: PlayerUnitsModel[]) {
     this.ctx = ctx;
 
     this.populateFromRow(data);
+    this.units = units;
   }
 
   async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
@@ -46,19 +50,21 @@ export default class PlayerModel {
       attackStrength: attackStrength,
       defenceStrength: defenceStrength,
       attackTurns: this.attackTurns,
+      units: this.units.map((unit) => ({
+        unitType: unit.unitType,
+        quantity: unit.quantity,
+      })),
     });
 
     return authedPlayerObject;
   }
 
   async calculateAttackStrength(): Promise<number> {
-    const playerUnits = await this.ctx.modelFactory.playerUnits.fetchUnitsForPlayer(this.ctx, this.id);
-    return playerUnits.reduce((acc, unit) => acc + unit.calculateAttackStrength(), 0);
+    return this.units.reduce((acc, unit) => acc + unit.calculateAttackStrength(), 0);
   }
 
   async calculateDefenceStrength(): Promise<number> {
-    const playerUnits = await this.ctx.modelFactory.playerUnits.fetchUnitsForPlayer(this.ctx, this.id);
-    return playerUnits.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
+    return this.units.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
   }
 
   async attackPlayer(targetPlayer: PlayerModel, attackTurns: number): Promise<WarHistoryModel> {
@@ -143,36 +149,50 @@ export default class PlayerModel {
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {
     const playerRows = await ctx.daoFactory.player.fetchAllForUser(ctx.logger, user.id);
-    return playerRows.map((row) => new PlayerModel(ctx, row));
+    return Promise.all(playerRows.map(async (row) => {
+      const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
+      return new PlayerModel(ctx, row, playerUnits);
+    }));
   }
 
   static async fetchAll(ctx: Context): Promise<PlayerModel[]> {
     const playerRows = await ctx.daoFactory.player.fetchAll(ctx.logger);
-    return playerRows.map((row) => new PlayerModel(ctx, row));
+    return Promise.all(playerRows.map(async (row) => {
+      const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
+      return new PlayerModel(ctx, row, playerUnits);
+    }));
   }
 
   static async fetchByID(ctx: Context, id: string): Promise<PlayerModel | null> {
     const playerRow = await ctx.daoFactory.player.fetchByID(ctx.logger, id);
     if (!playerRow) return null;
 
-    return new PlayerModel(ctx, playerRow);
+    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
+    return new PlayerModel(ctx, playerRow, playerUnits);
   }
 
   static async fetchByDisplayName(ctx: Context, displayName: string): Promise<PlayerModel | null> {
     const playerRow = await ctx.daoFactory.player.fetchByDisplayName(ctx.logger, displayName);
     if (!playerRow) return null;
 
-    return new PlayerModel(ctx, playerRow);
+    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
+    return new PlayerModel(ctx, playerRow, playerUnits);
   }
 
   static async fetchAllMatchingIDs(ctx: Context, playerIDs: string[]): Promise<PlayerModel[]> {
     const playerRows = await ctx.daoFactory.player.fetchAllMatchingIDs(ctx.logger, playerIDs);
-    return playerRows.map((row) => new PlayerModel(ctx, row));
+
+    return Promise.all(playerRows.map(async (row) => {
+      const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
+      return new PlayerModel(ctx, row, playerUnits);
+    }));
   }
 
   static async create(ctx: Context, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerModel> {
     const playerRow = await ctx.daoFactory.player.create(ctx.logger, ctx.authedUser.model.id, displayName, selectedRace, selectedClass);
     await ctx.daoFactory.playerUnits.create(ctx.logger, playerRow.id, 'citizen', 100);
-    return new PlayerModel(ctx, playerRow);
+
+    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
+    return new PlayerModel(ctx, playerRow, playerUnits);
   }
 }
