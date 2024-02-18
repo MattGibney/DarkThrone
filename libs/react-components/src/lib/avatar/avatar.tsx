@@ -1,5 +1,5 @@
 import { tv } from 'tailwind-variants';
-import { PlayerRace } from '@darkthrone/client-library';
+import { PlayerRace } from '@darkthrone/interfaces';
 
 const styles = tv({
   slots: {
