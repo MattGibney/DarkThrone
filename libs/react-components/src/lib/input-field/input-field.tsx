@@ -57,6 +57,7 @@ export function InputField(props: InputFieldProps) {
           value={props.value}
           onChange={(e) => props.setValue(e.target.value)}
           onBlur={props.onBlur}
+          onWheel={(e) => e.currentTarget.blur()}
         />
       </div>
       {props.validationMessage ? (

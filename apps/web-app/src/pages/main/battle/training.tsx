@@ -46,6 +46,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
       quantity: inpuValues[unitID],
     }));
     await props.client.training.trainUnits(desiredUnits);
+    setInputValuess({});
   }
 
   async function handleUnTrain() {
@@ -54,6 +55,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
       quantity: inpuValues[unitID],
     }));
     await props.client.training.unTrainUnits(unwantedUnits);
+    setInputValuess({});
   }
 
   return (

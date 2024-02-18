@@ -25,6 +25,8 @@ export default class TrainingController {
     try {
       const response = await this.root.http.post<PlayerUnits[]>('/training/untrain', desiredUnits);
 
+      this.root.emit('playerUpdate');
+
       return { status: 'ok', data: response.data };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
