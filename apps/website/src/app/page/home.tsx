@@ -51,13 +51,13 @@ export default function HomePage() {
         >
 
           <h1 className='font-display text-4xl mb-6'>About the project</h1>
-          <p>
-            Project Dark Curse is an open sourse re-creation of the classic MMO
-            Dark Throne originally created by Lazarus Software. That game is
-            gone now but this project aims to bring back the spirit of that
-            game. The primary goal of that project is to create a game that
-            emulates the same experience as the original. Afterwards, the goal
-            is to continually add additional features with the backing of the
+          <p className='text-zinc-200'>
+            DarkThrone Reborn is a  re-creation of the classic MMO
+            Dark Throne, originally created by Lazarus Software. That game is
+            gone now but this project aims to bring back it back in spirit. The
+            primary goal of the project is to create a game that emulates the
+            same experience as the original. Afterwards, the goal is to
+            continually add additional features with the backing of the
             community to push this game into the future.
           </p>
         </div>
@@ -79,12 +79,12 @@ export default function HomePage() {
           <div className='w-1/3 px-6'>
             <TrophyIcon className='w-20 mx-auto mb-6' />
             <h2 className='text-2xl font-display text-center mb-6'>The game you loved</h2>
-            <p className='text-center text-zinc-400'>This project aims to maintain the same experience and gameplay as the classic MMORPG Dark Throne</p>
+            <p className='text-center text-zinc-400'>We want to bring back the same experience as the classic MMORPG.</p>
           </div>
           <div className='w-1/3 px-6'>
             <DevicePhoneMobileIcon className='w-20 mx-auto mb-6' />
             <h2 className='text-2xl font-display text-center mb-6'>Built for Mobile</h2>
-            <p className='text-center text-zinc-400'>First class mobile support for play on the go. With option sin the future to expand into native mobile applications.</p>
+            <p className='text-center text-zinc-400'>First class mobile support for play on the go. With options in the future to expand into native mobile applications.</p>
           </div>
           <div className='w-1/3 px-6'>
             <UserGroupIcon className='w-20 mx-auto mb-6' />

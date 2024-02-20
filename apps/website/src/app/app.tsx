@@ -1,20 +1,33 @@
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Layout from '../components/layout/layout';
 import HomePage from './page/home';
+import { environment } from '../environments/environment';
 
-export const navigation = [
-  { name: 'Home', href: '/', element: HomePage },
-  // { name: 'Features', href: '/features' },
-  // { name: 'News', href: '/news' },
-  // { name: 'Social', href: '/social' },
-  // { name: 'Media', href: '/media' },
-];
+export type NavigationItem = {
+  name: string;
+  href: string;
+  element: React.FC;
+};
+
+export const screens: { [k: string]: NavigationItem } = {
+  home: { name: 'Home', href: '/', element: HomePage },
+  news: { name: 'News', href: '/news', element: HomePage },
+  roadmap: { name: 'Roadmap', href: '/roadmap', element: HomePage },
+  contact: { name: 'Contact', href: '/contact', element: HomePage },
+  privacy: { name: 'Privacy', href: '/privacy', element: HomePage },
+  terms: { name: 'Terms & Conditions', href: '/terms', element: HomePage },
+  github: { name: 'Github', href: environment.gitHubURL, element: HomePage },
+};
+
+export const navigation = ['home', 'news', 'roadmap'].map((item) => {
+  return screens[item];
+});
 
 export function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        {navigation.map((item) => (
+        {Object.values(screens).map((item) => (
           <Route key={item.name} path={item.href} element={<item.element />} />
         ))}
       </Route>

@@ -1,7 +1,8 @@
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { NavLink } from 'react-router-dom'
-import { navigation } from '../../app/app'
+import { Link, NavLink } from 'react-router-dom'
+import { navigation, screens } from '../../app/app'
+import { Logo } from '@darkthrone/react-components';
 
 export default function NavigationBar() {
   return (
@@ -28,7 +29,12 @@ export default function NavigationBar() {
             justify-between
             items-center
           '>
-            <h1 className='text-3xl'>DarkThrone</h1>
+            <Link
+              to={screens['home'].href}
+              className='select-none'
+            >
+              <Logo />
+            </Link>
             <div>
               <Disclosure.Button
                 className='sm:hidden inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white'

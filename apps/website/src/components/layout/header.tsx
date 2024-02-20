@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { environment } from '../../environments/environment';
+import { screens } from '../../app/app';
+import NavigationLink from '../navigationLink';
 
 export default function Header() {
   return (
@@ -22,20 +22,17 @@ export default function Header() {
       >
         <ul className='flex gap-4'>
           {/* <li>English</li> */}
-          <li>Privacy</li>
-          <li>Contact</li>
+          <li>
+            <NavigationLink linkData={screens['privacy']} />
+          </li>
+          <li>
+            <NavigationLink linkData={screens['contact']} />
+          </li>
         </ul>
         <ul className='flex gap-4'>
           <li>Discord</li>
           <li>
-            <Link
-              to={environment.gitHubURL}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='hover:text-amber-500'
-            >
-              Github
-            </Link>
+            <NavigationLink linkData={screens['github']} />
           </li>
         </ul>
       </div>
