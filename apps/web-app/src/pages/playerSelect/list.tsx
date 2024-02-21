@@ -1,6 +1,6 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { PlayerObject } from '@darkthrone/interfaces';
-import { Alert, Avatar, Button, InputCheckbox, InputField } from '@darkthrone/react-components';
+import { Alert, Avatar, Button, InputCheckbox, InputField, Logo } from '@darkthrone/react-components';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -42,12 +42,10 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
   return (
     <main>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=yellow&shade=600"
-          alt="Your Company"
-        />
-        <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-200">
+        <div className='flex justify-center'>
+          <Logo variant='large' />
+        </div>
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
           Player Select
         </h2>
       </div>

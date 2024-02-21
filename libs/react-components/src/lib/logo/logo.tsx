@@ -11,12 +11,16 @@ const styles = tv({
       short: {
         subText: 'hidden',
       },
+      large: {
+        text: 'text-5xl',
+        subText: 'text-2xl',
+      }
     },
   },
 });
 
 export interface LogoProps {
-  variant?: 'short';
+  variant?: 'short' | 'large';
 }
 
 export function Logo(props: LogoProps) {
