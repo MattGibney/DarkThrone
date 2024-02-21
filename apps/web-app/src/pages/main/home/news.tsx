@@ -6,8 +6,18 @@ import Markdown from 'react-markdown'
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-const newsPosts = [
-  `# News 1`,
+type NewsPost = {
+  title: string;
+  content: string;
+  date: Date;
+};
+
+const newsPosts: NewsPost[] = [
+  {
+    title: 'This is a heading',
+    content: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Deleniti accusamus, excepturi itaque corporis repudiandae est repellat mollitia unde sequi culpa impedit similique quae officia accusantium cum minima deserunt ipsum saepe.`,
+    date: new Date(),
+  },
 ];
 
 interface NewsPageProps {
@@ -18,7 +28,7 @@ export default function NewsPage(props: NewsPageProps) {
 
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
-  const [news, setNews] = useState<string[]>([]);
+  const [news, setNews] = useState<NewsPost[]>([]);
 
   const handlePageChange = useCallback((page: number) => {
     setSearchParams({ page: page.toString() });
@@ -44,9 +54,17 @@ export default function NewsPage(props: NewsPageProps) {
 
       <div className='mb-10 flex flex-col gap-y-6'>
         {news.map((n, i) => (
-          <Markdown className='border border-zinc-700 p-6 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert' key={i}>
-            {n}
-          </Markdown>
+          <div className='border border-zinc-700' key={i}>
+            <div className='bg-zinc-800 font-display px-4 py-2 flex justify-between items-center'>
+              <div>{n.title}</div>
+              <div className='text-sm font-sans text-zinc-300'>{new Intl.DateTimeFormat(undefined, {
+                dateStyle: 'medium',
+              }).format(n.date)}</div>
+            </div>
+            <Markdown className='p-4 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert'>
+              {n.content}
+            </Markdown>
+          </div>
         ))}
       </div>
 
