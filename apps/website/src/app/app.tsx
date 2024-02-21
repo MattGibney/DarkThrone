@@ -1,7 +1,8 @@
-import { Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import Layout from '../components/layout/layout';
 import HomePage from './page/home';
 import { environment } from '../environments/environment';
+import PrivacyPage from './page/legal/privacy';
 
 export type NavigationItem = {
   name: string;
@@ -14,9 +15,12 @@ export const screens: { [k: string]: NavigationItem } = {
   news: { name: 'News', href: '/news', element: HomePage },
   roadmap: { name: 'Roadmap', href: '/roadmap', element: HomePage },
   contact: { name: 'Contact', href: '/contact', element: HomePage },
-  privacy: { name: 'Privacy', href: '/privacy', element: HomePage },
+  privacy: { name: 'Privacy', href: '/privacy', element: PrivacyPage },
   terms: { name: 'Terms & Conditions', href: '/terms', element: HomePage },
-  github: { name: 'Github', href: environment.gitHubURL, element: HomePage },
+
+  // External Links
+  github: { name: 'Github', href: environment.gitHubURL, element: Outlet },
+  status: { name: 'Game Status', href: 'https://status.darkthronereborn.com/', element: Outlet },
 };
 
 export const navigation = ['home', 'news', 'roadmap'].map((item) => {

@@ -8,19 +8,19 @@ const styles = tv({
   },
   variants: {
     style: {
-      primary: {
-        body: '',
+      short: {
+        subText: 'hidden',
       },
     },
   },
 });
 
 export interface LogoProps {
-  variant?: 'primary';
+  variant?: 'short';
 }
 
 export function Logo(props: LogoProps) {
-  const { body, text, subText } = styles({ style: props.variant || 'primary' });
+  const { body, text, subText } = styles({ style: props.variant });
 
   return (
     <div className={body()}>

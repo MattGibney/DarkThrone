@@ -1,3 +1,4 @@
+import { Logo } from '@darkthrone/react-components';
 import { screens } from '../../app/app';
 import NavigationLink from '../navigationLink';
 
@@ -5,28 +6,40 @@ export default function Footer() {
   return (
     <div className='bg-zinc-900 py-12 px-4 xl:px-0'>
 
-      <div className='max-w-screen-lg mx-auto flex justify-around flex-wrap gap-0 text-zinc-400'>
-        <div className='w-full mb-6 sm:mb-0 sm:w-1/4'>
-          <p className='text-3xl font-display text-zinc-500'>DarkThrone</p>
+      <div className='max-w-screen-lg mx-auto justify-around flex-wrap gap-0 text-zinc-400 grid grid-cols-4'>
+        <div className='w-full mb-6 sm:mb-0'>
+          <Logo variant='short' />
+          {/* <p className='text-3xl font-display text-zinc-500'>DarkThrone</p> */}
           {/* <p className='text-zinc-400 text-sm'>Reborn</p> */}
+          <div className='mt-4'>
+            <iframe
+              src="https://status.darkthronereborn.com/badge?theme=dark"
+              width="100%"
+              height="30"
+              title='DarkThrone Reborn Status'
+            ></iframe>
+          </div>
         </div>
 
-        <div className='w-full mb-6 sm:mb-0 sm:w-1/4'>
+        <div className='w-full mb-6 sm:mb-0'>
           <h5 className='text-2xl font-display mb-2'>Support</h5>
           <ul>
-            <FooterLink label='Game Status' />
+            <li>
+              <NavigationLink linkData={screens['status']} />
+            </li>
             <FooterLink label='Discord' />
             <FooterLink label='Bug Report' />
-            <FooterLink label='API Docs' />
           </ul>
         </div>
 
-        <div className='w-full mb-6 sm:mb-0 sm:w-1/4'>
+        <div className='w-full mb-6 sm:mb-0'>
           <h5 className='text-2xl font-display mb-2'>Project</h5>
           <ul>
             <FooterLink label='About' />
             <FooterLink label='Contributors' />
-            <FooterLink label='Github' />
+            <li>
+              <NavigationLink linkData={screens['github']} />
+            </li>
             <li>
               <NavigationLink linkData={screens['news']} />
             </li>
@@ -34,7 +47,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className='w-full sm:w-1/4'>
+        <div className='w-full'>
           <h5 className='text-2xl font-display mb-2'>Legal</h5>
           <ul>
             <li>
