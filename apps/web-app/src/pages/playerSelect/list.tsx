@@ -1,9 +1,9 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { PlayerObject } from '@darkthrone/interfaces';
-import { Alert, Avatar, Button, InputCheckbox, InputField, Logo } from '@darkthrone/react-components';
+import { Avatar, Button, Logo } from '@darkthrone/react-components';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface PlayerSelectListPageProps {
   client: DarkThroneClient;
