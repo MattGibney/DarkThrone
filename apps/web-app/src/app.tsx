@@ -28,7 +28,7 @@ export const globalNavigation = [
     shouldRender: true,
     children: [
       { name: 'Overview', to: '/overview', shouldRender: true, component: OverviewPage },
-      // { name: 'News', to: '/news', shouldRender: true, component: NewsPage },
+      { name: 'News', to: '/news', shouldRender: true, component: NewsPage },
       // { name: 'Levels', to: '/levels' },
       // { name: 'Settings', to: '/settings' },
       // { name: 'FAQ', to: '/faq' },
