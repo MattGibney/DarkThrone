@@ -16,7 +16,9 @@ export default function SubNavigation() {
       })
     );
 
-    setTabs(activeParent?.children?.filter((tab) => tab.shouldRender !== false) || []);
+    if (!activeParent?.children) return;
+
+    setTabs(activeParent.children.filter((tab) => tab.shouldRender !== false) || []);
   }, [location]);
 
   return (

@@ -20,7 +20,22 @@ import TrainingScreen from './pages/main/battle/training';
 import NewsPage from './pages/main/home/news';
 import { UserSessionObject } from '@darkthrone/interfaces';
 
-export const globalNavigation = [
+export type SubNavigationItem = {
+  name: string;
+  to: string;
+  shouldRender: boolean;
+  component: React.ComponentType<GenericOutletProps>;
+};
+
+export type NavigationItem = {
+  name: string;
+  href: string;
+  shouldRender: boolean;
+  component: React.ComponentType<GenericOutletProps>;
+  children?: SubNavigationItem[];
+};
+
+export const globalNavigation: NavigationItem[] = [
   {
     name: 'Home',
     href: '/overview',
