@@ -48,14 +48,9 @@ export const globalNavigation = [
       // { name: 'Upgrades', to: '/upgrades' },
       { name: 'War History', to: '/war-history', shouldRender: true, component: ListWarHistory },
       { name: 'View War History', to: '/war-history/:historyID', shouldRender: false, component: WarHistoryView },
+      { name: 'View Player', to: '/player/:playerID', shouldRender: false, component: AttackViewPlayerPage }
     ]
   },
-  {
-    name: 'View Player',
-    href: '/player/:playerID',
-    shouldRender: false,
-    component: AttackViewPlayerPage,
-  }
   // {
   //   name: 'Structures',
   //   href: '/bank'
