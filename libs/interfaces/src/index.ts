@@ -13,13 +13,14 @@ export type UnitType = {
 };
 
 export type PlayerRace = 'human' | 'elf' | 'goblin' | 'undead';
+export type PlayerClass = 'fighter' | 'cleric' | 'thief' | 'assassin';
 
 export interface PlayerObject {
   id: string;
   name: string;
   avatarURL?: string;
   race: PlayerRace;
-  class: string;
+  class: PlayerClass;
   gold: number;
 };
 

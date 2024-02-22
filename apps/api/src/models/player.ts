@@ -60,15 +60,38 @@ export default class PlayerModel {
   }
 
   async calculateAttackStrength(): Promise<number> {
-    return this.units.reduce((acc, unit) => acc + unit.calculateAttackStrength(), 0);
+    let offense = this.units.reduce((acc, unit) => acc + unit.calculateAttackStrength(), 0);
+    if (this.race === 'human' || this.race === 'undead') {
+      // Humans and Undead get a 5% bonus to attack strength
+      offense *= 1.05;
+    }
+    if (this.class === 'fighter') {
+      // Fighters get a 5% bonus to attack strength
+      offense *= 1.05;
+    }
+    return offense;
   }
 
   async calculateDefenceStrength(): Promise<number> {
-    return this.units.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
+    const defence = this.units.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
+    if (this.race === 'elf' || this.race === 'goblin') {
+      // Elves and Goblins get a 5% bonus to defence strength
+      return defence * 1.05;
+    }
+    if (this.class === 'cleric') {
+      // Clerics get a 5% bonus to defence strength
+      return defence * 1.05;
+    }
+    return defence;
   }
 
   async calculateGoldPerTurn(): Promise<number> {
-    return this.units.reduce((acc, unit) => acc + unit.calculateGoldPerTurn(), 0);
+    let goldPerTurn = this.units.reduce((acc, unit) => acc + unit.calculateGoldPerTurn(), 0);
+    if (this.class === 'thief') {
+      // Thieves get a 5% bonus to gold per turn
+      goldPerTurn *= 1.05;
+    }
+    return goldPerTurn;
   }
 
   async attackPlayer(targetPlayer: PlayerModel, attackTurns: number): Promise<WarHistoryModel> {
