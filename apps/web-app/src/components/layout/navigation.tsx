@@ -8,7 +8,14 @@ export default function Navigation() {
   const [activeParentHref, setActiveParentHref] = useState<string | undefined>();
 
   useEffect(() => {
-    const activeParent = globalNavigation.find((nav) => nav.children?.some((child) => child.to === location.pathname));
+    const activeParent = globalNavigation.find(
+      (nav) => nav.children?.some((child) => {
+        const regexPattern = child.to.replace(/:[^/]+/g, '[^/]+');
+        const regex = new RegExp(`^${regexPattern}$`);
+
+        return regex.test(location.pathname);
+      })
+    );
     setActiveParentHref(activeParent?.href);
   }, [location]);
 
