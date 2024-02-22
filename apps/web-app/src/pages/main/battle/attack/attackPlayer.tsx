@@ -66,7 +66,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
   }
 
   return (
-    <div className='my-12 w-full max-w-2xl mx-auto rounded-xl'>
+    <div className='my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden'>
       <div className='bg-zinc-800/50 p-8'>
         <div className='flex items-center'>
           <div className='grow flex items-center gap-x-4'>

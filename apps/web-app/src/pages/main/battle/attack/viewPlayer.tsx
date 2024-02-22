@@ -45,18 +45,25 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
       navigate: `/attack/${player.id}`,
       isDisabled: isViewingSelf,
     },
-    {
-      name: 'Message Player',
-      isDisabled: isViewingSelf,
-    },
-    {
-      name: 'Report',
-      isDisabled: isViewingSelf,
-    },
+    // {
+    //   name: 'Message Player',
+    //   isDisabled: isViewingSelf,
+    // },
+    // {
+    //   name: 'Report',
+    //   isDisabled: isViewingSelf,
+    // },
   ]
 
+  const statistics = [
+    {
+      name: 'Gold',
+      value: new Intl.NumberFormat().format(player.gold),
+    },
+  ];
+
   return (
-    <div className='mx-auto max-w-2xl flex gap-x-6'>
+    <div className='my-12 mx-auto max-w-2xl flex gap-x-6'>
       <div className="w-1/2 flex flex-col gap-y-6">
         <section>
           <div className="aspect-square">
@@ -73,7 +80,7 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
           </div>
         </section>
 
-        <section>
+        {/* <section>
           <p className='text-sm text-zinc-300'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi temporibus optio deleniti, natus eum tempora sed soluta nisi fugit alias ea, quo autem inventore quae porro voluptatem tempore molestiae aliquid!
           </p>
@@ -85,7 +92,7 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
             &middot;
             <span><span className='font-semibold text-zinc-200'>5</span> Enemies</span>
           </p>
-        </section>
+        </section> */}
 
         <hr className='border-zinc-700' />
       </div>
@@ -113,8 +120,18 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
           </ul>
         </nav>
 
-        <div className="bg-zinc-800 text-zinc-200 rounded-lg px-4 py-3 text-sm">
-          Statistics
+        <div className="bg-zinc-800 text-zinc-200 rounded-lg text-sm">
+          {/* <h3 className='font-bold mb-4'>Statistics</h3> */}
+
+          <dl className="divide-y divide-white/10">
+            {statistics.map((statistic, index) => (
+              <div key={index} className='p-4'>
+                <dt className="text-sm font-medium leading-6 text-white">{statistic.name}</dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-400 sm:col-span-2 sm:mt-0">{statistic.value}</dd>
+              </div>
+            ))}
+          </dl>
+
         </div>
       </div>
     </div>
