@@ -1,5 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Button, InputField } from '@darkthrone/react-components';
+import { Button, InputField, Logo } from '@darkthrone/react-components';
 import { useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
@@ -97,70 +97,68 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
   return (
     <main>
-    <div className="sm:mx-auto sm:w-full sm:max-w-md">
-      <img
-        className="mx-auto h-10 w-auto"
-        src="https://tailwindui.com/img/logos/mark.svg?color=yellow&shade=600"
-        alt="Your Company"
-      />
-      <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-200">
-        Create new player
-      </h2>
-    </div>
-
-    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-      <div className="bg-zinc-800 sm:rounded-lg px-6 py-12 sm:px-12">
-        <form className='space-y-12' onSubmit={handleCreatePlayer}>
-          <InputField
-            displayName='Player Name'
-            value={playerName}
-            setValue={(newValue) => setPlayerName(newValue)}
-            onBlur={() => validatePlayerName()}
-            type='text'
-            validationState={playerNameStatus ? (playerNameStatus.isValid ? 'valid' : 'invalid') : 'neutral'}
-            validationMessage={playerNameStatus?.message}
-          />
-
-          <section>
-            <h2 className='text-sm font-medium leading-6 text-zinc-200 mb-2'>Race</h2>
-            <div className="grid grid-cols-2 gap-6">
-
-              {raceOptions.map((option, optionIdx) => (
-                <button type="button" key={optionIdx} onClick={() => setSelectedRace(option.race)}>
-                  <RaceCard
-                    {...option}
-                    selectedRace={option.race === selectedRace ? selectedRace : undefined}
-                  />
-                </button>
-              ))}
-
-            </div>
-          </section>
-
-          <section>
-            <h2 className='text-sm font-medium leading-6 text-zinc-200 mb-2'>Class</h2>
-            <div className="flex flex-col gap-6">
-
-              {classOptions.map((option, optionIdx) => (
-                <button type="button" key={optionIdx} onClick={() => setSelectedClass(option.class)}>
-                  <ClassCard
-                    {...option}
-                    isSelected={option.class === selectedClass}
-                  />
-                </button>
-              ))}
-
-            </div>
-          </section>
-
-          <Button
-            text='Create Player'
-            variant='primary'
-            type='submit'
-          />
-        </form>
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className='flex justify-center'>
+          <Logo variant='large' />
+        </div>
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
+          Create new player
+        </h2>
       </div>
-    </div>
-  </main>
+
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+        <div className="bg-zinc-800 sm:rounded-lg px-6 py-12 sm:px-12">
+          <form className='space-y-12' onSubmit={handleCreatePlayer}>
+            <InputField
+              displayName='Player Name'
+              value={playerName}
+              setValue={(newValue) => setPlayerName(newValue)}
+              onBlur={() => validatePlayerName()}
+              type='text'
+              validationState={playerNameStatus ? (playerNameStatus.isValid ? 'valid' : 'invalid') : 'neutral'}
+              validationMessage={playerNameStatus?.message}
+            />
+
+            <section>
+              <h2 className='text-sm font-medium leading-6 text-zinc-200 mb-2'>Race</h2>
+              <div className="grid grid-cols-2 gap-6">
+
+                {raceOptions.map((option, optionIdx) => (
+                  <button type="button" key={optionIdx} onClick={() => setSelectedRace(option.race)}>
+                    <RaceCard
+                      {...option}
+                      selectedRace={option.race === selectedRace ? selectedRace : undefined}
+                    />
+                  </button>
+                ))}
+
+              </div>
+            </section>
+
+            <section>
+              <h2 className='text-sm font-medium leading-6 text-zinc-200 mb-2'>Class</h2>
+              <div className="flex flex-col gap-6">
+
+                {classOptions.map((option, optionIdx) => (
+                  <button type="button" key={optionIdx} onClick={() => setSelectedClass(option.class)}>
+                    <ClassCard
+                      {...option}
+                      isSelected={option.class === selectedClass}
+                    />
+                  </button>
+                ))}
+
+              </div>
+            </section>
+
+            <Button
+              text='Create Player'
+              variant='primary'
+              type='submit'
+            />
+          </form>
+        </div>
+      </div>
+    </main>
   );
 }

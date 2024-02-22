@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 export default {
   GET_fetchAllPlayers: async (req: Request, res: Response) => {
-    const players = await req.ctx.modelFactory.player.fetchAllForUser(req.ctx, req.ctx.authedUser.model);
+    const players = await req.ctx.modelFactory.player.fetchAll(req.ctx);
 
     res.status(200).json(await Promise.all(players.map(async (player) => await player.serialise())));
   },
