@@ -19,6 +19,17 @@ export default class PlayersController {
     }
   }
 
+  async fetchAllPlayersForUser(): Promise<APIResponse<'ok', PlayerObject[]> | APIResponse<'fail', APIError[]>> {
+    try {
+      const response = await this.root.http.get<PlayerObject[]>('/auth/current-user/players');
+
+      return { status: 'ok', data: response.data as PlayerObject[] };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+    }
+  }
+
   async fetchByID(id: string): Promise<APIResponse<'ok', PlayerObject> | APIResponse<'fail', APIError[]>> {
     try {
       const response = await this.root.http.get<PlayerObject>(`/players/${id}`);

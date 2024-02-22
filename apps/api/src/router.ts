@@ -27,6 +27,7 @@ authedRouter.post('/attack', AttackController.POST_attackPlayer);
 router.post('/auth/login', AuthController.POST_login);
 router.post('/auth/register', AuthController.POST_register);
 router.get('/auth/current-user', AuthController.GET_currentUser);
+router.get('/auth/current-user/players', PlayersController.GET_fetchPlayersForUser);
 router.post('/auth/logout', AuthController.POST_logout);
 authedRouter.post('/auth/assume-player', AuthController.POST_assumePlayer);
 authedRouter.post('/auth/unassume-player', AuthController.POST_unassumePlayer);

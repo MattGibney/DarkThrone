@@ -16,7 +16,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
   useEffect(() => {
     const getPlayers = async () => {
-      const playersFetch = await props.client.players.fetchAllPlayers();
+      const playersFetch = await props.client.players.fetchAllPlayersForUser();
 
       setDidLoad(true);
 

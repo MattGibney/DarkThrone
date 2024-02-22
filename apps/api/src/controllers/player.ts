@@ -7,6 +7,12 @@ export default {
     res.status(200).json(await Promise.all(players.map(async (player) => await player.serialise())));
   },
 
+  GET_fetchPlayersForUser: async (req: Request, res: Response) => {
+    const players = await req.ctx.modelFactory.player.fetchAllForUser(req.ctx, req.ctx.authedUser.model);
+
+    res.status(200).json(await Promise.all(players.map(async (player) => await player.serialise())));
+  },
+
   GET_fetchPlayerByID: async (req: Request, res: Response) => {
     const player = await req.ctx.modelFactory.player.fetchByID(req.ctx, req.params.id);
     if (!player) {
