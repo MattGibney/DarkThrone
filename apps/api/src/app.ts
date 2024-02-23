@@ -42,6 +42,7 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
   app.use(cors(corsOptionsDelegate));
 
   app.use((req, res, next) => {
+    const requestStartTime = Date.now();
     const requestID = ulid();
 
     req.ctx = {
@@ -56,9 +57,17 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
     res.set('X-Request-ID', requestID);
 
     res.on('finish', () => {
+      if (req.path === '/healthcheck') return;
+      const requestDuration = Date.now() - requestStartTime;
       logger.info(
-        { requestID, statusCode: res.statusCode },
-        'Request finished',
+        {
+          requestID,
+          statusCode: res.statusCode,
+          method: req.method,
+          path: req.path,
+          duration: requestDuration,
+        },
+        `Request: ${req.method} ${req.path}`,
       );
     });
 
@@ -108,7 +117,6 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
   });
 
   app.get('/healthcheck', (req, res) => {
-    logger.info('Healthcheck');
     res.send({ message: 'OK' });
   });
 
