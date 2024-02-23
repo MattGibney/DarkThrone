@@ -32,9 +32,9 @@ export default class DarkThroneClient {
   public training: TrainingController;
   public warHistory: WarHistoryController;
 
-  constructor() {
+  constructor(apiUrl: string) {
     this.http = axios.create({
-      baseURL: 'http://localhost:3000',
+      baseURL: apiUrl,
       withCredentials: true,
     });
 

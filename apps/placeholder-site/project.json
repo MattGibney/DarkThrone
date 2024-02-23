@@ -16,7 +16,13 @@
           "mode": "development"
         },
         "production": {
-          "mode": "production"
+          "mode": "production",
+          "fileReplacements": [
+            {
+              "replace": "apps/placeholder-site/src/environments/environment.ts",
+              "with": "apps/placeholder-site/src/environments/environment.production.ts"
+            }
+          ]
         }
       }
     },

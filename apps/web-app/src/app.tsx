@@ -19,6 +19,7 @@ import ListWarHistory from './pages/main/battle/warHistory/listHistory';
 import TrainingScreen from './pages/main/battle/training';
 import NewsPage from './pages/main/home/news';
 import { UserSessionObject } from '@darkthrone/interfaces';
+import environment from './environments/environment';
 
 export type SubNavigationItem = {
   name: string;
@@ -80,7 +81,7 @@ export const globalNavigation: NavigationItem[] = [
   // },
 ];
 
-const client = new DarkThroneClient();
+const client = new DarkThroneClient(environment.gameAPI);
 
 export function App() {
   const [currentUser, setCurrentUser] = useState<UserSessionObject | null | undefined>(undefined);

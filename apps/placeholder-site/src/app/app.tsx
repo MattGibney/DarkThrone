@@ -1,5 +1,5 @@
 import { Button, Logo } from '@darkthrone/react-components';
-import environment from '../../environment/environment';
+import environment from '../environments/environment';
 
 export function App() {
   function handlePlayClick() {
