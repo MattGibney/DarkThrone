@@ -11,7 +11,7 @@ const SERVER_PASS = process.env.SERVER_PASS;
 async function prepareScript() {
   console.log('Preparing the script \n');
 
-  // await runCmdAndLog(exec, 'Installing the dependencies', 'npm install');
+  await runCmdAndLog(exec, 'Installing the dependencies', 'npm ci');
   await runCmdAndLog(exec, 'Reset Cache', 'npx nx reset');
 }
 
@@ -21,8 +21,6 @@ async function buildScript(id: string) {
   if (!SERVER_HOST || !SERVER_USER || !SERVER_PASS) {
     process.exit(1);
   }
-
-  console.log(SERVER_HOST.length, SERVER_USER.length, SERVER_PASS.length);
 
   await runCmdAndLog(exec, 'Building the Placeholder Site', 'npx nx run placeholder-site:build:production');
   await runCmdAndLog(exec, 'Building the Web App', 'npx nx run web-app:build:production');
@@ -38,8 +36,8 @@ async function deployScript(id: string) {
     host: SERVER_HOST || '',
     user: SERVER_USER || '',
     pass: SERVER_PASS || '',
-    agent: process.env.SSH_AUTH_SOCK,
-    agentForward: true
+    // agent: process.env.SSH_AUTH_SOCK,
+    // agentForward: true
   });
 
   await runCmdAndLog(exec, 'Transfer the file', `scp dist/${id}.tar.gz matt@192.168.0.44:/home/matt/Code/DTR/builds`);
