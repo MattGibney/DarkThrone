@@ -40,7 +40,7 @@ async function deployScript(id: string) {
     // agentForward: true
   });
 
-  await runCmdAndLog(exec, 'Transfer the file', `scp dist/${id}.tar.gz matt@192.168.0.44:/home/matt/Code/DTR/builds`);
+  await runCmdAndLog(exec, 'Transfer the file', `sshpass -p '${SERVER_PASS}' scp dist/${id}.tar.gz ${SERVER_USER}@${SERVER_HOST}:/home/matt/Code/DTR/builds`);
 
   runSSHCmdAndLog(ssh.exec.bind(ssh), 'Unpack the file', `cd /home/matt/Code/DTR/builds && mkdir ${id} && tar -xvf ${id}.tar.gz --directory ${id} && rm ${id}.tar.gz`);
   runSSHCmdAndLog(ssh.exec.bind(ssh), 'Install Deps', `cd /home/matt/Code/DTR/builds/${id}/api && npm install --omit=dev`);
