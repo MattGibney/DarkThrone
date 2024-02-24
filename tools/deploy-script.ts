@@ -22,6 +22,8 @@ async function buildScript(id: string) {
     process.exit(1);
   }
 
+  console.log(SERVER_HOST.length, SERVER_USER.length, SERVER_PASS.length);
+
   await runCmdAndLog(exec, 'Building the Placeholder Site', 'npx nx run placeholder-site:build:production');
   await runCmdAndLog(exec, 'Building the Web App', 'npx nx run web-app:build:production');
   await runCmdAndLog(exec, 'Building the API', 'npx nx run api:build:production');
