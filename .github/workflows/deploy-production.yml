@@ -24,7 +24,7 @@ jobs:
       run: npm ci
 
   deploy:
-    needs: test
+    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
