@@ -6,6 +6,7 @@ import UserModel from './user';
 import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
+import { levelXPArray } from '@darkthrone/game-data';
 
 export default class PlayerModel {
   private ctx: Context;
@@ -19,6 +20,7 @@ export default class PlayerModel {
   public createdAt: Date;
   public attackTurns: number;
   public gold: number;
+  public experience: number;
 
   public units: PlayerUnitsModel[];
 
@@ -39,6 +41,7 @@ export default class PlayerModel {
       race: this.race,
       class: this.class,
       gold: this.gold,
+      level: levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
     } as PlayerObject;
 
     if (!isAuthed) return playerObject;
@@ -172,6 +175,7 @@ export default class PlayerModel {
     this.createdAt = row.created_at;
     this.attackTurns = row.attack_turns;
     this.gold = row.gold;
+    this.experience = row.experience;
   }
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {

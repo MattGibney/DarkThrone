@@ -13,6 +13,7 @@ export type PlayerRow = {
   created_at: Date;
   attack_turns: number;
   gold: number;
+  experience: number;
 };
 
 export default class PlayerDao {

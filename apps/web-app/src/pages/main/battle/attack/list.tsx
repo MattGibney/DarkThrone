@@ -39,6 +39,9 @@ export default function AttackListPage(props: AttackListPageProps) {
                     Name
                   </th>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
+                    Level
+                  </th>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
                     Gold
                   </th>
                   <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
@@ -57,6 +60,9 @@ export default function AttackListPage(props: AttackListPageProps) {
                     >
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                         {player.name}
+                      </td>
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                        {player.level}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                         {new Intl.NumberFormat('en-GB').format(player.gold)}

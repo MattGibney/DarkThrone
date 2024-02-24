@@ -22,6 +22,7 @@ export interface PlayerObject {
   race: PlayerRace;
   class: PlayerClass;
   gold: number;
+  level: number;
 };
 
 export interface AuthedPlayerObject extends PlayerObject {

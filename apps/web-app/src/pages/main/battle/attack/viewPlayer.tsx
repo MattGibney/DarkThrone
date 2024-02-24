@@ -60,6 +60,10 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
       name: 'Gold',
       value: new Intl.NumberFormat().format(player.gold),
     },
+    {
+      name: 'Level',
+      value: player.level,
+    },
   ];
 
   return (
