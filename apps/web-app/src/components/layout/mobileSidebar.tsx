@@ -57,7 +57,7 @@ export default function MobileSidebar(props: MobileSidebarProps) {
                   <Logo />
                 </div>
 
-                <Navigation />
+                <Navigation closeSidebar={() => props.setSidebarOpen(false)} />
               </div>
             </Dialog.Panel>
           </Transition.Child>

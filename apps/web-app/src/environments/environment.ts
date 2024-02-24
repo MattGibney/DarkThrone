@@ -1,3 +1,3 @@
 export default {
-  gameAPI: 'http://localhost:4200',
+  gameAPI: 'http://localhost:3000',
 }

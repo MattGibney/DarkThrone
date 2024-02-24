@@ -3,7 +3,10 @@ import { classNames } from '../../utils';
 import { globalNavigation } from '../../app';
 import { useEffect, useState } from 'react';
 
-export default function Navigation() {
+interface NavigationProps {
+  closeSidebar?: () => void;
+}
+export default function Navigation(props: NavigationProps) {
   const location = useLocation();
   const [activeParentHref, setActiveParentHref] = useState<string | undefined>();
 
@@ -36,6 +39,7 @@ export default function Navigation() {
                     )
                   }
                   to={item.href}
+                  onClick={props.closeSidebar}
                 >
                   {item.name}
                 </NavLink>

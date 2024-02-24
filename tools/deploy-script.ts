@@ -1,4 +1,4 @@
-import { ChildProcess, ExecException, ExecOptions, exec } from 'child_process';
+import { ExecException, ExecOptions, exec } from 'child_process';
 import SSH, { ExecOptions as SSHExecOptions } from 'simple-ssh';
 import { ulid } from 'ulid';
 

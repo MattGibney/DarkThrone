@@ -49,7 +49,7 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
       <div className="sm:px-6 lg:px-8">
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle">
+            <div className="inline-block min-w-full sm:py-2 align-middle">
               <table className="min-w-full border-separate border-spacing-0">
                 <thead>
                 <tr>
