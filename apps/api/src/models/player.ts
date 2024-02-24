@@ -72,7 +72,7 @@ export default class PlayerModel {
       // Fighters get a 5% bonus to attack strength
       offense *= 1.05;
     }
-    return offense;
+    return Math.floor(offense);
   }
 
   async calculateDefenceStrength(): Promise<number> {
@@ -85,7 +85,7 @@ export default class PlayerModel {
       // Clerics get a 5% bonus to defence strength
       return defence * 1.05;
     }
-    return defence;
+    return Math.floor(defence);
   }
 
   async calculateGoldPerTurn(): Promise<number> {
@@ -94,7 +94,7 @@ export default class PlayerModel {
       // Thieves get a 5% bonus to gold per turn
       goldPerTurn *= 1.05;
     }
-    return goldPerTurn;
+    return Math.floor(goldPerTurn);
   }
 
   async attackPlayer(targetPlayer: PlayerModel, attackTurns: number): Promise<WarHistoryModel> {
