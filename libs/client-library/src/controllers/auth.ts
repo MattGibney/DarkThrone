@@ -12,8 +12,10 @@ export default class AuthController {
     try {
       const response = await this.root.http.get<{user: UserSessionObject, player?: AuthedPlayerObject }>('/auth/current-user');
 
+      this.root.serverTime = new Date(response.data.user.serverTime);
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
+      this.root.emit('updateCurrentUser');
 
       return { status: 'ok', data: response.data.user as UserSessionObject };
     } catch (err: unknown) {

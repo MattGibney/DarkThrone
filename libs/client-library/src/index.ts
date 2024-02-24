@@ -32,6 +32,8 @@ export default class DarkThroneClient {
   public training: TrainingController;
   public warHistory: WarHistoryController;
 
+  public serverTime: Date | undefined;
+
   constructor(apiUrl: string) {
     this.http = axios.create({
       baseURL: apiUrl,
@@ -43,6 +45,13 @@ export default class DarkThroneClient {
     this.players = new PlayersController(this);
     this.training = new TrainingController(this);
     this.warHistory = new WarHistoryController(this);
+
+    const reFetchCurrentUser = async () => {
+      await this.auth.getCurrentUser();
+    }
+    window.addEventListener('focus', function() {
+      reFetchCurrentUser();
+    });
   }
 
   on(event: string, listener: EventListener) {

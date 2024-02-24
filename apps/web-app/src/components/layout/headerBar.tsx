@@ -2,7 +2,7 @@ import DarkThroneClient from '@darkthrone/client-library';
 import { Avatar } from '@darkthrone/react-components';
 import { Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, ChevronDownIcon } from '@heroicons/react/20/solid';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface HeaderBarProps {
@@ -11,6 +11,42 @@ interface HeaderBarProps {
 }
 export default function HeaderBar(props: HeaderBarProps) {
   const navigate = useNavigate();
+
+  const [currentTime, setCurrentTime] = useState(props.client.serverTime ? new Date(props.client.serverTime) : undefined);
+  const [timeRemaining, setTimeRemaining] = useState(props.client.serverTime ? calculateTimeRemaining(props.client.serverTime) : undefined);
+
+  props.client.on('updateCurrentUser', async () => {
+    setCurrentTime(props.client.serverTime ? new Date(props.client.serverTime) : undefined);
+  });
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!currentTime) return;
+      const newTime = new Date(currentTime.getTime() + 1000);
+
+      setCurrentTime(newTime);
+      setTimeRemaining(calculateTimeRemaining(newTime));
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [currentTime]);
+
+  function calculateTimeRemaining(serverTime: Date) {
+    const minutes = serverTime.getMinutes();
+    const seconds = serverTime.getSeconds();
+    let minutesRemaining;
+
+    if (minutes < 30) {
+      minutesRemaining = 30 - minutes;
+    } else if (minutes === 30) {
+      minutesRemaining = 30;
+    } else {
+      minutesRemaining = 60 - minutes;
+    }
+
+    const secondsRemaining = 60 - seconds;
+    return { minutes: minutesRemaining, seconds: secondsRemaining };
+  }
 
   async function handleSwitchPlayer() {
     await props.client.auth.unassumePlayer();
@@ -28,14 +64,18 @@ export default function HeaderBar(props: HeaderBarProps) {
       <div className="h-6 w-px bg-zinc-900/10 lg:hidden" aria-hidden="true" />
 
       <div className="flex flex-1 items-center gap-x-6 self-stretch lg:gap-x-6">
-        {/* <div className='flex gap-x-4 text-sm text-zinc-300'>
-          <div>
-            <span className='text-white font-bold'>{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.gold || 0)}</span> Gold
-          </div>
-          <div>
-            <span className='text-white font-bold'>{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.attackTurns || 0)}</span> Attack Turns
-          </div>
-        </div> */}
+        <div className='flex gap-x-4 text-sm text-zinc-300'>
+          {currentTime ? (
+            <div>
+              DarkThrone Time: <span className='text-white font-bold'>{currentTime.toLocaleTimeString()}</span>
+            </div>
+          ) : null}
+          {timeRemaining ? (
+            <div>
+              Next Turn In: <span className='text-white font-bold'>{`${timeRemaining.minutes}:${timeRemaining.seconds < 10 ? '0' : ''}${timeRemaining.seconds}`}</span>
+            </div>
+          ) : null}
+        </div>
         <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
           {/* <button type="button" className="-m-2.5 p-2.5 text-zinc-300 hover:text-zinc-400">
             <span className="sr-only">View notifications</span>

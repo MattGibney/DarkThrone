@@ -41,4 +41,5 @@ export type UserSessionObject = {
   email: string;
   playerID?: string;
   hasConfirmedEmail: boolean;
+  serverTime: string;
 };

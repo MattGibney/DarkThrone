@@ -80,6 +80,7 @@ export default class UserSessionModel {
       email: user.email,
       playerID: this.playerID,
       hasConfirmedEmail: !!user.confirmedEmailAt,
+      serverTime: new Date().toISOString(),
     };
   }
 }
