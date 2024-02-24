@@ -4,6 +4,10 @@ import { ulid } from 'ulid';
 
 var colors = require('colors/safe');
 
+const SERVER_HOST = process.env.SERVER_HOST;
+const SERVER_USER = process.env.SERVER_USER;
+const SERVER_PASS = process.env.SERVER_PASS;
+
 async function prepareScript() {
   console.log('Preparing the script \n');
 
@@ -25,9 +29,9 @@ async function deployScript(id: string) {
   console.log('Deploying the script \n');
 
   const ssh = new SSH({
-    host: '192.168.0.44',
-    user: 'matt',
-    pass: '***REMOVED***',
+    host: SERVER_HOST,
+    user: SERVER_USER,
+    pass: SERVER_PASS,
     agent: process.env.SSH_AUTH_SOCK,
     agentForward: true
   });
