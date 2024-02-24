@@ -11,7 +11,7 @@ const SERVER_PASS = process.env.SERVER_PASS;
 async function prepareScript() {
   console.log('Preparing the script \n');
 
-  await runCmdAndLog(exec, 'Installing the dependencies', 'npm ci');
+  // await runCmdAndLog(exec, 'Installing the dependencies', 'npm ci');
   await runCmdAndLog(exec, 'Reset Cache', 'npx nx reset');
 }
 
