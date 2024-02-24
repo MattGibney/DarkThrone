@@ -11,12 +11,16 @@ const SERVER_PASS = process.env.SERVER_PASS;
 async function prepareScript() {
   console.log('Preparing the script \n');
 
-  await runCmdAndLog(exec, 'Installing the dependencies', 'npm install');
+  // await runCmdAndLog(exec, 'Installing the dependencies', 'npm install');
   await runCmdAndLog(exec, 'Reset Cache', 'npx nx reset');
 }
 
 async function buildScript(id: string) {
   console.log('Building the script \n');
+
+  if (!SERVER_HOST || !SERVER_USER || !SERVER_PASS) {
+    process.exit(1);
+  }
 
   await runCmdAndLog(exec, 'Building the Placeholder Site', 'npx nx run placeholder-site:build:production');
   await runCmdAndLog(exec, 'Building the Web App', 'npx nx run web-app:build:production');
@@ -29,9 +33,9 @@ async function deployScript(id: string) {
   console.log('Deploying the script \n');
 
   const ssh = new SSH({
-    host: SERVER_HOST,
-    user: SERVER_USER,
-    pass: SERVER_PASS,
+    host: SERVER_HOST || '',
+    user: SERVER_USER || '',
+    pass: SERVER_PASS || '',
     agent: process.env.SSH_AUTH_SOCK,
     agentForward: true
   });
@@ -55,7 +59,7 @@ async function deployScript(id: string) {
 
   const id = ulid();
 
-  // await prepareScript();
+  await prepareScript();
   await buildScript(id);
   await deployScript(id);
 })();
