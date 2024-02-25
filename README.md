@@ -28,13 +28,15 @@ You need to have the following installed on your machine:
 
    Within the directory `apps/api` copy the `.env` file to `.env.local` and update the values to match your local environment.
 
-4. Run the database migrations
+4. Connect to an already running PostgreSQL database or use `cd apps/api/ && docker-compose up -d && cd -` to create a PostgreSQL in a Docker container.
+
+5. Run the database migrations
 
    ```bash
    npx nx knex api migrate:latest
    ```
 
-5. Start the application
+6. Start the application
 
    ```bash
     npx nx run-many -t serve -p api,web-app,placeholder-site
