@@ -8,4 +8,7 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
+  collectCoverageFrom: [
+    './src/**/*.ts',
+  ]
 };
