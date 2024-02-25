@@ -23,8 +23,14 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {}
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint", "prettier"],
+      "extends": ["plugin:@nx/typescript", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
+      "rules": {
+        "quotes": [2, "single"],
+        "curly": ["error", "multi-line"],
+        "prettier/prettier": "error"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
