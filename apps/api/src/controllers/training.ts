@@ -8,7 +8,6 @@ import { error } from 'console';
 const training_request_errors = (desiredUnits: PlayerUnits[]): APIError[] => {
   // Used for both training and untraining units.
   // we expect only positive numbers to be used.
-  const apiErrors: APIError[] = [];
   if (desiredUnits.length === 0) {
     return [
       {
@@ -26,7 +25,8 @@ const training_request_errors = (desiredUnits: PlayerUnits[]): APIError[] => {
       },
     ];
   }
-  return apiErrors;
+
+  return [];
 };
 
 export default {
