@@ -7,6 +7,7 @@ import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
 import { levelXPArray } from '@darkthrone/game-data';
+import { getRandomNumber } from '../utils';
 
 export default class PlayerModel {
   private ctx: Context;
@@ -105,7 +106,14 @@ export default class PlayerModel {
 
     const isVictor = playerAttackStrength > targetPlayerDefenceStrength;
 
+    // Calculate XP
+    const victorExperience = Math.floor(getRandomNumber(500, 1500) * (0.1 * attackTurns));
+
     if (!isVictor) {
+      // Grant XP to the defender
+      targetPlayer.experience += victorExperience;
+      await targetPlayer.save();
+
       // Create War History
       return await this.ctx.modelFactory.warHistory.create(
         this.ctx,
@@ -119,6 +127,8 @@ export default class PlayerModel {
           defender_strength: targetPlayerDefenceStrength,
           gold_stolen: 0,
           created_at: new Date(),
+          attacker_experience: 0,
+          defender_experience: victorExperience,
         }
       );
     }
@@ -131,7 +141,8 @@ export default class PlayerModel {
     this.gold += winnings;
     targetPlayer.gold -= winnings;
 
-    // Calculate XP
+    // Grant XP to the attacker
+    this.experience += victorExperience;
 
     // Subtract attack Turns
     this.attackTurns -= attackTurns;
@@ -151,6 +162,8 @@ export default class PlayerModel {
         defender_strength: targetPlayerDefenceStrength,
         gold_stolen: winnings,
         created_at: new Date(),
+        attacker_experience: victorExperience,
+        defender_experience: 0,
       }
     )
   }
@@ -160,6 +173,7 @@ export default class PlayerModel {
       avatar_url: this.avatarURL,
       attack_turns: this.attackTurns,
       gold: this.gold,
+      experience: this.experience,
     });
 
     this.populateFromRow(playerData);

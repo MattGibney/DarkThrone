@@ -11,6 +11,8 @@ export type WarHistoryRow = {
   defender_strength: number;
   gold_stolen: number;
   created_at: Date;
+  attacker_experience: number;
+  defender_experience: number;
 }
 
 export default class WarHistoryDao {
