@@ -6,9 +6,13 @@
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["libs/game-data/**/*.ts"]
+        "lintFilePatterns": [
+          "libs/game-data/**/*.ts"
+        ]
       }
     }
   },
