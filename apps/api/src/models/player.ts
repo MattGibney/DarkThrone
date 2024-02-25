@@ -247,7 +247,15 @@ export default class PlayerModel {
 
     const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(ctx, displayName);
     if (existingPlayer) {
-      errors.push('name_taken');
+      /* If the name is already taken, we don't need to do any other validation
+       * A name that already exists, MUST be valid by definition. Returning
+       * additional errors would look sloppy.
+       */
+
+      return {
+        isValid: false,
+        issues: ['name_taken'],
+      };
     }
 
     // Validate Regex a-zA-Z0-9_
