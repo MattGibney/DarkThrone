@@ -7,7 +7,7 @@ describe('TrainUnitsController', () => {
   describe('splitUnitsToCreateAndUpdate', () => {
     it('should return empty arrays if no units requested', () => {
       const desiredUnits: PlayerUnits[] = [];
-      const existingUnits: PlayerUnitsModel[] = []
+      const existingUnits: PlayerUnitsModel[] = [];
 
       const result = splitUnitsToCreateAndUpdate(desiredUnits, existingUnits);
 
@@ -19,7 +19,7 @@ describe('TrainUnitsController', () => {
         { unitType: 'citizen', quantity: 1 },
         { unitType: 'worker', quantity: 1 },
       ];
-      const existingUnits: PlayerUnitsModel[] = []
+      const existingUnits: PlayerUnitsModel[] = [];
 
       const result = splitUnitsToCreateAndUpdate(desiredUnits, existingUnits);
 
@@ -32,8 +32,18 @@ describe('TrainUnitsController', () => {
         { unitType: 'worker', quantity: 1 },
       ];
       const existingUnits: PlayerUnitsModel[] = [
-        new PlayerUnitsModel({} as Context, { id: '', player_id: '', unit_type: 'citizen', quantity: 1 }),
-        new PlayerUnitsModel({} as Context, { id: '', player_id: '', unit_type: 'worker', quantity: 1 }),
+        new PlayerUnitsModel({} as Context, {
+          id: '',
+          player_id: '',
+          unit_type: 'citizen',
+          quantity: 1,
+        }),
+        new PlayerUnitsModel({} as Context, {
+          id: '',
+          player_id: '',
+          unit_type: 'worker',
+          quantity: 1,
+        }),
       ];
 
       const result = splitUnitsToCreateAndUpdate(desiredUnits, existingUnits);
@@ -47,12 +57,20 @@ describe('TrainUnitsController', () => {
         { unitType: 'worker', quantity: 1 },
       ];
       const existingUnits: PlayerUnitsModel[] = [
-        new PlayerUnitsModel({} as Context, { id: '', player_id: '', unit_type: 'citizen', quantity: 1 }),
+        new PlayerUnitsModel({} as Context, {
+          id: '',
+          player_id: '',
+          unit_type: 'citizen',
+          quantity: 1,
+        }),
       ];
 
       const result = splitUnitsToCreateAndUpdate(desiredUnits, existingUnits);
 
-      expect(result).toEqual({ toCreate: [{ unitType: 'worker', quantity: 1 }], toUpdate: [existingUnits[0]] });
+      expect(result).toEqual({
+        toCreate: [{ unitType: 'worker', quantity: 1 }],
+        toUpdate: [existingUnits[0]],
+      });
     });
   });
 });

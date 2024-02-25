@@ -1,10 +1,11 @@
-import { tv } from "tailwind-variants";
+import { tv } from 'tailwind-variants';
 
 const styles = tv({
   slots: {
-    label: "ml-3 block text-sm leading-6 text-zinc-200",
-    input: "h-4 w-4 rounded bg-zinc-700 border-0 text-yellow-600 focus:ring-yellow-600"
-  }
+    label: 'ml-3 block text-sm leading-6 text-zinc-200',
+    input:
+      'h-4 w-4 rounded bg-zinc-700 border-0 text-yellow-600 focus:ring-yellow-600',
+  },
 });
 
 export interface InputCheckboxProps {

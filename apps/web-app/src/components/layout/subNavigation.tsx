@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { globalNavigation } from '../../app';
 
-type Tab = { name: string; to: string; shouldRender: boolean; };
+type Tab = { name: string; to: string; shouldRender: boolean };
 export default function SubNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -11,19 +11,23 @@ export default function SubNavigation() {
   const [activeTab, setActiveTab] = useState<Tab>();
 
   useEffect(() => {
-    const activeParent = globalNavigation.find(
-      (nav) => nav.children?.some((child) => {
+    const activeParent = globalNavigation.find((nav) =>
+      nav.children?.some((child) => {
         const regexPattern = child.to.replace(/:[^/]+/g, '[^/]+');
         const regex = new RegExp(`^${regexPattern}$`);
 
         return regex.test(location.pathname);
-      })
+      }),
     );
 
     if (!activeParent?.children) return;
 
-    setTabs(activeParent.children.filter((tab) => tab.shouldRender !== false) || []);
-    setActiveTab(activeParent.children.find((tab) => tab.to === location.pathname));
+    setTabs(
+      activeParent.children.filter((tab) => tab.shouldRender !== false) || [],
+    );
+    setActiveTab(
+      activeParent.children.find((tab) => tab.to === location.pathname),
+    );
   }, [location]);
 
   return (
@@ -41,20 +45,26 @@ export default function SubNavigation() {
             onChange={(e) => navigate(e.target.value)}
           >
             {tabs.map((tab) => (
-              <option key={tab.name} value={tab.to} selected={tab === activeTab}>{tab.name}</option>
+              <option
+                key={tab.name}
+                value={tab.to}
+                selected={tab === activeTab}
+              >
+                {tab.name}
+              </option>
             ))}
           </select>
         </div>
         <div className="hidden sm:block">
           <nav className="flex border-b border-white/10 py-4">
-            <ul
-              className="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-zinc-400"
-            >
+            <ul className="flex min-w-full flex-none gap-x-6 px-2 text-sm font-semibold leading-6 text-zinc-400">
               {tabs.map((tab) => (
                 <li key={tab.name}>
                   <NavLink
                     to={tab.to}
-                    className={({ isActive }) => (isActive ? 'text-yellow-600' : '')}
+                    className={({ isActive }) =>
+                      isActive ? 'text-yellow-600' : ''
+                    }
                   >
                     {tab.name}
                   </NavLink>

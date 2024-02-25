@@ -6,7 +6,12 @@ export default async function addCitizens(ctx: Context) {
   const allPlayers = await ctx.modelFactory.player.fetchAll(ctx);
 
   for (const player of allPlayers) {
-    const playerCitizens = await ctx.modelFactory.playerUnits.fetchUnitsForPlayerByType(ctx, player.id, 'citizen');
+    const playerCitizens =
+      await ctx.modelFactory.playerUnits.fetchUnitsForPlayerByType(
+        ctx,
+        player.id,
+        'citizen',
+      );
 
     playerCitizens.quantity += 1;
     await playerCitizens.save();

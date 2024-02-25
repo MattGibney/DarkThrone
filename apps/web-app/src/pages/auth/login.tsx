@@ -1,5 +1,11 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Alert, Button, InputCheckbox, InputField, Logo } from '@darkthrone/react-components';
+import {
+  Alert,
+  Button,
+  InputCheckbox,
+  InputField,
+  Logo,
+} from '@darkthrone/react-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -9,8 +15,8 @@ interface LoginPageProps {
 export default function LoginPage(props: LoginPageProps) {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
@@ -31,8 +37,8 @@ export default function LoginPage(props: LoginPageProps) {
   return (
     <main>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className='flex justify-center'>
-          <Logo variant='large' />
+        <div className="flex justify-center">
+          <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
           Login to your account
@@ -90,14 +96,17 @@ export default function LoginPage(props: LoginPageProps) {
             </div>
 
             <div>
-              <Button type='submit' text='Login' />
+              <Button type="submit" text="Login" />
             </div>
           </form>
         </div>
 
         <p className="mt-10 text-center text-sm text-zinc-500">
           Not a member?{' '}
-          <Link to="/register" className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500">
+          <Link
+            to="/register"
+            className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
+          >
             Create an account now
           </Link>
         </p>

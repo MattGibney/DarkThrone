@@ -9,47 +9,78 @@ export default {
 
     if (desiredUnits.length === 0) {
       res.status(400).send({
-        errors: [{
-          code: 'no_units_requested',
-          title: 'No units requested',
-        }],
+        errors: [
+          {
+            code: 'no_units_requested',
+            title: 'No units requested',
+          },
+        ],
       });
       return;
     }
 
-    const availableCitizens = req.ctx.authedPlayer.units.find((unit) => unit.unitType === 'citizen')?.quantity || 0;
-    const totalUnitsRequested = desiredUnits.reduce((acc, unit) => acc + unit.quantity, 0);
+    const availableCitizens =
+      req.ctx.authedPlayer.units.find((unit) => unit.unitType === 'citizen')
+        ?.quantity || 0;
+    const totalUnitsRequested = desiredUnits.reduce(
+      (acc, unit) => acc + unit.quantity,
+      0,
+    );
     if (totalUnitsRequested > availableCitizens) {
       res.status(400).send({
-        errors: [{
-          code: 'not_enough_citizens',
-          title: 'Not enough citizens',
-        }],
+        errors: [
+          {
+            code: 'not_enough_citizens',
+            title: 'Not enough citizens',
+          },
+        ],
       });
       return;
     }
 
-    const totalCost = desiredUnits.reduce((acc, unit) => acc + unit.quantity * UnitTypes[unit.unitType].cost, 0);
+    const totalCost = desiredUnits.reduce(
+      (acc, unit) => acc + unit.quantity * UnitTypes[unit.unitType].cost,
+      0,
+    );
     if (totalCost > req.ctx.authedPlayer.gold) {
       res.status(400).send({
-        errors: [{
-          code: 'not_enough_gold',
-          title: 'Not enough gold',
-        }],
+        errors: [
+          {
+            code: 'not_enough_gold',
+            title: 'Not enough gold',
+          },
+        ],
       });
       return;
     }
 
     // Train Units
-    const { toCreate, toUpdate } = splitUnitsToCreateAndUpdate(desiredUnits, req.ctx.authedPlayer.units);
-    await Promise.all(toCreate.map((unit) => PlayerUnitsModel.create(req.ctx, req.ctx.authedPlayer.id, unit.unitType, unit.quantity)));
-    await Promise.all(toUpdate.map((unit) => {
-      unit.quantity += desiredUnits.find((u) => u.unitType === unit.unitType)?.quantity || 0;
-      return unit.save();
-    }));
+    const { toCreate, toUpdate } = splitUnitsToCreateAndUpdate(
+      desiredUnits,
+      req.ctx.authedPlayer.units,
+    );
+    await Promise.all(
+      toCreate.map((unit) =>
+        PlayerUnitsModel.create(
+          req.ctx,
+          req.ctx.authedPlayer.id,
+          unit.unitType,
+          unit.quantity,
+        ),
+      ),
+    );
+    await Promise.all(
+      toUpdate.map((unit) => {
+        unit.quantity +=
+          desiredUnits.find((u) => u.unitType === unit.unitType)?.quantity || 0;
+        return unit.save();
+      }),
+    );
 
     // Subtract Citizens
-    const citizenUnits = req.ctx.authedPlayer.units.find((unit) => unit.unitType === 'citizen');
+    const citizenUnits = req.ctx.authedPlayer.units.find(
+      (unit) => unit.unitType === 'citizen',
+    );
     if (citizenUnits) {
       citizenUnits.quantity -= totalUnitsRequested;
       await citizenUnits.save();
@@ -68,17 +99,21 @@ export default {
     // Validate Input
     if (desiredUnits.length === 0) {
       res.status(400).send({
-        errors: [{
-          code: 'no_units_requested',
-          title: 'No units requested',
-        }],
+        errors: [
+          {
+            code: 'no_units_requested',
+            title: 'No units requested',
+          },
+        ],
       });
       return;
     }
 
     const unitValiateErrors = [];
     desiredUnits.forEach((unit) => {
-      const existingUnit = req.ctx.authedPlayer.units.find((u) => u.unitType === unit.unitType);
+      const existingUnit = req.ctx.authedPlayer.units.find(
+        (u) => u.unitType === unit.unitType,
+      );
       if (!existingUnit) {
         unitValiateErrors.push({
           code: 'unit_not_found',
@@ -98,27 +133,43 @@ export default {
       return;
     }
 
-    const totalCost = desiredUnits.reduce((acc, unit) => acc + unit.quantity * UnitTypes[unit.unitType].cost, 0);
+    const totalCost = desiredUnits.reduce(
+      (acc, unit) => acc + unit.quantity * UnitTypes[unit.unitType].cost,
+      0,
+    );
     if (totalCost > req.ctx.authedPlayer.gold) {
       res.status(400).send({
-        errors: [{
-          code: 'not_enough_gold',
-          title: 'Not enough gold',
-        }],
+        errors: [
+          {
+            code: 'not_enough_gold',
+            title: 'Not enough gold',
+          },
+        ],
       });
       return;
     }
 
     // Untrain Units
-    const { toUpdate } = splitUnitsToCreateAndUpdate(desiredUnits, req.ctx.authedPlayer.units);
-    await Promise.all(toUpdate.map((unit) => {
-      unit.quantity -= desiredUnits.find((u) => u.unitType === unit.unitType)?.quantity || 0;
-      return unit.save();
-    }));
+    const { toUpdate } = splitUnitsToCreateAndUpdate(
+      desiredUnits,
+      req.ctx.authedPlayer.units,
+    );
+    await Promise.all(
+      toUpdate.map((unit) => {
+        unit.quantity -=
+          desiredUnits.find((u) => u.unitType === unit.unitType)?.quantity || 0;
+        return unit.save();
+      }),
+    );
 
     // Add Citizens
-    const totalUnitsRequested = desiredUnits.reduce((acc, unit) => acc + unit.quantity, 0);
-    const citizenUnits = req.ctx.authedPlayer.units.find((unit) => unit.unitType === 'citizen');
+    const totalUnitsRequested = desiredUnits.reduce(
+      (acc, unit) => acc + unit.quantity,
+      0,
+    );
+    const citizenUnits = req.ctx.authedPlayer.units.find(
+      (unit) => unit.unitType === 'citizen',
+    );
     if (citizenUnits) {
       citizenUnits.quantity += totalUnitsRequested;
       await citizenUnits.save();
@@ -128,15 +179,20 @@ export default {
     await req.ctx.authedPlayer.save();
 
     res.status(200).send({ message: 'UnTraining Complete' });
-  }
-}
+  },
+};
 
-export function splitUnitsToCreateAndUpdate(desiredUnits: PlayerUnits[], existingUnits: PlayerUnitsModel[]): { toCreate: PlayerUnits[], toUpdate: PlayerUnitsModel[] } {
+export function splitUnitsToCreateAndUpdate(
+  desiredUnits: PlayerUnits[],
+  existingUnits: PlayerUnitsModel[],
+): { toCreate: PlayerUnits[]; toUpdate: PlayerUnitsModel[] } {
   const toCreate: PlayerUnits[] = [];
   const toUpdate: PlayerUnitsModel[] = [];
 
   desiredUnits.forEach((desiredUnit) => {
-    const existingUnit = existingUnits.find((unit) => unit.unitType === desiredUnit.unitType);
+    const existingUnit = existingUnits.find(
+      (unit) => unit.unitType === desiredUnit.unitType,
+    );
     if (existingUnit) {
       toUpdate.push(existingUnit);
     } else {

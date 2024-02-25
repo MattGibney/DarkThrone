@@ -30,10 +30,12 @@ export default class WarHistoryModel {
       isAttackerVictor: this.isAttackerVictor,
       attackTurnsUsed: this.attackTurnsUsed,
       attackerStrength: this.attackerStrength,
-      defenderStrength: this.isAttackerVictor ? this.defenderStrength : undefined,
+      defenderStrength: this.isAttackerVictor
+        ? this.defenderStrength
+        : undefined,
       goldStolen: this.goldStolen,
       createdAt: this.createdAt,
-    }
+    };
   }
 
   populateFromRow(row: WarHistoryRow): void {
@@ -48,23 +50,43 @@ export default class WarHistoryModel {
     this.createdAt = row.created_at;
   }
 
-  static async create(ctx: Context, data: WarHistoryRow): Promise<WarHistoryModel | null> {
-    const warHistoryRow = await ctx.daoFactory.warHistory.create(ctx.logger, data);
+  static async create(
+    ctx: Context,
+    data: WarHistoryRow,
+  ): Promise<WarHistoryModel | null> {
+    const warHistoryRow = await ctx.daoFactory.warHistory.create(
+      ctx.logger,
+      data,
+    );
     if (!warHistoryRow) return null;
 
     return new WarHistoryModel(ctx, warHistoryRow);
   }
 
-  static async fetchByID(ctx: Context, id: string): Promise<WarHistoryModel | null> {
-    const warHistoryRow = await ctx.daoFactory.warHistory.fetchByID(ctx.logger, id);
+  static async fetchByID(
+    ctx: Context,
+    id: string,
+  ): Promise<WarHistoryModel | null> {
+    const warHistoryRow = await ctx.daoFactory.warHistory.fetchByID(
+      ctx.logger,
+      id,
+    );
     if (!warHistoryRow) return null;
 
     return new WarHistoryModel(ctx, warHistoryRow);
   }
 
-  static async fetchAllForPlayer(ctx: Context, player: PlayerModel): Promise<WarHistoryModel[]> {
-    const warHistoryRows = await ctx.daoFactory.warHistory.fetchAllForPlayer(ctx.logger, player.id);
+  static async fetchAllForPlayer(
+    ctx: Context,
+    player: PlayerModel,
+  ): Promise<WarHistoryModel[]> {
+    const warHistoryRows = await ctx.daoFactory.warHistory.fetchAllForPlayer(
+      ctx.logger,
+      player.id,
+    );
 
-    return warHistoryRows.map(warHistoryRow => new WarHistoryModel(ctx, warHistoryRow));
+    return warHistoryRows.map(
+      (warHistoryRow) => new WarHistoryModel(ctx, warHistoryRow),
+    );
   }
 }

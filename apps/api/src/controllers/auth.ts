@@ -27,10 +27,12 @@ export default {
     const user = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
     if (!user) {
       res.status(401).send({
-        errors: [{
-          code: 'login_invalid_credentials',
-          title: 'Invalid credentials',
-        }],
+        errors: [
+          {
+            code: 'login_invalid_credentials',
+            title: 'Invalid credentials',
+          },
+        ],
       });
       return;
     }
@@ -38,21 +40,29 @@ export default {
     const passwordMatch = await user.checkPassword(password);
     if (!passwordMatch) {
       res.status(401).send({
-        errors: [{
-          code: 'login_invalid_credentials',
-          title: 'Invalid credentials',
-        }],
+        errors: [
+          {
+            code: 'login_invalid_credentials',
+            title: 'Invalid credentials',
+          },
+        ],
       });
       return;
     }
 
-    const newSession = await req.ctx.modelFactory.userSession.create(req.ctx, user, rememberMe);
+    const newSession = await req.ctx.modelFactory.userSession.create(
+      req.ctx,
+      user,
+      rememberMe,
+    );
     if (!newSession) {
       res.status(500).send({
-        errors: [{
-          code: 'login_failed',
-          title: 'Login failed',
-        }],
+        errors: [
+          {
+            code: 'login_failed',
+            title: 'Login failed',
+          },
+        ],
       });
       return;
     }
@@ -88,35 +98,52 @@ export default {
       return;
     }
 
-    const existingUser = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
+    const existingUser = await req.ctx.modelFactory.user.fetchByEmail(
+      req.ctx,
+      email,
+    );
     if (existingUser) {
       res.status(400).send({
-        errors: [{
-          code: 'register_email_taken',
-          title: 'Email taken',
-        }],
+        errors: [
+          {
+            code: 'register_email_taken',
+            title: 'Email taken',
+          },
+        ],
       });
       return;
     }
 
-    const newUser = await req.ctx.modelFactory.user.create(req.ctx, email, password);
+    const newUser = await req.ctx.modelFactory.user.create(
+      req.ctx,
+      email,
+      password,
+    );
     if (!newUser) {
       res.status(500).send({
-        errors: [{
-          code: 'register_failed',
-          title: 'Registration failed',
-        }],
+        errors: [
+          {
+            code: 'register_failed',
+            title: 'Registration failed',
+          },
+        ],
       });
       return;
     }
 
-    const newSession = await req.ctx.modelFactory.userSession.create(req.ctx, newUser, false);
+    const newSession = await req.ctx.modelFactory.userSession.create(
+      req.ctx,
+      newUser,
+      false,
+    );
     if (!newSession) {
       res.status(500).send({
-        errors: [{
-          code: 'register_failed',
-          title: 'Registration failed',
-        }],
+        errors: [
+          {
+            code: 'register_failed',
+            title: 'Registration failed',
+          },
+        ],
       });
       return;
     }
@@ -133,26 +160,32 @@ export default {
   GET_currentUser: async (req: Request, res: Response) => {
     if (!req.ctx.authedUser) {
       res.status(401).send({
-        errors: [{
-          code: 'not_authenticated',
-          title: 'Not authenticated',
-        }],
+        errors: [
+          {
+            code: 'not_authenticated',
+            title: 'Not authenticated',
+          },
+        ],
       });
       return;
     }
     res.status(200).json({
       user: await req.ctx.authedUser.session.serialise(),
-      player: req.ctx.authedPlayer ? await req.ctx.authedPlayer.serialise() : undefined,
+      player: req.ctx.authedPlayer
+        ? await req.ctx.authedPlayer.serialise()
+        : undefined,
     });
   },
 
   POST_logout: async (req: Request, res: Response) => {
     if (!req.ctx.authedUser) {
       res.status(401).send({
-        errors: [{
-          code: 'not_authenticated',
-          title: 'Not authenticated',
-        }],
+        errors: [
+          {
+            code: 'not_authenticated',
+            title: 'Not authenticated',
+          },
+        ],
       });
       return;
     }
@@ -160,10 +193,12 @@ export default {
     const { session } = req.ctx.authedUser;
     if (!session) {
       res.status(500).json({
-        errors: [{
-          code: 'logout_failed',
-          title: 'Logout failed',
-        }],
+        errors: [
+          {
+            code: 'logout_failed',
+            title: 'Logout failed',
+          },
+        ],
       });
       return;
     }
@@ -189,13 +224,18 @@ export default {
       return;
     }
 
-    const player = await req.ctx.modelFactory.player.fetchByID(req.ctx, playerId);
+    const player = await req.ctx.modelFactory.player.fetchByID(
+      req.ctx,
+      playerId,
+    );
     if (!player) {
       res.status(404).json({
-        errors: [{
-          code: 'assume_player_player_not_found',
-          title: 'Player not found',
-        }],
+        errors: [
+          {
+            code: 'assume_player_player_not_found',
+            title: 'Player not found',
+          },
+        ],
       });
       return;
     }
@@ -219,4 +259,4 @@ export default {
     });
     return;
   },
-}
+};

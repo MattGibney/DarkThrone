@@ -1,22 +1,26 @@
-import { Disclosure } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link, NavLink } from 'react-router-dom'
-import { navigation, screens } from '../../app/app'
+import { Disclosure } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Link, NavLink } from 'react-router-dom';
+import { navigation, screens } from '../../app/app';
 import { Logo } from '@darkthrone/react-components';
 
 export default function NavigationBar() {
   return (
-    <Disclosure as="nav" className='
+    <Disclosure
+      as="nav"
+      className="
       bg-zinc-800
       sticky
       top-0
       z-20
 
       px-4 lg:px-0
-    '>
+    "
+    >
       {({ open, close }) => (
         <>
-          <div className='
+          <div
+            className="
             text-white
             font-display
 
@@ -28,17 +32,13 @@ export default function NavigationBar() {
             flex
             justify-between
             items-center
-          '>
-            <Link
-              to={screens['home'].href}
-              className='select-none'
-            >
+          "
+          >
+            <Link to={screens['home'].href} className="select-none">
               <Logo />
             </Link>
             <div>
-              <Disclosure.Button
-                className='sm:hidden inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white'
-              >
+              <Disclosure.Button className="sm:hidden inline-flex items-center justify-center rounded-md text-zinc-400 hover:text-white">
                 <span className="sr-only">Open main menu</span>
                 {open ? (
                   <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -51,7 +51,9 @@ export default function NavigationBar() {
                   <NavLink
                     key={item.name}
                     to={item.href}
-                    className={({ isActive }) => `hover:text-amber-600 ${isActive ? 'text-amber-500' : 'text-white'}`}
+                    className={({ isActive }) =>
+                      `hover:text-amber-600 ${isActive ? 'text-amber-500' : 'text-white'}`
+                    }
                   >
                     {item.name}
                   </NavLink>
@@ -80,5 +82,5 @@ export default function NavigationBar() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }

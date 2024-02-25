@@ -1,9 +1,10 @@
 import { PlayerRace } from '@darkthrone/interfaces';
-import { tv } from "tailwind-variants";
+import { tv } from 'tailwind-variants';
 
 const styles = tv({
   slots: {
-    container: 'text-center h-40 p-2 border-2 rounded-lg flex flex-col cursor-pointer',
+    container:
+      'text-center h-40 p-2 border-2 rounded-lg flex flex-col cursor-pointer',
   },
   variants: {
     race: {
@@ -33,8 +34,8 @@ const styles = tv({
       undead: {
         container: 'bg-zinc-600/75',
       },
-    }
-  }
+    },
+  },
 });
 
 export interface RaceCardProps {
@@ -45,14 +46,17 @@ export interface RaceCardProps {
   bonusText: string;
 }
 export default function RaceCard(props: RaceCardProps) {
-  const { container } = styles({ race: props.race, selectedRace: props.selectedRace });
+  const { container } = styles({
+    race: props.race,
+    selectedRace: props.selectedRace,
+  });
   return (
     <div className={container()}>
-      <div className='grow flex flex-col justify-center items-center'>
+      <div className="grow flex flex-col justify-center items-center">
         {props.icon()}
       </div>
-      <h3 className='font-bold'>{props.name}</h3>
-      <p className='text-sm text-zinc-400'>{props.bonusText}</p>
+      <h3 className="font-bold">{props.name}</h3>
+      <p className="text-sm text-zinc-400">{props.bonusText}</p>
     </div>
   );
 }

@@ -12,11 +12,19 @@ interface HeaderBarProps {
 export default function HeaderBar(props: HeaderBarProps) {
   const navigate = useNavigate();
 
-  const [currentTime, setCurrentTime] = useState(props.client.serverTime ? new Date(props.client.serverTime) : undefined);
-  const [timeRemaining, setTimeRemaining] = useState(props.client.serverTime ? calculateTimeRemaining(props.client.serverTime) : undefined);
+  const [currentTime, setCurrentTime] = useState(
+    props.client.serverTime ? new Date(props.client.serverTime) : undefined,
+  );
+  const [timeRemaining, setTimeRemaining] = useState(
+    props.client.serverTime
+      ? calculateTimeRemaining(props.client.serverTime)
+      : undefined,
+  );
 
   props.client.on('updateCurrentUser', async () => {
-    setCurrentTime(props.client.serverTime ? new Date(props.client.serverTime) : undefined);
+    setCurrentTime(
+      props.client.serverTime ? new Date(props.client.serverTime) : undefined,
+    );
   });
 
   useEffect(() => {
@@ -55,7 +63,11 @@ export default function HeaderBar(props: HeaderBarProps) {
 
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-      <button type="button" className="-m-2.5 p-2.5 text-zinc-300 lg:hidden" onClick={() => props.setSidebarOpen(true)}>
+      <button
+        type="button"
+        className="-m-2.5 p-2.5 text-zinc-300 lg:hidden"
+        onClick={() => props.setSidebarOpen(true)}
+      >
         <span className="sr-only">Open sidebar</span>
         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
       </button>
@@ -64,15 +76,19 @@ export default function HeaderBar(props: HeaderBarProps) {
       <div className="h-6 w-px bg-zinc-900/10 lg:hidden" aria-hidden="true" />
 
       <div className="flex flex-1 items-center gap-x-6 self-stretch lg:gap-x-6">
-        <div className='flex gap-x-4 text-sm text-zinc-300'>
+        <div className="flex gap-x-4 text-sm text-zinc-300">
           {currentTime ? (
             <div>
-              DarkThrone Time: <span className='text-white font-bold'>{currentTime.toLocaleTimeString()}</span>
+              DarkThrone Time:{' '}
+              <span className="text-white font-bold">
+                {currentTime.toLocaleTimeString()}
+              </span>
             </div>
           ) : null}
           {timeRemaining ? (
             <div>
-              Next Turn In: <span className='text-white font-bold'>{`${timeRemaining.minutes}:${timeRemaining.seconds < 10 ? '0' : ''}${timeRemaining.seconds}`}</span>
+              Next Turn In:{' '}
+              <span className="text-white font-bold">{`${timeRemaining.minutes}:${timeRemaining.seconds < 10 ? '0' : ''}${timeRemaining.seconds}`}</span>
             </div>
           ) : null}
         </div>
@@ -97,10 +113,16 @@ export default function HeaderBar(props: HeaderBarProps) {
               />
 
               <span className="hidden lg:flex lg:items-center">
-                <span className="ml-4 text-sm font-semibold leading-6 text-zinc-300" aria-hidden="true">
+                <span
+                  className="ml-4 text-sm font-semibold leading-6 text-zinc-300"
+                  aria-hidden="true"
+                >
                   {props.client.authenticatedPlayer?.name}
                 </span>
-                <ChevronDownIcon className="ml-2 h-5 w-5 text-zinc-300" aria-hidden="true" />
+                <ChevronDownIcon
+                  className="ml-2 h-5 w-5 text-zinc-300"
+                  aria-hidden="true"
+                />
               </span>
             </Menu.Button>
             <Transition
@@ -114,13 +136,13 @@ export default function HeaderBar(props: HeaderBarProps) {
             >
               <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-zinc-800 py-2 shadow-lg ring-1 ring-zinc-600/95 focus:outline-none">
                 <Menu.Button
-                  className='w-full items-center text-left rounded-md px-2 py-2 text-sm'
+                  className="w-full items-center text-left rounded-md px-2 py-2 text-sm"
                   onClick={() => handleSwitchPlayer()}
                 >
                   Switch Players
                 </Menu.Button>
                 <Menu.Button
-                  className='w-full items-center text-left rounded-md px-2 py-2 text-sm'
+                  className="w-full items-center text-left rounded-md px-2 py-2 text-sm"
                   onClick={() => props.client.auth.logout()}
                 >
                   Logout
