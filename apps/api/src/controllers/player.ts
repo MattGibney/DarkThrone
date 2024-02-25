@@ -38,22 +38,33 @@ export default {
   POST_validatePlayerName: async (req: Request, res: Response) => {
     const { displayName } = req.body;
 
-    const player = await req.ctx.modelFactory.player.fetchByDisplayName(req.ctx, displayName);
-    if (player) {
+    const nameValidation = await req.ctx.modelFactory.player.validateDisplayName(req.ctx, displayName);
+    if (!nameValidation.isValid) {
       res.status(400).json({
-        errors: [{
-          code: 'player_name_taken',
-          title: 'Player name taken',
-        }]
-       });
+        errors: nameValidation.issues.map((issue) => ({
+          code: issue,
+          title: issue,
+        })),
+      });
       return;
     }
 
-    res.status(200).json({ valid: player === null });
+    res.status(200).json({ valid: true });
   },
 
   POST_createPlayer: async (req: Request, res: Response) => {
     const { displayName, selectedRace, selectedClass } = req.body;
+
+    const nameValidation = await req.ctx.modelFactory.player.validateDisplayName(req.ctx, displayName);
+    if (!nameValidation.isValid) {
+      res.status(400).json({
+        errors: nameValidation.issues.map((issue) => ({
+          code: issue,
+          title: issue,
+        })),
+      });
+      return;
+    }
 
     const player = await req.ctx.modelFactory.player.create(req.ctx, displayName, selectedRace, selectedClass);
     res.status(200).json(await player.serialise());

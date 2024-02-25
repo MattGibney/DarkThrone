@@ -45,3 +45,8 @@ export type UserSessionObject = {
   hasConfirmedEmail: boolean;
   serverTime: string;
 };
+
+export type PlayerNameValidation = {
+  isValid: boolean;
+  issues: string[];
+};
