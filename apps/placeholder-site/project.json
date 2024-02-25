@@ -6,9 +6,7 @@
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/placeholder-site"
@@ -63,24 +61,15 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": [
-        "{workspaceRoot}/coverage/apps/placeholder-site"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/apps/placeholder-site"],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/apps/placeholder-site"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
-      "options": {
-        "lintFilePatterns": [
-          "apps/placeholder-site/**/*.{ts,tsx,js,jsx}"
-        ]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     }
   },
   "tags": []

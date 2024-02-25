@@ -1,9 +1,18 @@
 /// <reference types="vitest" />
+import { replaceFiles } from '@nx/vite/plugins/rollup-replace-files.plugin';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
+  root: __dirname,
+  build: {
+    outDir: '../../dist/apps/placeholder-site',
+    reportCompressedSize: true,
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
   cacheDir: '../../node_modules/.vite/placeholder-site',
 
   server: {
@@ -16,7 +25,16 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react(), nxViteTsPaths()],
+  plugins: [
+    replaceFiles([
+      {
+        replace: 'apps/placeholder-site/src/environments/environment.ts',
+        with: 'apps/placeholder-site/src/environments/environment.production.ts',
+      },
+    ]),
+    react(),
+    nxViteTsPaths(),
+  ],
 
   // Uncomment this if you are using workers.
   // worker: {
@@ -24,6 +42,11 @@ export default defineConfig({
   // },
 
   test: {
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: '../../coverage/apps/placeholder-site',
+      provider: 'v8',
+    },
     globals: true,
     cache: {
       dir: '../../node_modules/.vitest',

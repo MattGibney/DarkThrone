@@ -22,7 +22,7 @@ export type APIResponse<S, T> = {
   data: T;
 };
 
-type EventListener = (...args: any[]) => void;
+type EventListener = (...args: unknown[]) => void;
 
 export default class DarkThroneClient {
   public http: AxiosInstance;
@@ -66,7 +66,7 @@ export default class DarkThroneClient {
     this.events[event].push(listener);
   }
 
-  emit(event: string, ...args: any[]) {
+  emit(event: string, ...args: unknown[]) {
     const eventListeners = this.events[event];
     if (eventListeners) {
       eventListeners.forEach((listener) => {
