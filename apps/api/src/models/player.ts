@@ -1,4 +1,8 @@
-import { AuthedPlayerObject, PlayerNameValidation, PlayerObject } from '@darkthrone/interfaces';
+import {
+  AuthedPlayerObject,
+  PlayerNameValidation,
+  PlayerObject,
+} from '@darkthrone/interfaces';
 import { PlayerRace } from '@darkthrone/interfaces';
 import { Context } from '../app';
 import { PlayerRow } from '../daos/player';
@@ -65,7 +69,10 @@ export default class PlayerModel {
   }
 
   async calculateAttackStrength(): Promise<number> {
-    let offense = this.units.reduce((acc, unit) => acc + unit.calculateAttackStrength(), 0);
+    let offense = this.units.reduce(
+      (acc, unit) => acc + unit.calculateAttackStrength(),
+      0,
+    );
     if (this.race === 'human' || this.race === 'undead') {
       // Humans and Undead get a 5% bonus to attack strength
       offense *= 1.05;
@@ -78,7 +85,10 @@ export default class PlayerModel {
   }
 
   async calculateDefenceStrength(): Promise<number> {
-    const defence = this.units.reduce((acc, unit) => acc + unit.calculateDefenceStrength(), 0);
+    const defence = this.units.reduce(
+      (acc, unit) => acc + unit.calculateDefenceStrength(),
+      0,
+    );
     if (this.race === 'elf' || this.race === 'goblin') {
       // Elves and Goblins get a 5% bonus to defence strength
       return defence * 1.05;
@@ -91,7 +101,10 @@ export default class PlayerModel {
   }
 
   async calculateGoldPerTurn(): Promise<number> {
-    let goldPerTurn = this.units.reduce((acc, unit) => acc + unit.calculateGoldPerTurn(), 0);
+    let goldPerTurn = this.units.reduce(
+      (acc, unit) => acc + unit.calculateGoldPerTurn(),
+      0,
+    );
     if (this.class === 'thief') {
       // Thieves get a 5% bonus to gold per turn
       goldPerTurn *= 1.05;
@@ -99,16 +112,22 @@ export default class PlayerModel {
     return Math.floor(goldPerTurn);
   }
 
-  async attackPlayer(targetPlayer: PlayerModel, attackTurns: number): Promise<WarHistoryModel> {
+  async attackPlayer(
+    targetPlayer: PlayerModel,
+    attackTurns: number,
+  ): Promise<WarHistoryModel> {
     const warHistoryID = `WRH-${ulid()}`;
 
     const playerAttackStrength = await this.calculateAttackStrength();
-    const targetPlayerDefenceStrength = await targetPlayer.calculateDefenceStrength();
+    const targetPlayerDefenceStrength =
+      await targetPlayer.calculateDefenceStrength();
 
     const isVictor = playerAttackStrength > targetPlayerDefenceStrength;
 
     // Calculate XP
-    const victorExperience = Math.floor(getRandomNumber(500, 1500) * (0.1 * attackTurns));
+    const victorExperience = Math.floor(
+      getRandomNumber(500, 1500) * (0.1 * attackTurns),
+    );
 
     if (!isVictor) {
       // Grant XP to the defender
@@ -116,22 +135,19 @@ export default class PlayerModel {
       await targetPlayer.save();
 
       // Create War History
-      return await this.ctx.modelFactory.warHistory.create(
-        this.ctx,
-        {
-          id: warHistoryID,
-          attacker_id: this.id,
-          defender_id: targetPlayer.id,
-          attack_turns_used: attackTurns,
-          is_attacker_victor: false,
-          attacker_strength: playerAttackStrength,
-          defender_strength: targetPlayerDefenceStrength,
-          gold_stolen: 0,
-          created_at: new Date(),
-          attacker_experience: 0,
-          defender_experience: victorExperience,
-        }
-      );
+      return await this.ctx.modelFactory.warHistory.create(this.ctx, {
+        id: warHistoryID,
+        attacker_id: this.id,
+        defender_id: targetPlayer.id,
+        attack_turns_used: attackTurns,
+        is_attacker_victor: false,
+        attacker_strength: playerAttackStrength,
+        defender_strength: targetPlayerDefenceStrength,
+        gold_stolen: 0,
+        created_at: new Date(),
+        attacker_experience: 0,
+        defender_experience: victorExperience,
+      });
     }
 
     // Calculate Damage
@@ -151,31 +167,32 @@ export default class PlayerModel {
     this.save();
     targetPlayer.save();
 
-    return await this.ctx.modelFactory.warHistory.create(
-      this.ctx,
-      {
-        id: warHistoryID,
-        attacker_id: this.id,
-        defender_id: targetPlayer.id,
-        attack_turns_used: attackTurns,
-        is_attacker_victor: true,
-        attacker_strength: playerAttackStrength,
-        defender_strength: targetPlayerDefenceStrength,
-        gold_stolen: winnings,
-        created_at: new Date(),
-        attacker_experience: victorExperience,
-        defender_experience: 0,
-      }
-    )
+    return await this.ctx.modelFactory.warHistory.create(this.ctx, {
+      id: warHistoryID,
+      attacker_id: this.id,
+      defender_id: targetPlayer.id,
+      attack_turns_used: attackTurns,
+      is_attacker_victor: true,
+      attacker_strength: playerAttackStrength,
+      defender_strength: targetPlayerDefenceStrength,
+      gold_stolen: winnings,
+      created_at: new Date(),
+      attacker_experience: victorExperience,
+      defender_experience: 0,
+    });
   }
 
   async save() {
-    const playerData = await this.ctx.daoFactory.player.update(this.ctx.logger, this.id, {
-      avatar_url: this.avatarURL,
-      attack_turns: this.attackTurns,
-      gold: this.gold,
-      experience: this.experience,
-    });
+    const playerData = await this.ctx.daoFactory.player.update(
+      this.ctx.logger,
+      this.id,
+      {
+        avatar_url: this.avatarURL,
+        attack_turns: this.attackTurns,
+        gold: this.gold,
+        experience: this.experience,
+      },
+    );
 
     this.populateFromRow(playerData);
   }
@@ -194,58 +211,116 @@ export default class PlayerModel {
   }
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {
-    const playerRows = await ctx.daoFactory.player.fetchAllForUser(ctx.logger, user.id);
-    return Promise.all(playerRows.map(async (row) => {
-      const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
-      return new PlayerModel(ctx, row, playerUnits);
-    }));
+    const playerRows = await ctx.daoFactory.player.fetchAllForUser(
+      ctx.logger,
+      user.id,
+    );
+    return Promise.all(
+      playerRows.map(async (row) => {
+        const playerUnits =
+          await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
+        return new PlayerModel(ctx, row, playerUnits);
+      }),
+    );
   }
 
   static async fetchAll(ctx: Context): Promise<PlayerModel[]> {
     const playerRows = await ctx.daoFactory.player.fetchAll(ctx.logger);
-    return Promise.all(playerRows.map(async (row) => {
-      const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
-      return new PlayerModel(ctx, row, playerUnits);
-    }));
+    return Promise.all(
+      playerRows.map(async (row) => {
+        const playerUnits =
+          await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
+        return new PlayerModel(ctx, row, playerUnits);
+      }),
+    );
   }
 
-  static async fetchByID(ctx: Context, id: string): Promise<PlayerModel | null> {
+  static async fetchByID(
+    ctx: Context,
+    id: string,
+  ): Promise<PlayerModel | null> {
     const playerRow = await ctx.daoFactory.player.fetchByID(ctx.logger, id);
     if (!playerRow) return null;
 
-    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
+    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(
+      ctx,
+      playerRow.id,
+    );
     return new PlayerModel(ctx, playerRow, playerUnits);
   }
 
-  static async fetchByDisplayName(ctx: Context, displayName: string): Promise<PlayerModel | null> {
-    const playerRow = await ctx.daoFactory.player.fetchByDisplayName(ctx.logger, displayName);
+  static async fetchByDisplayName(
+    ctx: Context,
+    displayName: string,
+  ): Promise<PlayerModel | null> {
+    const playerRow = await ctx.daoFactory.player.fetchByDisplayName(
+      ctx.logger,
+      displayName,
+    );
     if (!playerRow) return null;
 
-    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
+    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(
+      ctx,
+      playerRow.id,
+    );
     return new PlayerModel(ctx, playerRow, playerUnits);
   }
 
-  static async fetchAllMatchingIDs(ctx: Context, playerIDs: string[]): Promise<PlayerModel[]> {
-    const playerRows = await ctx.daoFactory.player.fetchAllMatchingIDs(ctx.logger, playerIDs);
+  static async fetchAllMatchingIDs(
+    ctx: Context,
+    playerIDs: string[],
+  ): Promise<PlayerModel[]> {
+    const playerRows = await ctx.daoFactory.player.fetchAllMatchingIDs(
+      ctx.logger,
+      playerIDs,
+    );
 
-    return Promise.all(playerRows.map(async (row) => {
-      const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
-      return new PlayerModel(ctx, row, playerUnits);
-    }));
+    return Promise.all(
+      playerRows.map(async (row) => {
+        const playerUnits =
+          await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
+        return new PlayerModel(ctx, row, playerUnits);
+      }),
+    );
   }
 
-  static async create(ctx: Context, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerModel> {
-    const playerRow = await ctx.daoFactory.player.create(ctx.logger, ctx.authedUser.model.id, displayName, selectedRace, selectedClass);
-    await ctx.daoFactory.playerUnits.create(ctx.logger, playerRow.id, 'citizen', 100);
+  static async create(
+    ctx: Context,
+    displayName: string,
+    selectedRace: PlayerRace,
+    selectedClass: string,
+  ): Promise<PlayerModel> {
+    const playerRow = await ctx.daoFactory.player.create(
+      ctx.logger,
+      ctx.authedUser.model.id,
+      displayName,
+      selectedRace,
+      selectedClass,
+    );
+    await ctx.daoFactory.playerUnits.create(
+      ctx.logger,
+      playerRow.id,
+      'citizen',
+      100,
+    );
 
-    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
+    const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(
+      ctx,
+      playerRow.id,
+    );
     return new PlayerModel(ctx, playerRow, playerUnits);
   }
 
-  static async validateDisplayName(ctx: Context, displayName: string): Promise<PlayerNameValidation> {
+  static async validateDisplayName(
+    ctx: Context,
+    displayName: string,
+  ): Promise<PlayerNameValidation> {
     const errors = [];
 
-    const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(ctx, displayName);
+    const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(
+      ctx,
+      displayName,
+    );
     if (existingPlayer) {
       /* If the name is already taken, we don't need to do any other validation
        * A name that already exists, MUST be valid by definition. Returning

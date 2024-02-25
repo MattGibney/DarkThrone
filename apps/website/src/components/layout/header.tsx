@@ -3,9 +3,9 @@ import NavigationLink from '../navigationLink';
 
 export default function Header() {
   return (
-    <div className='bg-zinc-900'>
+    <div className="bg-zinc-900">
       <div
-        className='
+        className="
           text-white
           flex
           justify-between
@@ -18,9 +18,9 @@ export default function Header() {
           mx-auto
 
           px-4 lg:px-0
-        '
+        "
       >
-        <ul className='flex gap-4'>
+        <ul className="flex gap-4">
           {/* <li>English</li> */}
           <li>
             <NavigationLink linkData={screens['privacy']} />
@@ -29,7 +29,7 @@ export default function Header() {
             <NavigationLink linkData={screens['contact']} />
           </li>
         </ul>
-        <ul className='flex gap-4'>
+        <ul className="flex gap-4">
           <li>Discord</li>
           <li>
             <NavigationLink linkData={screens['github']} />

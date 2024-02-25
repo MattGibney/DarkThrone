@@ -13,7 +13,7 @@ export type WarHistoryRow = {
   created_at: Date;
   attacker_experience: number;
   defender_experience: number;
-}
+};
 
 export default class WarHistoryDao {
   private database: Knex;
@@ -22,9 +22,14 @@ export default class WarHistoryDao {
     this.database = database;
   }
 
-  async create(logger: Logger, warHistory: WarHistoryRow): Promise<WarHistoryRow | null> {
+  async create(
+    logger: Logger,
+    warHistory: WarHistoryRow,
+  ): Promise<WarHistoryRow | null> {
     try {
-      const [createdWarHistory] = await this.database<WarHistoryRow>('war_history')
+      const [createdWarHistory] = await this.database<WarHistoryRow>(
+        'war_history',
+      )
         .insert(warHistory)
         .returning('*');
 
@@ -48,7 +53,10 @@ export default class WarHistoryDao {
     }
   }
 
-  async fetchAllForPlayer(logger: Logger, playerID: string): Promise<WarHistoryRow[]> {
+  async fetchAllForPlayer(
+    logger: Logger,
+    playerID: string,
+  ): Promise<WarHistoryRow[]> {
     try {
       const warHistory = await this.database<WarHistoryRow>('war_history')
         .select('*')

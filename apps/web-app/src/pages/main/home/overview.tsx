@@ -8,20 +8,56 @@ interface OverviewPageProps {
 export default function OverviewPage(props: OverviewPageProps) {
   if (!props.client.authenticatedPlayer) return null;
 
-  const population = props.client.authenticatedPlayer.units.reduce((acc, unit) => acc + unit.quantity, 0);
-  const armySize = props.client.authenticatedPlayer.units.filter((unit) => UnitTypes[unit.unitType].type !== 'support').reduce((acc, unit) => acc + unit.quantity, 0);
+  const population = props.client.authenticatedPlayer.units.reduce(
+    (acc, unit) => acc + unit.quantity,
+    0,
+  );
+  const armySize = props.client.authenticatedPlayer.units
+    .filter((unit) => UnitTypes[unit.unitType].type !== 'support')
+    .reduce((acc, unit) => acc + unit.quantity, 0);
 
   const stats = [
-    { name: 'Population', value: new Intl.NumberFormat('en-GB').format(population) },
-    { name: 'Army Size', value: new Intl.NumberFormat('en-GB').format(armySize) },
+    {
+      name: 'Population',
+      value: new Intl.NumberFormat('en-GB').format(population),
+    },
+    {
+      name: 'Army Size',
+      value: new Intl.NumberFormat('en-GB').format(armySize),
+    },
     { name: 'Level', value: props.client.authenticatedPlayer.level },
-    { name: 'Experience', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.experience) },
+    {
+      name: 'Experience',
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.experience,
+      ),
+    },
 
-    { name: 'Attack Turns', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.attackTurns) },
-    { name: 'Gold', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.gold) },
-    { name: 'Attack Strength', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.attackStrength) },
-    { name: 'Defence Strength', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.defenceStrength) },
-  ]
+    {
+      name: 'Attack Turns',
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.attackTurns,
+      ),
+    },
+    {
+      name: 'Gold',
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.gold,
+      ),
+    },
+    {
+      name: 'Attack Strength',
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.attackStrength,
+      ),
+    },
+    {
+      name: 'Defence Strength',
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.defenceStrength,
+      ),
+    },
+  ];
 
   return (
     <div>
@@ -34,14 +70,15 @@ export default function OverviewPage(props: OverviewPageProps) {
             key={stat.name}
             className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-zinc-800 px-4 py-10 sm:px-6 xl:px-8"
           >
-            <dt className="text-sm font-medium leading-6 text-zinc-400">{stat.name}</dt>
+            <dt className="text-sm font-medium leading-6 text-zinc-400">
+              {stat.name}
+            </dt>
             <dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-zinc-200">
               {stat.value}
             </dd>
           </div>
         ))}
       </dl>
-
     </div>
   );
 }

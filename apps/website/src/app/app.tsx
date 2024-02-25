@@ -20,7 +20,11 @@ export const screens: { [k: string]: NavigationItem } = {
 
   // External Links
   github: { name: 'Github', href: environment.gitHubURL, element: Outlet },
-  status: { name: 'Game Status', href: 'https://status.darkthronereborn.com/', element: Outlet },
+  status: {
+    name: 'Game Status',
+    href: 'https://status.darkthronereborn.com/',
+    element: Outlet,
+  },
 };
 
 export const navigation = ['home', 'news', 'roadmap'].map((item) => {

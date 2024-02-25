@@ -1,24 +1,25 @@
-import { tv } from "tailwind-variants";
+import { tv } from 'tailwind-variants';
 
 const styles = tv({
   slots: {
-    label: "block text-sm font-medium leading-6 text-zinc-200",
-    input: "block w-full rounded-md border-0 py-1.5 bg-zinc-700 shadow-sm ring-1 ring-inset placeholder:text-zinc-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
-    feedback: "mt-2 text-sm"
+    label: 'block text-sm font-medium leading-6 text-zinc-200',
+    input:
+      'block w-full rounded-md border-0 py-1.5 bg-zinc-700 shadow-sm ring-1 ring-inset placeholder:text-zinc-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+    feedback: 'mt-2 text-sm',
   },
   variants: {
     style: {
       neutral: {
-        input: 'ring-zinc-700 focus:ring-yellow-600'
+        input: 'ring-zinc-700 focus:ring-yellow-600',
       },
       invalid: {
         input: 'ring-zinc-500 focus:ring-zinc-600',
-        feedback: 'text-zinc-300'
+        feedback: 'text-zinc-300',
       },
       valid: {
         input: 'ring-green-500 focus:ring-green-600',
-        feedback: 'text-green-300'
-      }
+        feedback: 'text-green-300',
+      },
     },
   },
 });
@@ -38,7 +39,9 @@ export interface InputFieldProps {
 }
 
 export function InputField(props: InputFieldProps) {
-  const { label, input, feedback } = styles({ style: props.validationState || 'neutral' });
+  const { label, input, feedback } = styles({
+    style: props.validationState || 'neutral',
+  });
   return (
     <div>
       {props.displayName ? (
@@ -46,7 +49,7 @@ export function InputField(props: InputFieldProps) {
           {props.displayName}
         </label>
       ) : null}
-      <div className={props.displayName ? "mt-2" : ""}>
+      <div className={props.displayName ? 'mt-2' : ''}>
         <input
           id={props.id}
           name={props.name}
@@ -61,9 +64,7 @@ export function InputField(props: InputFieldProps) {
         />
       </div>
       {props.validationMessage ? (
-        <p className={feedback()}>
-          {props.validationMessage}
-        </p>
+        <p className={feedback()}>{props.validationMessage}</p>
       ) : null}
     </div>
   );

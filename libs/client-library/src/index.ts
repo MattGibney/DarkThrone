@@ -2,8 +2,13 @@ import axios, { AxiosInstance } from 'axios';
 import AuthController from './controllers/auth';
 import PlayersController from './controllers/players';
 import AttackController from './controllers/attack';
-import WarHistoryController, { WarHistoryObject } from './controllers/warHistory';
-import type { AuthedPlayerObject, UserSessionObject } from '@darkthrone/interfaces';
+import WarHistoryController, {
+  WarHistoryObject,
+} from './controllers/warHistory';
+import type {
+  AuthedPlayerObject,
+  UserSessionObject,
+} from '@darkthrone/interfaces';
 import TrainingController from './controllers/training';
 
 export type APIError = {
@@ -15,7 +20,7 @@ export type APIError = {
 export type APIResponse<S, T> = {
   status: S;
   data: T;
-}
+};
 
 type EventListener = (...args: any[]) => void;
 
@@ -48,8 +53,8 @@ export default class DarkThroneClient {
 
     const reFetchCurrentUser = async () => {
       await this.auth.getCurrentUser();
-    }
-    window.addEventListener('focus', function() {
+    };
+    window.addEventListener('focus', function () {
       reFetchCurrentUser();
     });
   }
@@ -64,11 +69,11 @@ export default class DarkThroneClient {
   emit(event: string, ...args: any[]) {
     const eventListeners = this.events[event];
     if (eventListeners) {
-      eventListeners.forEach(listener => {
+      eventListeners.forEach((listener) => {
         listener(...args);
       });
     }
   }
 }
 
-export type { WarHistoryObject }
+export type { WarHistoryObject };

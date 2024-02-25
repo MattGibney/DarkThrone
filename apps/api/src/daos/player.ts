@@ -38,8 +38,7 @@ export default class PlayerDao {
 
   async fetchAll(logger: Logger): Promise<PlayerRow[]> {
     try {
-      const players = await this.database<PlayerRow>('players')
-        .select('*');
+      const players = await this.database<PlayerRow>('players').select('*');
 
       return players;
     } catch (error) {
@@ -61,7 +60,10 @@ export default class PlayerDao {
     }
   }
 
-  async fetchAllMatchingIDs(logger: Logger, playerIDs: string[]): Promise<PlayerRow[]> {
+  async fetchAllMatchingIDs(
+    logger: Logger,
+    playerIDs: string[],
+  ): Promise<PlayerRow[]> {
     try {
       const players = await this.database<PlayerRow>('players')
         .whereIn('id', playerIDs)
@@ -74,7 +76,10 @@ export default class PlayerDao {
     }
   }
 
-  async fetchByDisplayName(logger: Logger, displayName: string): Promise<PlayerRow | null> {
+  async fetchByDisplayName(
+    logger: Logger,
+    displayName: string,
+  ): Promise<PlayerRow | null> {
     try {
       const player = await this.database<PlayerRow>('players')
         .where({ display_name: displayName })
@@ -87,8 +92,14 @@ export default class PlayerDao {
     }
   }
 
-  async create(logger: Logger, userID: string, displayName: string, selectedRace: PlayerRace, selectedClass: string): Promise<PlayerRow> {
-    const playerID = `PLR-${ulid()}`
+  async create(
+    logger: Logger,
+    userID: string,
+    displayName: string,
+    selectedRace: PlayerRace,
+    selectedClass: string,
+  ): Promise<PlayerRow> {
+    const playerID = `PLR-${ulid()}`;
     try {
       const player = await this.database<PlayerRow>('players')
         .insert({
@@ -107,7 +118,11 @@ export default class PlayerDao {
     }
   }
 
-  async update(logger: Logger, playerID: string, update: Partial<PlayerRow>): Promise<PlayerRow> {
+  async update(
+    logger: Logger,
+    playerID: string,
+    update: Partial<PlayerRow>,
+  ): Promise<PlayerRow> {
     try {
       const player = await this.database<PlayerRow>('players')
         .where({ id: playerID })

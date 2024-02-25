@@ -11,20 +11,22 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
   const navigate = useNavigate();
   const { playerID } = useParams<{ playerID: string }>();
 
-  const [player, setPlayer] = useState<PlayerObject | null | undefined>(undefined);
+  const [player, setPlayer] = useState<PlayerObject | null | undefined>(
+    undefined,
+  );
   const [attackTurns, setAttackTurns] = useState<number>(1);
   const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchPlayer = async () => {
       if (playerID === undefined) {
-        setPlayer(null)
+        setPlayer(null);
         return;
       }
 
       const playerFetch = await props.client.players.fetchByID(playerID);
 
-      if(playerFetch.status === 'fail') {
+      if (playerFetch.status === 'fail') {
         setPlayer(null);
         return;
       }
@@ -44,57 +46,62 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
     if (!player) return;
 
-    const attackResponse = await props.client.attack.attackPlayer(player.id, attackTurns);
+    const attackResponse = await props.client.attack.attackPlayer(
+      player.id,
+      attackTurns,
+    );
     if (attackResponse.status === 'fail') {
       setInvalidMessages(attackResponse.data.map((error) => error.title));
       return;
     }
 
-    navigate(`/war-history/${attackResponse.data.id}`)
+    navigate(`/war-history/${attackResponse.data.id}`);
   }
 
   if (player === undefined) return;
 
-  if (player === null) return (<div>Player not found</div>);
+  if (player === null) return <div>Player not found</div>;
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
 
   if (isViewingSelf) {
-    return (
-      <div>You cannot attack yourself</div>
-    );
+    return <div>You cannot attack yourself</div>;
   }
 
   return (
-    <div className='my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden'>
-      <div className='bg-zinc-800/50 p-8'>
-        <div className='flex items-center'>
-          <div className='grow flex items-center gap-x-4'>
+    <div className="my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden">
+      <div className="bg-zinc-800/50 p-8">
+        <div className="flex items-center">
+          <div className="grow flex items-center gap-x-4">
             <Avatar race={player.race} url={player.avatarURL} />
             <div>
-              <div className='text-sm font-bold text-zinc-400'>Attack</div>
-              <div className='grow text-2xl font-semibold text-zinc-200'>{player.name}</div>
+              <div className="text-sm font-bold text-zinc-400">Attack</div>
+              <div className="grow text-2xl font-semibold text-zinc-200">
+                {player.name}
+              </div>
             </div>
           </div>
-          <div className='flex flex-col items-center'>
-            <div className='text-sm font-bold text-zinc-400'>Current Turns</div>
-            <div className='text-2xl font-light'>{Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer?.attackTurns || 0)}</div>
+          <div className="flex flex-col items-center">
+            <div className="text-sm font-bold text-zinc-400">Current Turns</div>
+            <div className="text-2xl font-light">
+              {Intl.NumberFormat('en-GB').format(
+                props.client.authenticatedPlayer?.attackTurns || 0,
+              )}
+            </div>
           </div>
         </div>
-
       </div>
       <form
-        className='flex flex-col gap-y-6 bg-zinc-800 p-8'
+        className="flex flex-col gap-y-6 bg-zinc-800 p-8"
         onSubmit={handleAttack}
       >
         {invalidMessages.length > 0 ? (
-          <Alert
-            messages={invalidMessages}
-            type={'error'}
-          />
+          <Alert messages={invalidMessages} type={'error'} />
         ) : null}
-        <div className='flex justify-between items-center'>
-          <div>Attack Turns <span className='text-sm text-zinc-400'>(1 / 10)</span></div>
+        <div className="flex justify-between items-center">
+          <div>
+            Attack Turns <span className="text-sm text-zinc-400">(1 / 10)</span>
+          </div>
           <input
             type="number"
             value={attackTurns.toString()}
@@ -109,16 +116,13 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
           <div>
             <Button
               text={'Cancel'}
-              variant='secondary'
-              type='button'
+              variant="secondary"
+              type="button"
               onClick={() => navigate(-1)}
             />
           </div>
           <div>
-            <Button
-              text={'Attack'}
-              type='submit'
-            />
+            <Button text={'Attack'} type="submit" />
           </div>
         </div>
       </form>

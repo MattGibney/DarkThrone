@@ -10,7 +10,6 @@ import Knex from 'knex';
 import knexConfig from '../knexfile';
 import pino from 'pino';
 
-
 import application from './app';
 import config from '../config/environment';
 import DaoFactory from './daoFactory';

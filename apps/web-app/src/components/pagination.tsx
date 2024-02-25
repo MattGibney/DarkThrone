@@ -1,5 +1,8 @@
 import { tv } from 'tailwind-variants';
-import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid'
+import {
+  ArrowLongLeftIcon,
+  ArrowLongRightIcon,
+} from '@heroicons/react/20/solid';
 
 interface PaginationProps {
   onPageChange: (page: number) => void;
@@ -15,7 +18,10 @@ export default function Pagination(props: PaginationProps) {
       <div className="-mt-px flex w-0 flex-1">
         {props.currentPage > 1 ? (
           <LinkBlock onClick={() => props.onPageChange(props.currentPage - 1)}>
-            <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-zinc-400" aria-hidden="true" />
+            <ArrowLongLeftIcon
+              className="mr-3 h-5 w-5 text-zinc-400"
+              aria-hidden="true"
+            />
             Previous
           </LinkBlock>
         ) : null}
@@ -32,8 +38,7 @@ export default function Pagination(props: PaginationProps) {
               {pageNumber}
             </LinkBlock>
           );
-        }
-        )}
+        })}
         {/* <LinkBlock>1</LinkBlock>
         <LinkBlock isCurrent={true}>2</LinkBlock>
         <LinkBlock>3</LinkBlock>
@@ -48,12 +53,15 @@ export default function Pagination(props: PaginationProps) {
         {props.currentPage < totalPages ? (
           <LinkBlock onClick={() => props.onPageChange(props.currentPage + 1)}>
             Next
-            <ArrowLongRightIcon className="ml-3 h-5 w-5 text-zinc-400" aria-hidden="true" />
+            <ArrowLongRightIcon
+              className="ml-3 h-5 w-5 text-zinc-400"
+              aria-hidden="true"
+            />
           </LinkBlock>
         ) : null}
       </div>
     </nav>
-  )
+  );
 }
 
 const styles = tv({
@@ -61,9 +69,9 @@ const styles = tv({
   variants: {
     color: {
       zinc: 'text-zinc-500 hover:text-zinc-300 hover:border-zinc-300',
-      yellow: 'border-yellow-600 text-yellow-600'
-    }
-  }
+      yellow: 'border-yellow-600 text-yellow-600',
+    },
+  },
 });
 
 interface LinkBlockProps {
