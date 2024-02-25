@@ -8,29 +8,49 @@ export default class TrainingController {
     this.root = root;
   }
 
-  async trainUnits(desiredUnits: PlayerUnits[]): Promise<APIResponse<'ok', PlayerUnits[]> | APIResponse<'fail', APIError[]>> {
+  async trainUnits(
+    desiredUnits: PlayerUnits[],
+  ): Promise<
+    APIResponse<'ok', PlayerUnits[]> | APIResponse<'fail', APIError[]>
+  > {
     try {
-      const response = await this.root.http.post<PlayerUnits[]>('/training/train', desiredUnits);
+      const response = await this.root.http.post<PlayerUnits[]>(
+        '/training/train',
+        desiredUnits,
+      );
 
       this.root.emit('playerUpdate');
 
       return { status: 'ok', data: response.data };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 
-  async unTrainUnits(desiredUnits: PlayerUnits[]): Promise<APIResponse<'ok', PlayerUnits[]> | APIResponse<'fail', APIError[]>> {
+  async unTrainUnits(
+    desiredUnits: PlayerUnits[],
+  ): Promise<
+    APIResponse<'ok', PlayerUnits[]> | APIResponse<'fail', APIError[]>
+  > {
     try {
-      const response = await this.root.http.post<PlayerUnits[]>('/training/untrain', desiredUnits);
+      const response = await this.root.http.post<PlayerUnits[]>(
+        '/training/untrain',
+        desiredUnits,
+      );
 
       this.root.emit('playerUpdate');
 
       return { status: 'ok', data: response.data };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 }

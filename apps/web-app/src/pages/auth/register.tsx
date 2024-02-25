@@ -9,9 +9,9 @@ interface RegisterPageProps {
 export default function RegisterPage(props: RegisterPageProps) {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
@@ -40,8 +40,8 @@ export default function RegisterPage(props: RegisterPageProps) {
   return (
     <main>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className='flex justify-center'>
-          <Logo variant='large' />
+        <div className="flex justify-center">
+          <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
           Create your account
@@ -76,8 +76,16 @@ export default function RegisterPage(props: RegisterPageProps) {
               autoComplete="new-password"
               required
               displayName="Password"
-              validationMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
-              validationState={shouldCheckPasswords && !doPasswordsMatch ? 'invalid' : 'neutral'}
+              validationMessage={
+                shouldCheckPasswords && !doPasswordsMatch
+                  ? 'Passwords do not match'
+                  : ''
+              }
+              validationState={
+                shouldCheckPasswords && !doPasswordsMatch
+                  ? 'invalid'
+                  : 'neutral'
+              }
               value={password}
               setValue={(newVal) => setPassword(newVal)}
             />
@@ -90,21 +98,32 @@ export default function RegisterPage(props: RegisterPageProps) {
               onBlur={() => setShouldCheckPasswords(true)}
               required
               displayName="Confirm Password"
-              validationMessage={shouldCheckPasswords && !doPasswordsMatch ? 'Passwords do not match' : ''}
-              validationState={shouldCheckPasswords && !doPasswordsMatch ? 'invalid' : 'neutral'}
+              validationMessage={
+                shouldCheckPasswords && !doPasswordsMatch
+                  ? 'Passwords do not match'
+                  : ''
+              }
+              validationState={
+                shouldCheckPasswords && !doPasswordsMatch
+                  ? 'invalid'
+                  : 'neutral'
+              }
               value={confirmPassword}
               setValue={(newVal) => setConfirmPassword(newVal)}
             />
 
             <div>
-              <Button type='submit' text='Create Account' />
+              <Button type="submit" text="Create Account" />
             </div>
           </form>
         </div>
 
         <p className="mt-10 text-center text-sm text-zinc-500">
           Already a member?{' '}
-          <Link to="/login" className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500">
+          <Link
+            to="/login"
+            className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
+          >
             Login now
           </Link>
         </p>

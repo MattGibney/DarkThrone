@@ -23,7 +23,7 @@ export interface PlayerObject {
   class: PlayerClass;
   gold: number;
   level: number;
-};
+}
 
 export interface AuthedPlayerObject extends PlayerObject {
   attackStrength: number;
@@ -31,12 +31,12 @@ export interface AuthedPlayerObject extends PlayerObject {
   experience: number;
   attackTurns: number;
   units: PlayerUnits[];
-};
+}
 
 export interface PlayerUnits {
   unitType: keyof typeof UnitTypes;
   quantity: number;
-};
+}
 
 export type UserSessionObject = {
   id: string;

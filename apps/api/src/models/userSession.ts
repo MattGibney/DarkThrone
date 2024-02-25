@@ -27,7 +27,11 @@ export default class UserSessionModel {
     this.expiresAt = data.expires_at;
   }
 
-  static async create(ctx: Context, user: UserModel, rememberMe: boolean): Promise<UserSessionModel> {
+  static async create(
+    ctx: Context,
+    user: UserModel,
+    rememberMe: boolean,
+  ): Promise<UserSessionModel> {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + (rememberMe ? 30 : 1));
 
@@ -64,17 +68,27 @@ export default class UserSessionModel {
   }
 
   async assumePlayer(player: PlayerModel): Promise<void> {
-    await this.ctx.daoFactory.userSession.assumePlayer(this.ctx.logger, this.id, player.id);
+    await this.ctx.daoFactory.userSession.assumePlayer(
+      this.ctx.logger,
+      this.id,
+      player.id,
+    );
     this.playerID = player.id;
   }
 
   async unassumePlayer(): Promise<void> {
-    await this.ctx.daoFactory.userSession.unassumePlayer(this.ctx.logger, this.id);
+    await this.ctx.daoFactory.userSession.unassumePlayer(
+      this.ctx.logger,
+      this.id,
+    );
     this.playerID = null;
   }
 
   async serialise(): Promise<UserSessionObject> {
-    const user = await this.ctx.modelFactory.user.fetchByID(this.ctx, this.userID);
+    const user = await this.ctx.modelFactory.user.fetchByID(
+      this.ctx,
+      this.userID,
+    );
     return {
       id: this.id,
       email: user.email,

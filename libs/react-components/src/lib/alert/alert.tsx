@@ -1,35 +1,35 @@
-import { XCircleIcon } from '@heroicons/react/20/solid'
-import { tv } from "tailwind-variants";
+import { XCircleIcon } from '@heroicons/react/20/solid';
+import { tv } from 'tailwind-variants';
 
 const styles = tv({
   slots: {
-    container: "rounded-md p-4",
-    icon: "h-5 w-5",
-    title: "text-sm font-medium mb-2",
-    messageBody: "text-sm",
+    container: 'rounded-md p-4',
+    icon: 'h-5 w-5',
+    title: 'text-sm font-medium mb-2',
+    messageBody: 'text-sm',
   },
   variants: {
     type: {
       error: {
-        container: "bg-red-800/25",
-        icon: "text-red-400",
-        title: "text-red-400",
-        messageBody: "text-red-200",
+        container: 'bg-red-800/25',
+        icon: 'text-red-400',
+        title: 'text-red-400',
+        messageBody: 'text-red-200',
       },
       warning: {
-        container: "bg-yellow-800/25",
-        icon: "text-yellow-400",
-        title: "text-yellow-400",
-        messageBody: "text-yellow-300",
+        container: 'bg-yellow-800/25',
+        icon: 'text-yellow-400',
+        title: 'text-yellow-400',
+        messageBody: 'text-yellow-300',
       },
-    }
-  }
+    },
+  },
 });
 
 export interface AlertProps {
   title?: string;
   messages: string[];
-  type: "error" | "warning";
+  type: 'error' | 'warning';
 }
 
 export function Alert(props: AlertProps) {

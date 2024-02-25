@@ -1,4 +1,8 @@
-import { AuthedPlayerObject, PlayerObject, UserSessionObject } from '@darkthrone/interfaces';
+import {
+  AuthedPlayerObject,
+  PlayerObject,
+  UserSessionObject,
+} from '@darkthrone/interfaces';
 import DarkThroneClient, { APIError, APIResponse } from '..';
 
 export default class AuthController {
@@ -8,9 +12,14 @@ export default class AuthController {
     this.root = root;
   }
 
-  async getCurrentUser(): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
+  async getCurrentUser(): Promise<
+    APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
+  > {
     try {
-      const response = await this.root.http.get<{user: UserSessionObject, player?: AuthedPlayerObject }>('/auth/current-user');
+      const response = await this.root.http.get<{
+        user: UserSessionObject;
+        player?: AuthedPlayerObject;
+      }>('/auth/current-user');
 
       this.root.serverTime = new Date(response.data.user.serverTime);
       this.root.authenticatedUser = response.data.user;
@@ -20,15 +29,24 @@ export default class AuthController {
       return { status: 'ok', data: response.data.user as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 
-  async login(email: string, password: string, rememberMe: boolean): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
+  async login(
+    email: string,
+    password: string,
+    rememberMe: boolean,
+  ): Promise<
+    APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
+  > {
     try {
       const response = await this.root.http.post<UserSessionObject>(
         '/auth/login',
-        { email, password, rememberMe }
+        { email, password, rememberMe },
       );
 
       this.root.emit('userLogin', response.data);
@@ -37,15 +55,23 @@ export default class AuthController {
       return { status: 'ok', data: response.data as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 
-  async register(email: string, password: string): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
+  async register(
+    email: string,
+    password: string,
+  ): Promise<
+    APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
+  > {
     try {
       const response = await this.root.http.post<UserSessionObject>(
         '/auth/register',
-        { email, password }
+        { email, password },
       );
 
       this.root.emit('userLogin', response.data);
@@ -54,11 +80,16 @@ export default class AuthController {
       return { status: 'ok', data: response.data as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 
-  async logout(): Promise<APIResponse<'ok', null> | APIResponse<'fail', APIError[]>> {
+  async logout(): Promise<
+    APIResponse<'ok', null> | APIResponse<'fail', APIError[]>
+  > {
     try {
       await this.root.http.post('/auth/logout');
 
@@ -68,16 +99,23 @@ export default class AuthController {
       return { status: 'ok', data: null };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 
-  async assumePlayer(playerId: string): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
+  async assumePlayer(
+    playerId: string,
+  ): Promise<
+    APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
+  > {
     try {
-      const response = await this.root.http.post<{ user: UserSessionObject, player: AuthedPlayerObject }>(
-        '/auth/assume-player',
-        { playerId }
-      );
+      const response = await this.root.http.post<{
+        user: UserSessionObject;
+        player: AuthedPlayerObject;
+      }>('/auth/assume-player', { playerId });
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
@@ -86,15 +124,21 @@ export default class AuthController {
       return { status: 'ok', data: response.data.user as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 
-  async unassumePlayer(): Promise<APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>> {
+  async unassumePlayer(): Promise<
+    APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
+  > {
     try {
-      const response = await this.root.http.post<{ user: UserSessionObject, player: PlayerObject }>(
-        '/auth/unassume-player'
-      );
+      const response = await this.root.http.post<{
+        user: UserSessionObject;
+        player: PlayerObject;
+      }>('/auth/unassume-player');
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = undefined;
@@ -103,7 +147,10 @@ export default class AuthController {
       return { status: 'ok', data: response.data.user as UserSessionObject };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return { status: 'fail', data: axiosError.response.data.errors as APIError[] };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
     }
   }
 }

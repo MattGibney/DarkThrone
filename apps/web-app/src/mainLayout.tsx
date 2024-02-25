@@ -12,17 +12,23 @@ interface MainLayoutProps {
 export default function MainLayout(props: MainLayoutProps) {
   const navigate = useNavigate();
 
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (props.client.authenticatedUser && !props.client.authenticatedUser.playerID) {
+    if (
+      props.client.authenticatedUser &&
+      !props.client.authenticatedUser.playerID
+    ) {
       navigate('/player-select');
     }
   }, [navigate, props.client.authenticatedUser]);
 
   return (
     <div>
-      <MobileSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <MobileSidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
       {/* Static sidebar for desktop */}
       <DesktopSidebar />
@@ -37,5 +43,5 @@ export default function MainLayout(props: MainLayoutProps) {
         <Footer />
       </div>
     </div>
-  )
+  );
 }

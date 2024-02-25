@@ -18,10 +18,15 @@ export default class UserSessionDao {
     this.database = database;
   }
 
-  async create(logger: Logger, userSession: Partial<UserSessionRow>): Promise<UserSessionRow | null> {
-    const userID = `SES-${ulid()}`
+  async create(
+    logger: Logger,
+    userSession: Partial<UserSessionRow>,
+  ): Promise<UserSessionRow | null> {
+    const userID = `SES-${ulid()}`;
     try {
-      const [createdUserSession] = await this.database<UserSessionRow>('user_sessions')
+      const [createdUserSession] = await this.database<UserSessionRow>(
+        'user_sessions',
+      )
         .insert({
           id: userID,
           ...userSession,
@@ -62,7 +67,11 @@ export default class UserSessionDao {
     }
   }
 
-  async assumePlayer(logger: Logger, id: string, playerID: string): Promise<void> {
+  async assumePlayer(
+    logger: Logger,
+    id: string,
+    playerID: string,
+  ): Promise<void> {
     try {
       await this.database<UserSessionRow>('user_sessions')
         .update({ player_id: playerID })

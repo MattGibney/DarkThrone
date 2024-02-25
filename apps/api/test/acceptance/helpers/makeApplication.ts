@@ -47,10 +47,14 @@ export default function makeApplication(
     daoFactory = Object.assign(
       {
         userSession: {
-          fetchValidByToken: jest.fn().mockResolvedValue(options.authenticatedUser.session),
+          fetchValidByToken: jest
+            .fn()
+            .mockResolvedValue(options.authenticatedUser.session),
         },
         user: {
-          fetchByID: jest.fn().mockResolvedValue(options.authenticatedUser.user),
+          fetchByID: jest
+            .fn()
+            .mockResolvedValue(options.authenticatedUser.user),
         },
       },
       daoFactory,

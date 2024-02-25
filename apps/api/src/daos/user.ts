@@ -43,8 +43,12 @@ export default class UserDao {
     }
   }
 
-  async create(logger: Logger, email: string, passwordHash: string): Promise<UserRow | null> {
-    const userID = `USR-${ulid()}`
+  async create(
+    logger: Logger,
+    email: string,
+    passwordHash: string,
+  ): Promise<UserRow | null> {
+    const userID = `USR-${ulid()}`;
     try {
       const user = await this.database<UserRow>('users')
         .insert({

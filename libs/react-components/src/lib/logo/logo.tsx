@@ -1,4 +1,4 @@
-import { tv } from "tailwind-variants";
+import { tv } from 'tailwind-variants';
 
 const styles = tv({
   slots: {
@@ -14,7 +14,7 @@ const styles = tv({
       large: {
         text: 'text-5xl',
         subText: 'text-2xl',
-      }
+      },
     },
   },
 });

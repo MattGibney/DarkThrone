@@ -8,16 +8,18 @@ interface NavigationProps {
 }
 export default function Navigation(props: NavigationProps) {
   const location = useLocation();
-  const [activeParentHref, setActiveParentHref] = useState<string | undefined>();
+  const [activeParentHref, setActiveParentHref] = useState<
+    string | undefined
+  >();
 
   useEffect(() => {
-    const activeParent = globalNavigation.find(
-      (nav) => nav.children?.some((child) => {
+    const activeParent = globalNavigation.find((nav) =>
+      nav.children?.some((child) => {
         const regexPattern = child.to.replace(/:[^/]+/g, '[^/]+');
         const regex = new RegExp(`^${regexPattern}$`);
 
         return regex.test(location.pathname);
-      })
+      }),
     );
     setActiveParentHref(activeParent?.href);
   }, [location]);
@@ -27,24 +29,26 @@ export default function Navigation(props: NavigationProps) {
       <ul className="flex flex-1 flex-col gap-y-7">
         <li>
           <ul className="-mx-2 space-y-1">
-            {globalNavigation.filter((tab) => tab.shouldRender).map((item, itemIdx) => (
-              <li key={itemIdx}>
-                <NavLink
-                  className={({ isActive }) =>
-                    classNames(
-                      isActive || item.href === activeParentHref
-                        ? 'bg-yellow-700/25 text-yellow-600'
-                        : 'text-zinc-300 hover:text-primary-600 hover:bg-zinc-700/50',
-                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
-                    )
-                  }
-                  to={item.href}
-                  onClick={props.closeSidebar}
-                >
-                  {item.name}
-                </NavLink>
-              </li>
-            ))}
+            {globalNavigation
+              .filter((tab) => tab.shouldRender)
+              .map((item, itemIdx) => (
+                <li key={itemIdx}>
+                  <NavLink
+                    className={({ isActive }) =>
+                      classNames(
+                        isActive || item.href === activeParentHref
+                          ? 'bg-yellow-700/25 text-yellow-600'
+                          : 'text-zinc-300 hover:text-primary-600 hover:bg-zinc-700/50',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+                      )
+                    }
+                    to={item.href}
+                    onClick={props.closeSidebar}
+                  >
+                    {item.name}
+                  </NavLink>
+                </li>
+              ))}
           </ul>
         </li>
       </ul>
