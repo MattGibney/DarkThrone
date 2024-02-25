@@ -1,3 +1,4 @@
+import { UnitTypes } from '@darkthrone/game-data';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
 
@@ -7,7 +8,15 @@ interface OverviewPageProps {
 export default function OverviewPage(props: OverviewPageProps) {
   if (!props.client.authenticatedPlayer) return null;
 
+  const population = props.client.authenticatedPlayer.units.reduce((acc, unit) => acc + unit.quantity, 0);
+  const armySize = props.client.authenticatedPlayer.units.filter((unit) => UnitTypes[unit.unitType].type !== 'support').reduce((acc, unit) => acc + unit.quantity, 0);
+
   const stats = [
+    { name: 'Population', value: new Intl.NumberFormat('en-GB').format(population) },
+    { name: 'Army Size', value: new Intl.NumberFormat('en-GB').format(armySize) },
+    { name: 'Level', value: props.client.authenticatedPlayer.level },
+    { name: 'Experience', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.experience) },
+
     { name: 'Attack Turns', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.attackTurns) },
     { name: 'Gold', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.gold) },
     { name: 'Attack Strength', value: new Intl.NumberFormat('en-GB').format(props.client.authenticatedPlayer.attackStrength) },

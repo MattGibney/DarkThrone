@@ -54,6 +54,7 @@ export default class PlayerModel {
       attackStrength: attackStrength,
       defenceStrength: defenceStrength,
       attackTurns: this.attackTurns,
+      experience: this.experience,
       units: this.units.map((unit) => ({
         unitType: unit.unitType,
         quantity: unit.quantity,
