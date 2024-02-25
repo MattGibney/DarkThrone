@@ -27,11 +27,11 @@ describe('POST /training/units', () => {
   it('should return 400 if zero or negative number of units requested', async () => {
     const { application } = createAppForTest({});
 
-    // fails to train when requesting a negative number of units
+    // fails to train when requesting zero units to train
     let response = await request(application)
       .post('/training/train')
       .set('Cookie', 'DTAC=token')
-      .send([{ unitType: 'citizen', quantity: -1 }]);
+      .send([{ unitType: 'citizen', quantity: 0 }]);
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
