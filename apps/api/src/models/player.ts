@@ -1,4 +1,4 @@
-import { AuthedPlayerObject, PlayerObject } from '@darkthrone/interfaces';
+import { AuthedPlayerObject, PlayerNameValidation, PlayerObject } from '@darkthrone/interfaces';
 import { PlayerRace } from '@darkthrone/interfaces';
 import { Context } from '../app';
 import { PlayerRow } from '../daos/player';
@@ -240,5 +240,32 @@ export default class PlayerModel {
 
     const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, playerRow.id);
     return new PlayerModel(ctx, playerRow, playerUnits);
+  }
+
+  static async validateDisplayName(ctx: Context, displayName: string): Promise<PlayerNameValidation> {
+    const errors = [];
+
+    const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(ctx, displayName);
+    if (existingPlayer) {
+      errors.push('name_taken');
+    }
+
+    // Validate Regex a-zA-Z0-9_
+    if (!/^[a-zA-Z0-9_]*$/.test(displayName)) {
+      errors.push('invalid_characters');
+    }
+
+    if (displayName.length < 3) {
+      errors.push('too_short');
+    }
+
+    if (displayName.length > 20) {
+      errors.push('too_long');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      issues: errors,
+    };
   }
 }
