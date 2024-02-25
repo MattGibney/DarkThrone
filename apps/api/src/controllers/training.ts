@@ -3,7 +3,6 @@ import { PlayerUnits } from '@darkthrone/interfaces';
 import { Request, Response } from 'express';
 import PlayerUnitsModel from '../models/playerUnits';
 import { APIError } from '@darkthrone/client-library';
-import { error } from 'console';
 
 const training_request_errors = (desiredUnits: PlayerUnits[]): APIError[] => {
   // Used for both training and untraining units.
