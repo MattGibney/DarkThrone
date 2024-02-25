@@ -1,4 +1,4 @@
-import pino, { P } from 'pino';
+import pino from 'pino';
 import DaoFactory from '../../../src/daoFactory';
 import app from '../../../src/app';
 import { Config } from '../../../config/environment';
