@@ -23,12 +23,23 @@ You need to have the following installed on your machine:
 ## Getting Started
 
 1. Clone the repository
+
 2. Run `npm install` to install the dependencies
+
 3. Setup your environment file
 
-   Within the directory `apps/api` copy the `.env` file to `.env.local` and update the values to match your local environment.
+   Copy the `.env` file to `.env.local`:
+   
+   ```bash
+   cd apps/api && cp .env .env.local && cd -
+   ```
+   
+   Optionally replace the defaults to match your local environment
+   
 
-4. Connect to an already running PostgreSQL database or use `cd apps/api/ && docker-compose up -d && cd -` to create a PostgreSQL in a Docker container.
+4. Connect to an already running PostgreSQL database or use `cd apps/api/ && docker-compose up -d && cd -` to create a PostgreSQL in a Docker container
+
+   You can turn it off using `docker-compose down`.
 
 5. Run the database migrations
 
@@ -39,13 +50,13 @@ You need to have the following installed on your machine:
 6. Start the application
 
    ```bash
-    npx nx run-many -t serve -p api,web-app,placeholder-site
-    ```
+   npx nx run-many -t serve -p api,web-app,placeholder-site
+   ```
 
-    This will start the:
-    * API on port 3000
-    * Web App on port 4200
-    * Placeholder Site on port 4201.
+   This will start the:
+   * API on port 3000
+   * Web App on port 4200
+   * Placeholder Site on port 4201.
 
 ## Basic Architecture
 
