@@ -1,5 +1,5 @@
 import DarkThroneClient, { APIError, APIResponse } from '..';
-import type { PlayerObject } from '@darkthrone/interfaces';
+import type { PlayerNameValidation, PlayerObject } from '@darkthrone/interfaces';
 
 export default class PlayersController {
   private root: DarkThroneClient;
@@ -52,11 +52,11 @@ export default class PlayersController {
     }
   }
 
-  async validatePlayerName(name: string): Promise<APIResponse<'ok', boolean> | APIResponse<'fail', APIError[]>> {
+  async validatePlayerName(name: string): Promise<APIResponse<'ok', PlayerNameValidation> | APIResponse<'fail', APIError[]>> {
     try {
-      const response = await this.root.http.post<boolean>('/players/validate-name', { displayName: name });
+      const response = await this.root.http.post<PlayerNameValidation>('/players/validate-name', { displayName: name });
 
-      return { status: 'ok', data: response.data as boolean };
+      return { status: 'ok', data: response.data };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
       return { status: 'fail', data: axiosError.response.data.errors as APIError[] };

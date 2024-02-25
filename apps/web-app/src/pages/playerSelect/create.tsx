@@ -6,6 +6,16 @@ import ClassCard, { ClassCardProps } from './components/classCard';
 import { useNavigate } from 'react-router-dom';
 import { PlayerRace } from '@darkthrone/interfaces';
 
+//TODO: This should be handled by i18n
+const validationMessages = {
+  empty: 'Player name cannot be empty',
+  name_taken: 'This name is already taken',
+  invalid_characters: 'Player name must only contain letters, numbers and underscores',
+  too_short: 'Player name must be longer than 3 characters',
+  too_long: 'Player name cannot be lonmger than 20 characters',
+  available: 'This name is available'
+};
+
 interface CreatePlayerPageProps {
   client: DarkThroneClient;
 }
@@ -21,18 +31,18 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
   async function validatePlayerName() {
     if (playerName.length === 0) {
-      setPlayerNameStatus({ isValid: false, message: 'Player name cannot be empty' });
+      setPlayerNameStatus({ isValid: false, message: validationMessages['empty'] });
       return;
     }
 
     const response = await props.client.players.validatePlayerName(playerName);
-
     if (response.status === 'fail') {
-      setPlayerNameStatus({ isValid: false, message: response.data.map(err => err.title).join(', ') });
+      const errorMessages = response.data.map((error) => validationMessages[error.code as keyof typeof validationMessages]);
+      setPlayerNameStatus({ isValid: false, message: errorMessages.join(', ')});
       return;
     }
 
-    setPlayerNameStatus({ isValid: true, message: 'This name is available' });
+    setPlayerNameStatus({ isValid: true, message: validationMessages['available'] });
   }
 
   const raceOptions: RaceCardProps[] = [
