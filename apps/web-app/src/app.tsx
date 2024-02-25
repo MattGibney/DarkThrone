@@ -43,13 +43,18 @@ export const globalNavigation: NavigationItem[] = [
     component: GenericOutlet,
     shouldRender: true,
     children: [
-      { name: 'Overview', to: '/overview', shouldRender: true, component: OverviewPage },
+      {
+        name: 'Overview',
+        to: '/overview',
+        shouldRender: true,
+        component: OverviewPage,
+      },
       { name: 'News', to: '/news', shouldRender: true, component: NewsPage },
       // { name: 'Levels', to: '/levels' },
       // { name: 'Settings', to: '/settings' },
       // { name: 'FAQ', to: '/faq' },
       // { name: 'Support', to: '/support' },
-    ]
+    ],
   },
   {
     name: 'Battle',
@@ -57,15 +62,45 @@ export const globalNavigation: NavigationItem[] = [
     shouldRender: true,
     component: BattlePage,
     children: [
-      { name: 'Attack', to: '/attack', shouldRender: true, component: AttackListPage },
-      { name: 'Attack Player', to: '/attack/:playerID', shouldRender: false, component: AttackPlayerPage },
-      { name: 'Training', to: '/training', shouldRender: true, component: TrainingScreen },
+      {
+        name: 'Attack',
+        to: '/attack',
+        shouldRender: true,
+        component: AttackListPage,
+      },
+      {
+        name: 'Attack Player',
+        to: '/attack/:playerID',
+        shouldRender: false,
+        component: AttackPlayerPage,
+      },
+      {
+        name: 'Training',
+        to: '/training',
+        shouldRender: true,
+        component: TrainingScreen,
+      },
       // { name: 'Mercenaries', to: '/mercenaries' },
       // { name: 'Upgrades', to: '/upgrades' },
-      { name: 'War History', to: '/war-history', shouldRender: true, component: ListWarHistory },
-      { name: 'View War History', to: '/war-history/:historyID', shouldRender: false, component: WarHistoryView },
-      { name: 'View Player', to: '/player/:playerID', shouldRender: false, component: AttackViewPlayerPage }
-    ]
+      {
+        name: 'War History',
+        to: '/war-history',
+        shouldRender: true,
+        component: ListWarHistory,
+      },
+      {
+        name: 'View War History',
+        to: '/war-history/:historyID',
+        shouldRender: false,
+        component: WarHistoryView,
+      },
+      {
+        name: 'View Player',
+        to: '/player/:playerID',
+        shouldRender: false,
+        component: AttackViewPlayerPage,
+      },
+    ],
   },
   // {
   //   name: 'Structures',
@@ -84,7 +119,9 @@ export const globalNavigation: NavigationItem[] = [
 const client = new DarkThroneClient(environment.gameAPI);
 
 export function App() {
-  const [currentUser, setCurrentUser] = useState<UserSessionObject | null | undefined>(undefined);
+  const [currentUser, setCurrentUser] = useState<
+    UserSessionObject | null | undefined
+  >(undefined);
 
   async function fetchCurrentUser() {
     const userFetch = await client.auth.getCurrentUser();
@@ -109,7 +146,7 @@ export function App() {
       client.on('playerUpdate', fetchCurrentUser);
 
       fetchCurrentUser();
-    }
+    };
 
     initialise();
   }, []);
@@ -136,19 +173,32 @@ export function App() {
   return (
     <Routes>
       <Route element={<PlayerSelectLayout client={client} />}>
-        <Route path="/player-select" element={<PlayerSelectListPage client={client} />} />
-        <Route path="/player-select/create" element={<CreatePlayerPage client={client} />} />
+        <Route
+          path="/player-select"
+          element={<PlayerSelectListPage client={client} />}
+        />
+        <Route
+          path="/player-select/create"
+          element={<CreatePlayerPage client={client} />}
+        />
       </Route>
 
       <Route element={<MainLayout client={client} />}>
         {globalNavigation.map((nav) => (
-          <Route key={nav.name} path={nav.children ? undefined : nav.href} element={<nav.component client={client} />}>
+          <Route
+            key={nav.name}
+            path={nav.children ? undefined : nav.href}
+            element={<nav.component client={client} />}
+          >
             {nav.children?.map((child) => (
-              <Route key={child.name} path={child.to} element={<child.component client={client} />} />
+              <Route
+                key={child.name}
+                path={child.to}
+                element={<child.component client={client} />}
+              />
             ))}
           </Route>
         ))}
-
 
         {/* Home */}
         {/* <Route path="/overview" element={<OverviewPage client={client} />} /> */}
@@ -190,9 +240,6 @@ export function App() {
         <Route path="/forum" element={<div>Forum</div>} />
         <Route path="/messaging" element={<div>Messaging</div>} />
         <Route path="/recruiter" element={<div>Recruiter</div>} /> */}
-
-
-
       </Route>
 
       <Route path="*" element={<RedirectTo path={'/overview'} />} />
@@ -214,7 +261,7 @@ interface GenericOutletProps {
   client: DarkThroneClient;
 }
 function GenericOutlet(props: GenericOutletProps) {
-  return <Outlet />
+  return <Outlet />;
 }
 
 export default App;

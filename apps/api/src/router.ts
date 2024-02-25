@@ -10,10 +10,12 @@ const authedRouter = Router();
 authedRouter.use((req, res, next) => {
   if (!req.ctx.authedUser) {
     res.status(401).send({
-      errors: [{
-        code: 'not_authenticated',
-        title: 'Not authenticated',
-      }],
+      errors: [
+        {
+          code: 'not_authenticated',
+          title: 'Not authenticated',
+        },
+      ],
     });
     return;
   }
@@ -27,7 +29,10 @@ authedRouter.post('/attack', AttackController.POST_attackPlayer);
 router.post('/auth/login', AuthController.POST_login);
 router.post('/auth/register', AuthController.POST_register);
 router.get('/auth/current-user', AuthController.GET_currentUser);
-authedRouter.get('/auth/current-user/players', PlayersController.GET_fetchPlayersForUser);
+authedRouter.get(
+  '/auth/current-user/players',
+  PlayersController.GET_fetchPlayersForUser,
+);
 router.post('/auth/logout', AuthController.POST_logout);
 authedRouter.post('/auth/assume-player', AuthController.POST_assumePlayer);
 authedRouter.post('/auth/unassume-player', AuthController.POST_unassumePlayer);
@@ -35,9 +40,15 @@ authedRouter.post('/auth/unassume-player', AuthController.POST_unassumePlayer);
 // Players
 authedRouter.get('/players', PlayersController.GET_fetchAllPlayers);
 authedRouter.post('/players', PlayersController.POST_createPlayer);
-authedRouter.post('/players/validate-name', PlayersController.POST_validatePlayerName);
+authedRouter.post(
+  '/players/validate-name',
+  PlayersController.POST_validatePlayerName,
+);
 authedRouter.get('/players/:id', PlayersController.GET_fetchPlayerByID);
-authedRouter.post('/players/matching-ids', PlayersController.POST_fetchAllMatchingIDs);
+authedRouter.post(
+  '/players/matching-ids',
+  PlayersController.POST_fetchAllMatchingIDs,
+);
 
 // War History
 authedRouter.get('/war-history/:id', WarHistoryController.GET_fetchByID);

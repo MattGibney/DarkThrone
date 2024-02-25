@@ -26,4 +26,3 @@ export default (logger: Logger, config: Config, daoFactory: DaoFactory) => {
 
   return cron;
 };
-

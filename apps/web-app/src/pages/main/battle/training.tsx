@@ -8,7 +8,7 @@ interface TrainingScreenProps {
   client: DarkThroneClient;
 }
 export default function TrainingScreen(props: TrainingScreenProps) {
-  const [inpuValues, setInputValuess] = useState<{ [ k: string]: number }>({});
+  const [inpuValues, setInputValuess] = useState<{ [k: string]: number }>({});
 
   const renderUnitTypes = ['worker', 'soldier_1', 'guard_1'].map((unitID) => {
     const typeData = UnitTypes[unitID];
@@ -62,9 +62,25 @@ export default function TrainingScreen(props: TrainingScreenProps) {
     <main>
       <SubNavigation />
 
-      <div className='border border-zinc-700/50 bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm'>
-        <div>Gold <span className="text-white font-bold text-md">{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.gold || 0)}</span></div>
-        <div>Citizens <span className="text-white font-bold text-md">{new Intl.NumberFormat().format(props.client.authenticatedPlayer?.units.find((unit) => unit.unitType === 'citizen')?.quantity || 0)}</span></div>
+      <div className="border border-zinc-700/50 bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
+        <div>
+          Gold{' '}
+          <span className="text-white font-bold text-md">
+            {new Intl.NumberFormat().format(
+              props.client.authenticatedPlayer?.gold || 0,
+            )}
+          </span>
+        </div>
+        <div>
+          Citizens{' '}
+          <span className="text-white font-bold text-md">
+            {new Intl.NumberFormat().format(
+              props.client.authenticatedPlayer?.units.find(
+                (unit) => unit.unitType === 'citizen',
+              )?.quantity || 0,
+            )}
+          </span>
+        </div>
       </div>
       <form onSubmit={handleTrain}>
         <div className="sm:px-6 lg:px-8">
@@ -73,29 +89,44 @@ export default function TrainingScreen(props: TrainingScreenProps) {
               <div className="inline-block min-w-full sm:py-2 align-middle">
                 <table className="min-w-full border-separate border-spacing-0">
                   <thead>
-                  <tr>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500">
-                      Unit Type
-                    </th>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500">
-                      Attributes
-                    </th>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                      You Have
-                    </th>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                      Cost
-                    </th>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                      Quantity
-                    </th>
-                  </tr>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
+                      >
+                        Unit Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
+                      >
+                        Attributes
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                      >
+                        You Have
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                      >
+                        Cost
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                      >
+                        Quantity
+                      </th>
+                    </tr>
                   </thead>
                   <tbody>
                     {renderUnitTypes.map((unit, unitIdx) => (
                       <tr
                         key={unitIdx}
-                        className='even:bg-zinc-800 odd:bg-zinc-800/50'
+                        className="even:bg-zinc-800 odd:bg-zinc-800/50"
                       >
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                           {unit.name}
@@ -104,16 +135,24 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                           {unit.attributes.join(', ')}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                          {new Intl.NumberFormat().format(props.client.authenticatedPlayer?.units.find((playerUnit) => playerUnit.unitType === unit.id)?.quantity || 0)}
+                          {new Intl.NumberFormat().format(
+                            props.client.authenticatedPlayer?.units.find(
+                              (playerUnit) => playerUnit.unitType === unit.id,
+                            )?.quantity || 0,
+                          )}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                           {new Intl.NumberFormat().format(unit.cost)}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                           <InputField
-                            value={inpuValues[unit.id] ? inpuValues[unit.id].toString() : ''}
+                            value={
+                              inpuValues[unit.id]
+                                ? inpuValues[unit.id].toString()
+                                : ''
+                            }
                             setValue={(val) => setInputValue(unit.id, val)}
-                            type='number'
+                            type="number"
                           />
                         </td>
                       </tr>
@@ -127,10 +166,15 @@ export default function TrainingScreen(props: TrainingScreenProps) {
 
         <div className="flex justify-end gap-x-4 mt-8">
           <div>
-            <Button text={'Untrain'} type='button' onClick={handleUnTrain} variant='secondary' />
+            <Button
+              text={'Untrain'}
+              type="button"
+              onClick={handleUnTrain}
+              variant="secondary"
+            />
           </div>
           <div>
-            <Button text={'Train'} type='submit' variant='primary' />
+            <Button text={'Train'} type="submit" variant="primary" />
           </div>
         </div>
       </form>

@@ -32,19 +32,27 @@ export default {
       return;
     }
 
-    const targetPlayer = await req.ctx.modelFactory.player.fetchByID(req.ctx, targetID);
+    const targetPlayer = await req.ctx.modelFactory.player.fetchByID(
+      req.ctx,
+      targetID,
+    );
     if (!targetPlayer) {
       res.status(404).send({
-        errors: [{
-          code: 'attack_target_not_found',
-          title: 'Target not found',
-        }],
+        errors: [
+          {
+            code: 'attack_target_not_found',
+            title: 'Target not found',
+          },
+        ],
       });
       return;
     }
 
-    const warHistory = await req.ctx.authedPlayer.attackPlayer(targetPlayer, attackTurns);
+    const warHistory = await req.ctx.authedPlayer.attackPlayer(
+      targetPlayer,
+      attackTurns,
+    );
 
     res.status(200).send(warHistory.serialise());
-  }
-}
+  },
+};

@@ -24,20 +24,24 @@ export type Context = {
   authedPlayer?: PlayerModel;
 };
 
-const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => {
+const application = (
+  logger: Logger,
+  config: Config,
+  daoFactory: DaoFactory,
+) => {
   const app = express();
 
   app.use(express.json());
   app.use(cookieParser());
 
-  const allowlist = [config.webApp.origin]
+  const allowlist = [config.webApp.origin];
   const corsOptionsDelegate = function (req, callback) {
     let corsOptions = { origin: false, credentials: false };
     if (allowlist.indexOf(req.header('Origin')) !== -1) {
-      corsOptions = { origin: true, credentials: true }
+      corsOptions = { origin: true, credentials: true };
     }
-    callback(null, corsOptions)
-  }
+    callback(null, corsOptions);
+  };
 
   app.use(cors(corsOptionsDelegate));
 
@@ -50,7 +54,7 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
       config,
       logger: logger.child({ requestID }),
       modelFactory: new ModelFactory(),
-      daoFactory
+      daoFactory,
     };
 
     res.setHeader('X-Powered-By', 'Dark Throne');
@@ -129,6 +133,6 @@ const application = (logger: Logger, config: Config, daoFactory: DaoFactory) => 
   });
 
   return app;
-}
+};
 
 export default application;

@@ -20,10 +20,9 @@ export default function AttackListPage(props: AttackListPageProps) {
         return;
       }
       setPlayers(playersFetch.data);
-    }
+    };
     fetchPlayers();
   }, [props.client.players]);
-
 
   return (
     <main>
@@ -34,28 +33,40 @@ export default function AttackListPage(props: AttackListPageProps) {
             <div className="inline-block min-w-full sm:py-2 align-middle">
               <table className="min-w-full border-separate border-spacing-0">
                 <thead>
-                <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500">
-                    Name
-                  </th>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                    Level
-                  </th>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                    Gold
-                  </th>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32">
-                    Race
-                  </th>
-                </tr>
+                  <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                    >
+                      Level
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                    >
+                      Gold
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                    >
+                      Race
+                    </th>
+                  </tr>
                 </thead>
                 <tbody>
                   {players.map((player, playerIdx) => (
                     <tr
                       key={playerIdx}
-                      className='even:bg-zinc-800/50 cursor-pointer'
+                      className="even:bg-zinc-800/50 cursor-pointer"
                       onClick={() => {
-                        navigate(`/player/${player.id}`)
+                        navigate(`/player/${player.id}`);
                       }}
                     >
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
@@ -68,10 +79,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                         {new Intl.NumberFormat('en-GB').format(player.gold)}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        <Avatar
-                          race={player.race}
-                          size='small'
-                        />
+                        <Avatar race={player.race} size="small" />
                       </td>
                     </tr>
                   ))}
