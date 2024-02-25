@@ -6,9 +6,13 @@
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["libs/interfaces/**/*.ts"]
+        "lintFilePatterns": [
+          "libs/interfaces/**/*.ts"
+        ]
       }
     }
   },
