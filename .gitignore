@@ -38,4 +38,8 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Environment variables
 apps/api/.env.local
+
+# Database storage
+apps/api/data
