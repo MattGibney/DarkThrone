@@ -24,6 +24,42 @@ describe('POST /training/units', () => {
     });
   });
 
+  it('should return 400 if zero or negative number of units requested', async () => {
+    const { application } = createAppForTest({});
+
+    // fails to train when requesting zero units to train
+    let response = await request(application)
+      .post('/training/train')
+      .set('Cookie', 'DTAC=token')
+      .send([{ unitType: 'citizen', quantity: 0 }]);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      errors: [
+        {
+          code: 'non_positive_units_requests',
+          title: 'Non positive units requests',
+        },
+      ],
+    });
+
+    // fails to train when requesting a negative number of units
+    response = await request(application)
+      .post('/training/train')
+      .set('Cookie', 'DTAC=token')
+      .send([{ unitType: 'citizen', quantity: -1 }]);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      errors: [
+        {
+          code: 'non_positive_units_requests',
+          title: 'Non positive units requests',
+        },
+      ],
+    });
+  });
+
   it('should return 400 if not enough citizens', async () => {
     const { application } = createAppForTest({});
 

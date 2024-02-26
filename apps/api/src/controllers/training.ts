@@ -2,20 +2,39 @@ import { UnitTypes } from '@darkthrone/game-data';
 import { PlayerUnits } from '@darkthrone/interfaces';
 import { Request, Response } from 'express';
 import PlayerUnitsModel from '../models/playerUnits';
+import { APIError } from '@darkthrone/client-library';
+
+const validateTrainingInputs = (desiredUnits: PlayerUnits[]): APIError[] => {
+  // Used for both training and untraining units.
+  // we expect only positive numbers to be used.
+  if (desiredUnits.length === 0) {
+    return [
+      {
+        code: 'no_units_requested',
+        title: 'No units requested',
+      },
+    ];
+  }
+
+  if (desiredUnits.find(({ quantity }) => quantity <= 0)) {
+    return [
+      {
+        code: 'non_positive_units_requests',
+        title: 'Non positive units requests',
+      },
+    ];
+  }
+
+  return [];
+};
 
 export default {
   POST_trainUnits: async (req: Request, res: Response) => {
     const desiredUnits = req.body as PlayerUnits[];
 
-    if (desiredUnits.length === 0) {
-      res.status(400).send({
-        errors: [
-          {
-            code: 'no_units_requested',
-            title: 'No units requested',
-          },
-        ],
-      });
+    const errors = validateTrainingInputs(desiredUnits);
+    if (errors.length > 0) {
+      res.status(400).send({ errors });
       return;
     }
 
@@ -96,16 +115,9 @@ export default {
   POST_unTrainUnits: async (req: Request, res: Response) => {
     const desiredUnits = req.body as PlayerUnits[];
 
-    // Validate Input
-    if (desiredUnits.length === 0) {
-      res.status(400).send({
-        errors: [
-          {
-            code: 'no_units_requested',
-            title: 'No units requested',
-          },
-        ],
-      });
+    const errors = validateTrainingInputs(desiredUnits);
+    if (errors.length > 0) {
+      res.status(400).send({ errors });
       return;
     }
 
