@@ -135,13 +135,13 @@ export function App() {
   useEffect(() => {
     const initialise = async () => {
       client.on('userLogin', (user) => {
-        setCurrentUser(user);
+        setCurrentUser(user as UserSessionObject);
       });
       client.on('userLogout', () => {
         setCurrentUser(null);
       });
       client.on('playerChange', (UserSessionObject) => {
-        setCurrentUser(UserSessionObject);
+        setCurrentUser(UserSessionObject as UserSessionObject);
       });
       client.on('playerUpdate', fetchCurrentUser);
 
