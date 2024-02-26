@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import PlayerUnitsModel from '../models/playerUnits';
 import { APIError } from '@darkthrone/client-library';
 
-const training_request_errors = (desiredUnits: PlayerUnits[]): APIError[] => {
+const validateTrainingInputs = (desiredUnits: PlayerUnits[]): APIError[] => {
   // Used for both training and untraining units.
   // we expect only positive numbers to be used.
   if (desiredUnits.length === 0) {
@@ -32,7 +32,7 @@ export default {
   POST_trainUnits: async (req: Request, res: Response) => {
     const desiredUnits = req.body as PlayerUnits[];
 
-    const errors = training_request_errors(desiredUnits);
+    const errors = validateTrainingInputs(desiredUnits);
     if (errors.length > 0) {
       res.status(400).send({ errors });
       return;
@@ -115,7 +115,7 @@ export default {
   POST_unTrainUnits: async (req: Request, res: Response) => {
     const desiredUnits = req.body as PlayerUnits[];
 
-    const errors = training_request_errors(desiredUnits);
+    const errors = validateTrainingInputs(desiredUnits);
     if (errors.length > 0) {
       res.status(400).send({ errors });
       return;
