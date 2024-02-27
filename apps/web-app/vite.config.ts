@@ -1,5 +1,4 @@
 /// <reference types="vitest" />
-import { replaceFiles } from '@nx/vite/plugins/rollup-replace-files.plugin';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
@@ -25,16 +24,7 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [
-    replaceFiles([
-      {
-        replace: 'apps/web-app/src/environments/environment.ts',
-        with: 'apps/web-app/src/environments/environment.production.ts',
-      },
-    ]),
-    react(),
-    nxViteTsPaths(),
-  ],
+  plugins: [react(), nxViteTsPaths()],
 
   // Uncomment this if you are using workers.
   // worker: {

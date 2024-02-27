@@ -29,3 +29,5 @@ jobs:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
         SERVER_PASS: ${{ secrets.SERVER_PASS }}
+        VITE_GAME_APP_URL: ${{ secrets.GAME_APP_URL }}
+        VITE_GAME_API_URL: ${{ secrets.GAME_API_URL }}
