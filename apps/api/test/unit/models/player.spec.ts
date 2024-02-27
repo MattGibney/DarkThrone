@@ -152,12 +152,12 @@ describe('Model: Player', () => {
       { race: 'human', class: 'assassin', expected: 100 },
 
       { race: 'elf', class: 'fighter', expected: 105 },
-      { race: 'elf', class: 'cleric', expected: 105 },
+      { race: 'elf', class: 'cleric', expected: 110 },
       { race: 'elf', class: 'thief', expected: 105 },
       { race: 'elf', class: 'assassin', expected: 105 },
 
       { race: 'goblin', class: 'fighter', expected: 105 },
-      { race: 'goblin', class: 'cleric', expected: 105 },
+      { race: 'goblin', class: 'cleric', expected: 110 },
       { race: 'goblin', class: 'thief', expected: 105 },
       { race: 'goblin', class: 'assassin', expected: 105 },
 
@@ -186,6 +186,82 @@ describe('Model: Player', () => {
 
         expect(defenceStrength).toEqual(testCase.expected);
       });
+    });
+  });
+
+  describe('attackPlayer', () => {
+    it('should correctly record war history for a successful attack', async () => {
+      const attackerPlayerRow = {
+        id: 'PLR-01HQP5D6HM1XS3MNAQXZAWP61K',
+        race: 'elf',
+        class: 'theif',
+        gold: 100,
+      } as unknown as PlayerRow;
+      const attackerUnits = [
+        {
+          unitType: 'offence',
+          quantity: 6,
+          calculateAttackStrength: jest.fn().mockReturnValue(18),
+        } as unknown as PlayerUnitsModel,
+      ] as unknown as PlayerUnitsModel[];
+
+      const defenderPlayerRow = {
+        id: 'PLR-01HQP5DE1ZC99QTZR4AVV0MS7R',
+        race: 'goblin',
+        class: 'cleric',
+        gold: 100,
+      } as unknown as PlayerRow;
+      const defenderUnits = [
+        {
+          unitType: 'defence',
+          quantity: 1,
+          calculateDefenceStrength: jest.fn().mockReturnValue(3),
+        } as unknown as PlayerUnitsModel,
+      ] as unknown as PlayerUnitsModel[];
+
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            update: jest.fn().mockResolvedValue(attackerPlayerRow),
+          },
+        },
+        modelFactory: {
+          warHistory: {
+            create: jest.fn().mockResolvedValue({}),
+          },
+        },
+      } as unknown as Context;
+
+      const attacker = new PlayerModel(
+        mockCTX,
+        attackerPlayerRow,
+        attackerUnits,
+      );
+
+      const defender = new PlayerModel(
+        mockCTX,
+        defenderPlayerRow,
+        defenderUnits,
+      );
+
+      await attacker.attackPlayer(defender, 10);
+
+      expect(mockCTX.modelFactory.warHistory.create).toHaveBeenCalledWith(
+        mockCTX,
+        {
+          id: expect.any(String),
+          attacker_id: 'PLR-01HQP5D6HM1XS3MNAQXZAWP61K',
+          defender_id: 'PLR-01HQP5DE1ZC99QTZR4AVV0MS7R',
+          attack_turns_used: 10,
+          is_attacker_victor: true,
+          attacker_strength: 18,
+          defender_strength: 3,
+          gold_stolen: expect.any(Number),
+          created_at: expect.any(Date),
+          attacker_experience: expect.any(Number),
+          defender_experience: 0,
+        },
+      );
     });
   });
 });
