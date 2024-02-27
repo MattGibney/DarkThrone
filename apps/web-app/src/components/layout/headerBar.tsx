@@ -42,18 +42,19 @@ export default function HeaderBar(props: HeaderBarProps) {
   function calculateTimeRemaining(serverTime: Date) {
     const minutes = serverTime.getMinutes();
     const seconds = serverTime.getSeconds();
-    let minutesRemaining;
 
-    if (minutes < 30) {
-      minutesRemaining = 30 - minutes;
-    } else if (minutes === 30) {
-      minutesRemaining = 30;
-    } else {
-      minutesRemaining = 60 - minutes;
-    }
+    const halfHourInSeconds = 60 * 30;
 
-    const secondsRemaining = 60 - seconds;
-    return { minutes: minutesRemaining, seconds: secondsRemaining };
+    const timeInSeconds = minutes * 60 + seconds;
+    const timeSinceHourOrHalfHourInSeconds =
+    timeInSeconds % halfHourInSeconds;
+    const timeToHourOrHalfHourInSeconds =
+      halfHourInSeconds - timeSinceHourOrHalfHourInSeconds;
+
+    const minutesRemaining = Math.floor(timeToHourOrHalfHourInSeconds / 60);
+    const remainingSeconds = timeToHourOrHalfHourInSeconds % 60;
+
+    return `${String(minutesRemaining).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   }
 
   async function handleSwitchPlayer() {
@@ -88,7 +89,7 @@ export default function HeaderBar(props: HeaderBarProps) {
           {timeRemaining ? (
             <div>
               Next Turn In:{' '}
-              <span className="text-white font-bold">{`${timeRemaining.minutes}:${timeRemaining.seconds < 10 ? '0' : ''}${timeRemaining.seconds}`}</span>
+              <span className="text-white font-bold">{timeRemaining}</span>
             </div>
           ) : null}
         </div>
