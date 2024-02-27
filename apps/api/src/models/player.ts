@@ -85,17 +85,17 @@ export default class PlayerModel {
   }
 
   async calculateDefenceStrength(): Promise<number> {
-    const defence = this.units.reduce(
+    let defence = this.units.reduce(
       (acc, unit) => acc + unit.calculateDefenceStrength(),
       0,
     );
     if (this.race === 'elf' || this.race === 'goblin') {
       // Elves and Goblins get a 5% bonus to defence strength
-      return defence * 1.05;
+      defence *= 1.05;
     }
     if (this.class === 'cleric') {
       // Clerics get a 5% bonus to defence strength
-      return defence * 1.05;
+      defence *= 1.05;
     }
     return Math.floor(defence);
   }
