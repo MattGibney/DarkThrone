@@ -1,3 +1,3 @@
 export default {
-  gameAppUrl: 'http://localhost:4200',
+  gameAppUrl: import.meta.env.VITE_GAME_APP_URL || 'http://localhost:4200',
 };
