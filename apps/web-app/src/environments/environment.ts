@@ -1,3 +1,3 @@
 export default {
-  gameAPI: 'http://localhost:3000',
+  gameAPI: import.meta.env.VITE_GAME_API_URL || 'http://localhost:3000',
 };
