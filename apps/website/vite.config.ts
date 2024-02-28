@@ -33,6 +33,7 @@ export default defineConfig({
 
   test: {
     reporters: ['default'],
+    passWithNoTests: true,
     coverage: {
       reportsDirectory: '../../coverage/apps/website',
       provider: 'v8',
