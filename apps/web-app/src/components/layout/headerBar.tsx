@@ -46,8 +46,7 @@ export default function HeaderBar(props: HeaderBarProps) {
     const halfHourInSeconds = 60 * 30;
 
     const timeInSeconds = minutes * 60 + seconds;
-    const timeSinceHourOrHalfHourInSeconds =
-    timeInSeconds % halfHourInSeconds;
+    const timeSinceHourOrHalfHourInSeconds = timeInSeconds % halfHourInSeconds;
     const timeToHourOrHalfHourInSeconds =
       halfHourInSeconds - timeSinceHourOrHalfHourInSeconds;
 
