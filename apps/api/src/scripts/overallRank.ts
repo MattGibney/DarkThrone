@@ -22,11 +22,17 @@ export default async function overallRank(ctx: Context) {
     const defends = warHistory.filter((wh) => wh.defenderID === player.id);
     const defendsWon = defends.filter((wh) => !wh.isAttackerVictor);
 
-    const wins = attacksWon.length + defendsWon.length;
-    const winLossRatio = wins ? (attacks.length + defends.length) / wins : 0;
+    const attackWinLossRatio = attacks.length
+      ? attacksWon.length / attacks.length
+      : 0;
+    const defendWinLossRatio = defends.length
+      ? defendsWon.length / defends.length
+      : 0;
+
+    const winLossRatio = (attackWinLossRatio + defendWinLossRatio) / 2;
 
     const finalScore = Math.floor(
-      offence + defence + goldPerTurn + winLossRatio,
+      offence + defence + goldPerTurn * winLossRatio,
     );
 
     ctx.logger.debug({
