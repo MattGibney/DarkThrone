@@ -50,6 +50,9 @@ export default async function overallRank(ctx: Context) {
     const { player, score } = scores[i];
 
     ctx.logger.debug({ player: player.id, rank: rank, score: score });
+
+    player.overallRank = rank;
+    await player.save();
   }
 
   ctx.logger.info('[Overall Rank] Complete');

@@ -25,7 +25,8 @@ export default (logger: Logger, config: Config, daoFactory: DaoFactory) => {
   // At 00:00 every day
   cron.schedule('0 0 * * *', () => addCitizens(ctx));
 
-  cron.schedule('0,41 * * * *', () => overallRank(ctx));
+  // At the 0th minute of every hour
+  cron.schedule('0 * * * *', () => overallRank(ctx));
 
   return cron;
 };
