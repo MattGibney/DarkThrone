@@ -4,7 +4,9 @@ import InputField from './input-field';
 
 describe('InputField', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<InputField />);
+    const { baseElement } = render(
+      <InputField value={''} setValue={() => null} />,
+    );
     expect(baseElement).toBeTruthy();
   });
 });
