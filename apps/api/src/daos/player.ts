@@ -1,4 +1,4 @@
-import { PlayerRace } from '@darkthrone/interfaces';
+import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
@@ -8,12 +8,13 @@ export type PlayerRow = {
   user_id: string;
   display_name: string;
   race: PlayerRace;
-  class: string;
+  class: PlayerClass;
   avatar_url?: string;
   created_at: Date;
   attack_turns: number;
   gold: number;
   experience: number;
+  overall_rank: number;
 };
 
 export default class PlayerDao {
@@ -97,7 +98,7 @@ export default class PlayerDao {
     userID: string,
     displayName: string,
     selectedRace: PlayerRace,
-    selectedClass: string,
+    selectedClass: PlayerClass,
   ): Promise<PlayerRow> {
     const playerID = `PLR-${ulid()}`;
     try {

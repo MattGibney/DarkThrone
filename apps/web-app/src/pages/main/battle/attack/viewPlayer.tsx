@@ -66,6 +66,10 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
       name: 'Level',
       value: player.level,
     },
+    {
+      name: 'Overall Rank',
+      value: player.overallRank,
+    },
   ];
 
   return (
