@@ -14,6 +14,7 @@ export type PlayerRow = {
   attack_turns: number;
   gold: number;
   experience: number;
+  overall_rank: number;
 };
 
 export default class PlayerDao {

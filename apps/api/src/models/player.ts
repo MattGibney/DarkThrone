@@ -26,6 +26,7 @@ export default class PlayerModel {
   public attackTurns: number;
   public gold: number;
   public experience: number;
+  public overallRank: number;
 
   public units: PlayerUnitsModel[];
 
@@ -191,6 +192,7 @@ export default class PlayerModel {
         attack_turns: this.attackTurns,
         gold: this.gold,
         experience: this.experience,
+        overall_rank: this.overallRank,
       },
     );
 
@@ -208,6 +210,7 @@ export default class PlayerModel {
     this.attackTurns = row.attack_turns;
     this.gold = row.gold;
     this.experience = row.experience;
+    this.overallRank = row.overall_rank;
   }
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {
