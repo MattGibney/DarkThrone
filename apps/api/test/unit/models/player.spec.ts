@@ -13,6 +13,7 @@ const mockPlayerRow: PlayerRow = {
   attack_turns: 10,
   gold: 20,
   experience: 30,
+  overall_rank: 1,
 };
 
 const mockPlayerUnits = [
@@ -40,6 +41,7 @@ describe('Model: Player', () => {
         'class',
         'gold',
         'level',
+        'overallRank',
       ]);
     });
     it('should return a AuthedPlayerObject if the object is for the authenticated player', async () => {
@@ -60,6 +62,7 @@ describe('Model: Player', () => {
         'class',
         'gold',
         'level',
+        'overallRank',
         'attackStrength',
         'defenceStrength',
         'attackTurns',
@@ -86,6 +89,7 @@ describe('Model: Player', () => {
         gold: 20,
         level: 1,
         experience: 30,
+        overallRank: 1,
         attackTurns: 10,
         attackStrength: 44, // 40 from the mockPlayerUnits + 5% bonus for human
         defenceStrength: 50,

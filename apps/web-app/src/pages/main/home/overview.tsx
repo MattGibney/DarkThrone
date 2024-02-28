@@ -63,6 +63,38 @@ export default function OverviewPage(props: OverviewPageProps) {
     <div>
       <SubNavigation />
 
+      <div className="my-12 flex flex-col gap-12">
+        <h2 className="text-2xl font-semibold text-zinc-200 text-center">
+          {props.client.authenticatedPlayer.name}{' '}
+          <span className="text-yellow-600">is an</span>{' '}
+          <span className="capitalize">
+            {props.client.authenticatedPlayer.race}
+          </span>{' '}
+          <span className="capitalize">
+            {props.client.authenticatedPlayer.class}
+          </span>
+        </h2>
+
+        <div className="flex justify-around text-lg text-zinc-300">
+          <div>
+            Level:{' '}
+            <span className="text-white font-bold">
+              {new Intl.NumberFormat().format(
+                props.client.authenticatedPlayer.level,
+              )}
+            </span>
+          </div>
+          <div>
+            Overall Rank:{' '}
+            <span className="text-white font-bold">
+              {new Intl.NumberFormat().format(
+                props.client.authenticatedPlayer.overallRank,
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* lg:grid-cols-4 */}
       <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 md:grid-cols-4 rounded-xl overflow-hidden">
         {stats.map((stat) => (
