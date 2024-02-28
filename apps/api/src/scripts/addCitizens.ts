@@ -13,7 +13,7 @@ export default async function addCitizens(ctx: Context) {
         'citizen',
       );
 
-    playerCitizens.quantity += 1;
+    playerCitizens.quantity += 25;
     await playerCitizens.save();
   }
 
