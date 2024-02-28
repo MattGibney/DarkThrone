@@ -19,7 +19,9 @@ export default function AttackListPage(props: AttackListPageProps) {
         console.error(playersFetch.data);
         return;
       }
-      setPlayers(playersFetch.data);
+      setPlayers(
+        playersFetch.data.sort((a, b) => a.overallRank - b.overallRank),
+      );
     };
     fetchPlayers();
   }, [props.client.players]);
@@ -34,6 +36,12 @@ export default function AttackListPage(props: AttackListPageProps) {
               <table className="min-w-full border-separate border-spacing-0">
                 <thead>
                   <tr>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                    >
+                      Rank
+                    </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
@@ -69,6 +77,9 @@ export default function AttackListPage(props: AttackListPageProps) {
                         navigate(`/player/${player.id}`);
                       }}
                     >
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                        {player.overallRank}
+                      </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                         {player.name}
                       </td>

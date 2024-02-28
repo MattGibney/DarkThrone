@@ -1,5 +1,6 @@
 import {
   AuthedPlayerObject,
+  PlayerClass,
   PlayerNameValidation,
   PlayerObject,
 } from '@darkthrone/interfaces';
@@ -20,7 +21,7 @@ export default class PlayerModel {
   public userID: string;
   public displayName: string;
   public race: PlayerRace;
-  public class: string;
+  public class: PlayerClass;
   public avatarURL?: string;
   public createdAt: Date;
   public attackTurns: number;
@@ -40,7 +41,7 @@ export default class PlayerModel {
   async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
     const isAuthed = this.ctx.authedPlayer?.id === this.id;
 
-    const playerObject = {
+    const playerObject: PlayerObject = {
       id: this.id,
       name: this.displayName,
       avatarURL: this.avatarURL,
@@ -48,7 +49,8 @@ export default class PlayerModel {
       class: this.class,
       gold: this.gold,
       level: levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
-    } as PlayerObject;
+      overallRank: this.overallRank,
+    };
 
     if (!isAuthed) return playerObject;
 
@@ -291,7 +293,7 @@ export default class PlayerModel {
     ctx: Context,
     displayName: string,
     selectedRace: PlayerRace,
-    selectedClass: string,
+    selectedClass: PlayerClass,
   ): Promise<PlayerModel> {
     const playerRow = await ctx.daoFactory.player.create(
       ctx.logger,
