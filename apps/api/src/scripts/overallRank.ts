@@ -51,14 +51,14 @@ export default async function overallRank(ctx: Context) {
 
   scores.sort((a, b) => b.score - a.score);
 
-  for (let i = 0; i < scores.length; i++) {
-    const rank = i + 1;
-    const { player, score } = scores[i];
-
+  let rank = 1;
+  for (const { player, score } of scores) {
     ctx.logger.debug({ player: player.id, rank: rank, score: score });
 
     player.overallRank = rank;
     await player.save();
+
+    rank++;
   }
 
   ctx.logger.info('[Overall Rank] Complete');
