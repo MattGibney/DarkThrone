@@ -23,6 +23,7 @@ export interface PlayerObject {
   class: PlayerClass;
   gold: number;
   level: number;
+  overallRank: number;
 }
 
 export interface AuthedPlayerObject extends PlayerObject {
