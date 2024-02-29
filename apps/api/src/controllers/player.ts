@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 
 export default {
   GET_fetchAllPlayers: async (req: Request, res: Response) => {
-    const { page, size } = req.query;
+    const { page, pageSize } = req.query;
     const pageNumber = parseInt(page as string) || 1;
-    const pageSize = parseInt(size as string) || 100;
+    const pageSizeNumber = parseInt(pageSize as string) || 100;
 
     const paginator = await req.ctx.modelFactory.player.fetchAllPaginated(
       req.ctx,
       pageNumber,
-      pageSize,
+      pageSizeNumber,
     );
 
     res.status(200).json(await paginator.serialise());

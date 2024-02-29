@@ -1,4 +1,5 @@
-import DarkThroneClient, { APIError, APIResponse } from '..';
+import { AxiosError } from 'axios';
+import DarkThroneClient, { APIError, APIResponse, PaginatedResponse } from '..';
 import type {
   PlayerNameValidation,
   PlayerObject,
@@ -11,19 +12,28 @@ export default class PlayersController {
     this.root = root;
   }
 
-  async fetchAllPlayers(): Promise<
-    APIResponse<'ok', PlayerObject[]> | APIResponse<'fail', APIError[]>
+  async fetchAllPlayers(
+    page: number,
+    pageSize?: number,
+  ): Promise<
+    | APIResponse<'ok', PaginatedResponse<PlayerObject>>
+    | APIResponse<'fail', APIError[]>
   > {
     try {
-      const response = await this.root.http.get<PlayerObject[]>('/players');
+      if (!pageSize) {
+        pageSize = 100;
+      }
 
-      return { status: 'ok', data: response.data as PlayerObject[] };
+      const response = await this.root.http.get<
+        PaginatedResponse<PlayerObject>
+      >(`/players?page=${page}&pageSize=${pageSize}`);
+
+      return { status: 'ok', data: response.data };
     } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      const axiosError = err as AxiosError;
+      console.log(err);
+
+      return { status: 'fail', data: axiosError.response?.data as APIError[] };
     }
   }
 
