@@ -17,6 +17,15 @@ export type APIError = {
   detail?: string;
 };
 
+export type PaginatedResponse<T> = {
+  items: T[];
+  meta: {
+    totalCount: number;
+    page: number;
+    pageSize: number;
+  };
+};
+
 export type APIResponse<S, T> = {
   status: S;
   data: T;

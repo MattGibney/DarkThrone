@@ -1,30 +1,60 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Avatar } from '@darkthrone/react-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { PlayerObject } from '@darkthrone/interfaces';
+import { Paginator } from '../../../../libs/pagination';
+import Pagination from '../../../../components/pagination';
 
 interface AttackListPageProps {
   client: DarkThroneClient;
 }
 export default function AttackListPage(props: AttackListPageProps) {
   const navigate = useNavigate();
-  const [players, setPlayers] = useState<PlayerObject[]>([]);
 
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      const playersFetch = await props.client.players.fetchAllPlayers();
-      if (playersFetch.status === 'fail') {
-        console.error(playersFetch.data);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = searchParams.get('page');
+  const currentPageNumber = pageParam ? Math.max(1, parseInt(pageParam)) : 1;
+  const pageSize = 100;
+
+  const fetchForPage = useCallback(
+    async (pageNumber: number) => {
+      const fetched = await props.client.players.fetchAllPlayers(
+        pageNumber,
+        pageSize,
+      );
+
+      if (fetched.status === 'fail') {
         return;
       }
-      setPlayers(
-        playersFetch.data.sort((a, b) => a.overallRank - b.overallRank),
-      );
-    };
-    fetchPlayers();
-  }, [props.client.players]);
+
+      return {
+        items: fetched.data.items,
+        meta: fetched.data.meta,
+      };
+    },
+    [props.client.players],
+  );
+
+  const { setPage, totalItems, data } = Paginator<PlayerObject>({
+    paginationRoute: '/attack',
+    navigate,
+    currentPageNumber,
+    fetchForPage,
+  });
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setSearchParams({ page: page.toString() });
+      setPage(page);
+    },
+    [setPage, setSearchParams],
+  );
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <main>
@@ -69,7 +99,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {players.map((player, playerIdx) => (
+                  {data.map((player, playerIdx) => (
                     <tr
                       key={playerIdx}
                       className="even:bg-zinc-800/50 cursor-pointer"
@@ -100,6 +130,13 @@ export default function AttackListPage(props: AttackListPageProps) {
           </div>
         </div>
       </div>
+
+      <Pagination
+        onPageChange={handlePageChange}
+        currentPage={currentPageNumber}
+        itemsPerPage={pageSize}
+        totalItems={totalItems}
+      />
     </main>
   );
 }
