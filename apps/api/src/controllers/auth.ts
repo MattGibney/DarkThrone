@@ -92,6 +92,24 @@ export default {
         title: 'Password required',
       });
     }
+    if (password.length < 7) {
+      apiErrors.push({
+        code: 'register_password_too_short',
+        title: 'The password length must be at least 7 characters long',
+      });
+    }
+    if (password.toUpperCase() === password) {
+      apiErrors.push({
+        code: 'register_password_requires_lower_case',
+        title: 'The password lacks a lower case character',
+      });
+    }
+    if (password.toLowerCase() === password) {
+      apiErrors.push({
+        code: 'register_password_requires_upper_case',
+        title: 'The password lacks an upper case character',
+      });
+    }
 
     if (apiErrors.length > 0) {
       res.status(400).send({ errors: apiErrors });
