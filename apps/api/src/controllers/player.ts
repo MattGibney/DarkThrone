@@ -2,15 +2,20 @@ import { Request, Response } from 'express';
 
 export default {
   GET_fetchAllPlayers: async (req: Request, res: Response) => {
-    const players = await req.ctx.modelFactory.player.fetchAll(req.ctx);
+    const { page, pageSize } = req.query;
+    const pageNumber = Math.max(parseInt(page as string), 1);
+    const pageSizeNumber = Math.max(
+      1,
+      Math.min(200, parseInt(pageSize as string)),
+    );
 
-    res
-      .status(200)
-      .json(
-        await Promise.all(
-          players.map(async (player) => await player.serialise()),
-        ),
-      );
+    const paginator = await req.ctx.modelFactory.player.fetchAllPaginated(
+      req.ctx,
+      pageNumber,
+      pageSizeNumber,
+    );
+
+    res.status(200).json(await paginator.serialise());
   },
 
   GET_fetchPlayersForUser: async (req: Request, res: Response) => {

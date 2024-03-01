@@ -2,6 +2,8 @@ import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
+import { Paginator } from '../lib/paginator';
+import PlayerModel from '../models/player';
 
 export type PlayerRow = {
   id: string;
@@ -45,6 +47,33 @@ export default class PlayerDao {
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch all players');
       return [];
+    }
+  }
+
+  async fetchAllPaginated(
+    logger: Logger,
+    paginator: Paginator<PlayerRow, PlayerModel>,
+  ): Promise<undefined> {
+    try {
+      const rows = await this.database('players')
+        .select(
+          'players.*',
+          this.database.raw('COUNT(*) OVER() AS total_count'),
+        )
+        .orderBy('overall_rank', 'ASC')
+        .limit(paginator.pageSize)
+        .offset((paginator.page - 1) * paginator.pageSize);
+
+      paginator.dataRows = rows;
+
+      // All rows have the same total_count, so just pick the first one
+      paginator.totalItemCount = rows.length > 0 ? rows[0].total_count : 0;
+
+      return;
+    } catch (error) {
+      logger.error(error, 'DAO: Failed to fetch all players');
+      paginator.totalItemCount = 0;
+      return;
     }
   }
 
