@@ -37,7 +37,11 @@ export default function AttackListPage(props: AttackListPageProps) {
     [props.client.players],
   );
 
-  const { setPage, totalItems, data } = Paginator<PlayerObject>({
+  const {
+    setPage,
+    totalItems,
+    data: players,
+  } = Paginator<PlayerObject>({
     paginationRoute: '/attack',
     navigate,
     currentPageNumber,
@@ -52,7 +56,7 @@ export default function AttackListPage(props: AttackListPageProps) {
     [setPage, setSearchParams],
   );
 
-  if (!data) {
+  if (!players) {
     return null;
   }
 
@@ -99,7 +103,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((player, playerIdx) => (
+                  {players.map((player, playerIdx) => (
                     <tr
                       key={playerIdx}
                       className="even:bg-zinc-800/50 cursor-pointer"
