@@ -13,6 +13,7 @@ import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
 import { levelXPArray } from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
+import { Paginator } from '../lib/paginator';
 
 export default class PlayerModel {
   private ctx: Context;
@@ -238,6 +239,31 @@ export default class PlayerModel {
         return new PlayerModel(ctx, row, playerUnits);
       }),
     );
+  }
+
+  static async fetchAllPaginated(
+    ctx: Context,
+    page = 1,
+    pageSize = 100,
+  ): Promise<Paginator<PlayerRow, PlayerModel>> {
+    const paginator: Paginator<PlayerRow, PlayerModel> = new Paginator<
+      PlayerRow,
+      PlayerModel
+    >(page, pageSize);
+    await ctx.daoFactory.player.fetchAllPaginated(ctx.logger, paginator);
+
+    paginator.items = await Promise.all(
+      paginator.dataRows.map(async (player) => {
+        const playerUnits =
+          await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(
+            ctx,
+            player.id,
+          );
+        return new PlayerModel(ctx, player, playerUnits);
+      }),
+    );
+
+    return paginator;
   }
 
   static async fetchByID(
