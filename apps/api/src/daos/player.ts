@@ -67,12 +67,12 @@ export default class PlayerDao {
       paginator.dataRows = rows;
 
       // All rows have the same total_count, so just pick the first one
-      paginator.totalCount = rows.length > 0 ? rows[0].total_count : 0;
+      paginator.totalItemCount = rows.length > 0 ? rows[0].total_count : 0;
 
       return;
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch all players');
-      paginator.totalCount = 0;
+      paginator.totalItemCount = 0;
       return;
     }
   }

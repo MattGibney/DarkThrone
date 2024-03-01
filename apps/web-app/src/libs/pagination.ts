@@ -10,7 +10,11 @@ interface PaginatorProps<R> {
   fetchForPage: (pageNumber: number) => Promise<
     | {
         items: R[];
-        meta: { totalCount: number; pageSize: number };
+        meta: {
+          totalItemCount: number;
+          totalPageCount: number;
+          pageSize: number;
+        };
       }
     | undefined
   >;
@@ -48,25 +52,12 @@ export function Paginator<T>(props: PaginatorProps<T>) {
       }
 
       setData(fetched.items);
-      const numberOfPages = calculateNumberOfPages(
-        fetched.meta.totalCount,
-        fetched.meta.pageSize,
-      );
-      setTotalPages(numberOfPages);
-      setTotalItems(fetched.meta.totalCount);
+      setTotalPages(fetched.meta.totalPageCount);
+      setTotalItems(fetched.meta.totalItemCount);
     };
 
     fetchData();
   }, [currentPageNumber, fetchForPage, setPage]);
 
   return { setPage, totalPages, totalItems, data, setData };
-}
-
-export function calculateNumberOfPages(
-  totalCount: number | undefined,
-  pageSize: number | undefined,
-): number {
-  if (!totalCount || !pageSize) return 0;
-  const numberOfPages = Math.ceil(totalCount / pageSize);
-  return numberOfPages;
 }
