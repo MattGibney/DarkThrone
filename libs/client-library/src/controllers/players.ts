@@ -31,7 +31,6 @@ export default class PlayersController {
       return { status: 'ok', data: response.data };
     } catch (err: unknown) {
       const axiosError = err as AxiosError;
-      console.log(err);
 
       return { status: 'fail', data: axiosError.response?.data as APIError[] };
     }
