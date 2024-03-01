@@ -20,7 +20,8 @@ export type APIError = {
 export type PaginatedResponse<T> = {
   items: T[];
   meta: {
-    totalCount: number;
+    totalItemCount: number;
+    totalPageCount: number;
     page: number;
     pageSize: number;
   };

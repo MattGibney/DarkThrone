@@ -6,7 +6,7 @@ interface Serialisable {
 export class Paginator<R, I extends Serialisable> {
   public dataRows: R[];
   public items: I[];
-  public totalCount = 0;
+  public totalItemCount = 0;
   public page: number;
   public pageSize: number;
   private rowObject: R;
@@ -25,7 +25,8 @@ export class Paginator<R, I extends Serialisable> {
         this.items.map(async (item) => await item.serialise()),
       ),
       meta: {
-        totalCount: this.totalCount,
+        totalItemCount: this.totalItemCount,
+        totalPageCount: Math.ceil(this.totalItemCount / this.pageSize),
         page: this.page,
         pageSize: this.pageSize,
       },
