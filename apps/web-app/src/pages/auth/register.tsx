@@ -14,16 +14,20 @@ export default function RegisterPage(props: RegisterPageProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
-  const [shouldCheckPasswords, setShouldCheckPasswords] = useState(false);
-  const [doPasswordsMatch, setDoPasswordsMatch] = useState(false);
+  const [passwordsError, setPasswordsError] = useState('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!email || !password || !doPasswordsMatch) return;
+    if (!email || !password || !confirmPassword) return;
+
+    setPasswordsError('');
+    const matchingPasswords = password === confirmPassword;
+    if (!matchingPasswords) {
+      setPasswordsError('Passwords do not match');
+      return;
+    }
 
     const result = await props.client.auth.register(email, password);
-
     if (result.status === 'fail') {
       setErrorMessages(result.data.map((err) => err.title));
       return;
@@ -31,11 +35,6 @@ export default function RegisterPage(props: RegisterPageProps) {
 
     navigate('/player-select');
   }
-
-  useEffect(() => {
-    if (!shouldCheckPasswords) return;
-    setDoPasswordsMatch(password === confirmPassword);
-  }, [password, confirmPassword, shouldCheckPasswords]);
 
   return (
     <main>
@@ -76,16 +75,8 @@ export default function RegisterPage(props: RegisterPageProps) {
               autoComplete="new-password"
               required
               displayName="Password"
-              validationMessage={
-                shouldCheckPasswords && !doPasswordsMatch
-                  ? 'Passwords do not match'
-                  : ''
-              }
-              validationState={
-                shouldCheckPasswords && !doPasswordsMatch
-                  ? 'invalid'
-                  : 'neutral'
-              }
+              validationMessage={passwordsError}
+              validationState={passwordsError ? 'invalid' : 'neutral'}
               value={password}
               setValue={(newVal) => setPassword(newVal)}
             />
@@ -95,25 +86,20 @@ export default function RegisterPage(props: RegisterPageProps) {
               name="confirm-password"
               type="password"
               autoComplete="new-password"
-              onBlur={() => setShouldCheckPasswords(true)}
               required
               displayName="Confirm Password"
-              validationMessage={
-                shouldCheckPasswords && !doPasswordsMatch
-                  ? 'Passwords do not match'
-                  : ''
-              }
-              validationState={
-                shouldCheckPasswords && !doPasswordsMatch
-                  ? 'invalid'
-                  : 'neutral'
-              }
+              validationMessage={passwordsError}
+              validationState={passwordsError ? 'invalid' : 'neutral'}
               value={confirmPassword}
               setValue={(newVal) => setConfirmPassword(newVal)}
             />
 
             <div>
-              <Button type="submit" text="Create Account" />
+              <Button
+                onClick={handleSubmit}
+                type="submit"
+                text="Create Account"
+              />
             </div>
           </form>
         </div>
