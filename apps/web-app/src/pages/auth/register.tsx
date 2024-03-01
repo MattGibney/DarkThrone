@@ -1,6 +1,6 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Alert, Button, InputField, Logo } from '@darkthrone/react-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface RegisterPageProps {
