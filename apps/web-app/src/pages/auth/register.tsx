@@ -96,7 +96,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 
             <div>
               <Button
-                onClick={handleSubmit}
+                onClick={() => handleSubmit}
                 type="submit"
                 text="Create Account"
               />
