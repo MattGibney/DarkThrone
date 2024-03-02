@@ -79,45 +79,41 @@ const application = (
   });
 
   app.use(async (req, res, next) => {
-    const token = req.cookies['DTAC'];
-    if (!token) {
-      return next();
+    if (!req.headers.authorization) return;
+
+    const [type, token] = req.headers.authorization.split(' ');
+    if (!token) return next();
+    if (type === 'Bearer') {
+      req.ctx.logger.debug({ token }, 'Found token in Authorization header');
+      const userSession =
+        await req.ctx.modelFactory.userSession.fetchValidByToken(
+          req.ctx,
+          token,
+        );
+
+      if (!userSession) return next();
+
+      const user = await userSession.getUser();
+      if (!user) return next();
+
+      req.ctx.logger.debug({ userID: user.id }, 'Found user');
+      req.ctx.authedUser = {
+        model: user,
+        session: userSession,
+      };
+
+      if (userSession.playerID) {
+        const player = await req.ctx.modelFactory.player.fetchByID(
+          req.ctx,
+          userSession.playerID,
+        );
+
+        req.ctx.logger.debug({ playerID: player.id }, 'Found player');
+        req.ctx.authedPlayer = player;
+      }
+
+      next();
     }
-
-    req.ctx.logger.debug({ token }, 'Found token in cookie');
-    const userSession =
-      await req.ctx.modelFactory.userSession.fetchValidByToken(req.ctx, token);
-    if (!userSession) {
-      // The cookie doesn't belong to a valid session, so clear it
-      res.clearCookie('DTAC');
-      return next();
-    }
-
-    const user = await req.ctx.modelFactory.user.fetchByID(
-      req.ctx,
-      userSession.userID,
-    );
-    if (!user) {
-      return next();
-    }
-
-    req.ctx.logger.debug({ userID: user.id }, 'Found user');
-    req.ctx.authedUser = {
-      model: user,
-      session: userSession,
-    };
-
-    if (userSession.playerID) {
-      const player = await req.ctx.modelFactory.player.fetchByID(
-        req.ctx,
-        userSession.playerID,
-      );
-
-      req.ctx.logger.debug({ playerID: player.id }, 'Found player');
-      req.ctx.authedPlayer = player;
-    }
-
-    next();
   });
 
   app.get('/healthcheck', (req, res) => {

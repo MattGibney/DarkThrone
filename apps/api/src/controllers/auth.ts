@@ -67,13 +67,10 @@ export default {
       return;
     }
 
-    res.cookie('DTAC', newSession.token, {
-      httpOnly: true,
-      secure: true,
-      expires: newSession.expiresAt,
+    res.status(200).send({
+      session: await newSession.serialise(),
+      token: newSession.token,
     });
-
-    res.status(200).send(await newSession.serialise());
   },
 
   POST_register: async (req: Request, res: Response) => {
@@ -166,13 +163,10 @@ export default {
       return;
     }
 
-    res.cookie('DTAC', newSession.token, {
-      httpOnly: true,
-      secure: true,
-      expires: newSession.expiresAt,
+    res.status(200).send({
+      session: await newSession.serialise(),
+      token: newSession.token,
     });
-
-    res.status(200).send(await newSession.serialise());
   },
 
   GET_currentUser: async (req: Request, res: Response) => {
@@ -222,7 +216,6 @@ export default {
     }
 
     await session.invalidate();
-    res.clearCookie('DTAC');
     res.status(200).json({});
   },
 
