@@ -57,3 +57,8 @@ export type NewsPost = {
   content: string;
   date: Date;
 };
+
+export type ValidAuthResponse = {
+  session: UserSessionObject;
+  token: string;
+};

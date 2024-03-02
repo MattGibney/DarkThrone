@@ -51,6 +51,9 @@ export default class DarkThroneClient {
     this.http = axios.create({
       baseURL: apiUrl,
       withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     });
 
     this.attack = new AttackDAO(this);
