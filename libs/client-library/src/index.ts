@@ -1,15 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
-import AuthController from './controllers/auth';
-import PlayersController from './controllers/players';
-import AttackController from './controllers/attack';
-import WarHistoryController, {
-  WarHistoryObject,
-} from './controllers/warHistory';
+import AuthDAO from './daos/auth';
+import PlayersDAO from './daos/players';
+import AttackDAO from './daos/attack';
+import WarHistoryController, { WarHistoryObject } from './daos/warHistory';
 import type {
   AuthedPlayerObject,
   UserSessionObject,
 } from '@darkthrone/interfaces';
-import TrainingController from './controllers/training';
+import TrainingDAO from './daos/training';
 
 export type APIError = {
   code: string;
@@ -41,10 +39,10 @@ export default class DarkThroneClient {
   public authenticatedUser: UserSessionObject | undefined;
   public authenticatedPlayer: AuthedPlayerObject | undefined;
 
-  public attack: AttackController;
-  public auth: AuthController;
-  public players: PlayersController;
-  public training: TrainingController;
+  public attack: AttackDAO;
+  public auth: AuthDAO;
+  public players: PlayersDAO;
+  public training: TrainingDAO;
   public warHistory: WarHistoryController;
 
   public serverTime: Date | undefined;
@@ -55,10 +53,10 @@ export default class DarkThroneClient {
       withCredentials: true,
     });
 
-    this.attack = new AttackController(this);
-    this.auth = new AuthController(this);
-    this.players = new PlayersController(this);
-    this.training = new TrainingController(this);
+    this.attack = new AttackDAO(this);
+    this.auth = new AuthDAO(this);
+    this.players = new PlayersDAO(this);
+    this.training = new TrainingDAO(this);
     this.warHistory = new WarHistoryController(this);
 
     const reFetchCurrentUser = async () => {
