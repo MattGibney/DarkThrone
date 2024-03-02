@@ -1,7 +1,7 @@
 import DarkThroneClient, { APIError, APIResponse } from '..';
 import { WarHistoryObject } from './warHistory';
 
-export default class AttackController {
+export default class AttackDAO {
   private root: DarkThroneClient;
 
   constructor(root: DarkThroneClient) {
