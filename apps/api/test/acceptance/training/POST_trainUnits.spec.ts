@@ -10,7 +10,7 @@ describe('POST /training/units', () => {
 
     const response = await request(application)
       .post('/training/train')
-      .set('Cookie', 'DTAC=token')
+      .set('Authorization', 'Bearer token')
       .send([]);
 
     expect(response.status).toBe(400);
@@ -30,7 +30,7 @@ describe('POST /training/units', () => {
     // fails to train when requesting zero units to train
     let response = await request(application)
       .post('/training/train')
-      .set('Cookie', 'DTAC=token')
+      .set('Authorization', 'Bearer token')
       .send([{ unitType: 'citizen', quantity: 0 }]);
 
     expect(response.status).toBe(400);
@@ -46,7 +46,7 @@ describe('POST /training/units', () => {
     // fails to train when requesting a negative number of units
     response = await request(application)
       .post('/training/train')
-      .set('Cookie', 'DTAC=token')
+      .set('Authorization', 'Bearer token')
       .send([{ unitType: 'citizen', quantity: -1 }]);
 
     expect(response.status).toBe(400);
@@ -65,7 +65,7 @@ describe('POST /training/units', () => {
 
     const response = await request(application)
       .post('/training/train')
-      .set('Cookie', 'DTAC=token')
+      .set('Authorization', 'Bearer token')
       .send([{ unitType: 'citizen', quantity: 1 }]);
 
     expect(response.status).toBe(400);
@@ -91,7 +91,7 @@ describe('POST /training/units', () => {
 
     const response = await request(application)
       .post('/training/train')
-      .set('Cookie', 'DTAC=token')
+      .set('Authorization', 'Bearer token')
       .send([{ unitType: 'worker', quantity: 1 }]);
 
     expect(response.status).toBe(400);
@@ -139,7 +139,7 @@ describe('POST /training/units', () => {
 
     const response = await request(application)
       .post('/training/train')
-      .set('Cookie', 'DTAC=token')
+      .set('Authorization', 'Bearer token')
       .send([
         { unitType: 'worker', quantity: 1 },
         { unitType: 'soldier_1', quantity: 1 },
