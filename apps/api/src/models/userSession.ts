@@ -16,7 +16,9 @@ export default class UserSessionModel {
   public createdAt: Date;
   public expiresAt: Date;
 
-  constructor(ctx: Context, data: UserSessionRow) {
+  public _user: UserModel | undefined;
+
+  constructor(ctx: Context, data: UserSessionRow, user?: UserModel) {
     this.ctx = ctx;
 
     this.id = data.id;
@@ -25,6 +27,18 @@ export default class UserSessionModel {
     this.playerID = data.player_id;
     this.createdAt = data.created_at;
     this.expiresAt = data.expires_at;
+
+    this._user = user;
+  }
+
+  async getUser(): Promise<UserModel> {
+    if (!this._user) {
+      this._user = await this.ctx.modelFactory.user.fetchByID(
+        this.ctx,
+        this.userID,
+      );
+    }
+    return this._user;
   }
 
   static async create(
@@ -47,7 +61,7 @@ export default class UserSessionModel {
 
     if (!userSessionRow) return null;
 
-    return new UserSessionModel(ctx, userSessionRow);
+    return new UserSessionModel(ctx, userSessionRow, user);
   }
 
   static async fetchValidByToken(
@@ -85,10 +99,7 @@ export default class UserSessionModel {
   }
 
   async serialise(): Promise<UserSessionObject> {
-    const user = await this.ctx.modelFactory.user.fetchByID(
-      this.ctx,
-      this.userID,
-    );
+    const user = await this.getUser();
     return {
       id: this.id,
       email: user.email,
