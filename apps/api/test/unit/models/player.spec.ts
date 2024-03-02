@@ -22,6 +22,7 @@ const mockPlayerUnits = [
     quantity: 10,
     calculateAttackStrength: jest.fn().mockReturnValue(40),
     calculateDefenceStrength: jest.fn().mockReturnValue(50),
+    calculateGoldPerTurn: jest.fn().mockReturnValue(100),
   } as unknown as PlayerUnitsModel,
 ];
 
@@ -190,6 +191,38 @@ describe('Model: Player', () => {
 
         expect(defenceStrength).toEqual(testCase.expected);
       });
+    });
+  });
+
+  describe('calculateGoldPerTurn', () => {
+    it('should return 0 if the player has no units', async () => {
+      const mockCTX = {} as unknown as Context;
+
+      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+      const goldPerTurn = await player.calculateGoldPerTurn();
+
+      expect(goldPerTurn).toEqual(0);
+    });
+    it('should return the sum of goldPerTurn for each unit', async () => {
+      const mockCTX = {} as unknown as Context;
+
+      const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
+      const goldPerTurn = await player.calculateGoldPerTurn();
+
+      expect(goldPerTurn).toEqual(100);
+    });
+    it('should add 5% bonus for thief players', async () => {
+      const mockCTX = {} as unknown as Context;
+
+      const thiefPlayerRow = {
+        ...mockPlayerRow,
+        class: 'thief',
+      } as unknown as PlayerRow;
+
+      const player = new PlayerModel(mockCTX, thiefPlayerRow, mockPlayerUnits);
+      const goldPerTurn = await player.calculateGoldPerTurn();
+
+      expect(goldPerTurn).toEqual(105);
     });
   });
 
