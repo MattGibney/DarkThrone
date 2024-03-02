@@ -5,7 +5,7 @@ import {
 } from '@darkthrone/interfaces';
 import DarkThroneClient, { APIError, APIResponse } from '..';
 
-export default class AuthController {
+export default class AuthDAO {
   private root: DarkThroneClient;
 
   constructor(root: DarkThroneClient) {
