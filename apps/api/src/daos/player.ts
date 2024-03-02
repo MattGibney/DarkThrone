@@ -147,7 +147,7 @@ export default class PlayerDao {
       // but this will be eventually fixed the next time the cron calculates ranks.
       const numberOfPlayers = await this.count(logger);
       // would be nice for us to have this default rank be a problem.
-      let rank: number = 999999;
+      let rank = 999999;
       if (numberOfPlayers !== null) {
         rank = numberOfPlayers + 1;
       }
