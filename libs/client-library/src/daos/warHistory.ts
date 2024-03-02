@@ -12,7 +12,7 @@ export type WarHistoryObject = {
   createdAt: Date;
 };
 
-export default class AttackController {
+export default class AttackDAO {
   private root: DarkThroneClient;
 
   constructor(root: DarkThroneClient) {
