@@ -26,8 +26,12 @@ export default function Footer() {
             <li>
               <NavigationLink linkData={screens['status']} />
             </li>
-            <FooterLink label="Discord" />
-            <FooterLink label="Bug Report" />
+            <li>
+              <NavigationLink linkData={screens['discord']} />
+            </li>
+            <li>
+              <NavigationLink linkData={screens['bugReport']} />
+            </li>
           </ul>
         </div>
 
@@ -35,14 +39,15 @@ export default function Footer() {
           <h5 className="text-2xl font-display mb-2">Project</h5>
           <ul>
             <FooterLink label="About" />
-            <FooterLink label="Contributors" />
+            <li>
+              <NavigationLink linkData={screens['contributors']} />
+            </li>
             <li>
               <NavigationLink linkData={screens['github']} />
             </li>
             <li>
               <NavigationLink linkData={screens['news']} />
             </li>
-            <FooterLink label="Press" />
           </ul>
         </div>
 

@@ -30,7 +30,9 @@ export default function Header() {
           </li>
         </ul>
         <ul className="flex gap-4">
-          <li>Discord</li>
+          <li>
+            <NavigationLink linkData={screens['discord']} />
+          </li>
           <li>
             <NavigationLink linkData={screens['github']} />
           </li>
