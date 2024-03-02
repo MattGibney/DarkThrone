@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
+import { ValidAuthResponse } from '@darkthrone/interfaces';
 
 export default {
   POST_login: async (req: Request, res: Response) => {
@@ -67,10 +68,11 @@ export default {
       return;
     }
 
-    res.status(200).send({
+    const authResponse: ValidAuthResponse = {
       session: await newSession.serialise(),
       token: newSession.token,
-    });
+    };
+    res.status(200).send(authResponse);
   },
 
   POST_register: async (req: Request, res: Response) => {
@@ -163,10 +165,11 @@ export default {
       return;
     }
 
-    res.status(200).send({
+    const authResponse: ValidAuthResponse = {
       session: await newSession.serialise(),
       token: newSession.token,
-    });
+    };
+    res.status(200).send(authResponse);
   },
 
   GET_currentUser: async (req: Request, res: Response) => {
