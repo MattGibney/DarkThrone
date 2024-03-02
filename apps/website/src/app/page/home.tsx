@@ -65,11 +65,11 @@ export default function HomePage() {
           <p className="text-zinc-200">
             DarkThrone Reborn is a re-creation of the classic MMO Dark Throne,
             originally created by Lazarus Software. That game is gone now but
-            this project aims to bring back it back in spirit. The primary goal
-            of the project is to create a game that emulates the same experience
-            as the original. Afterwards, the goal is to continually add
-            additional features with the backing of the community to push this
-            game into the future.
+            this project aims to bring back it back in spirit. Our primary goal
+            is to create a game that emulates the same experience as the
+            original, a spiritual successor. Afterwards, the goal is to
+            continually add additional features with the backing of the
+            community to push this game into the future.
           </p>
         </div>
       </div>

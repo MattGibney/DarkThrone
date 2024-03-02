@@ -1,7 +1,6 @@
 import { Outlet, Route, Routes } from 'react-router-dom';
 import Layout from '../components/layout/layout';
 import HomePage from './page/home';
-import { environment } from '../environments/environment';
 import PrivacyPage from './page/legal/privacy';
 
 export type NavigationItem = {
@@ -19,10 +18,29 @@ export const screens: { [k: string]: NavigationItem } = {
   terms: { name: 'Terms & Conditions', href: '/terms', element: HomePage },
 
   // External Links
-  github: { name: 'Github', href: environment.gitHubURL, element: Outlet },
+  github: {
+    name: 'Github',
+    href: 'https://github.com/MattGibney/DarkThrone',
+    element: Outlet,
+  },
+  discord: {
+    name: 'Discord',
+    href: 'https://discord.gg/EXHuUrTy3X',
+    element: Outlet,
+  },
   status: {
     name: 'Game Status',
     href: 'https://status.darkthronereborn.com/',
+    element: Outlet,
+  },
+  bugReport: {
+    name: 'Bug Report',
+    href: 'https://github.com/MattGibney/DarkThrone/issues/new/choose',
+    element: Outlet,
+  },
+  contributors: {
+    name: 'Contributors',
+    href: 'https://github.com/MattGibney/DarkThrone/graphs/contributors',
     element: Outlet,
   },
 };
