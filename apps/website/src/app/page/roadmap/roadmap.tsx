@@ -28,7 +28,8 @@ In addition to gameplay, we will also be working on the game's infrastructure. T
         variant: 'gray' as BadgeProps['variant'],
       },
       image: '/social.jpg',
-      github: '',
+      github:
+        'https://github.com/users/MattGibney/projects/6/views/1?pane=info',
       description: `
 In this pahse, we'll be focusing more on the social aspects of the game. This includes a messaging system between players, a friends list, and an alliance system. We will also spend time putting some proper stucture into the Discord server. Perhaps with some custom integrations.
 
