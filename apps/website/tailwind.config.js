@@ -14,9 +14,11 @@ module.exports = {
     extend: {
       fontFamily: {
         display: ['Marcellus SC', 'serif'],
-        sans: ['Roboto Condensed', 'sans-serif']
+        sans: ['Raleway', 'sans-serif']
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };

@@ -18,7 +18,8 @@ const styles = tv({
 
 export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   onClick?: () => void;
   variant?: 'primary' | 'secondary';
 }
@@ -28,7 +29,7 @@ export function Button(props: ButtonProps) {
 
   return (
     <button type={props.type} onClick={props.onClick} className={body()}>
-      {props.text}
+      {props.text} {props.children}
     </button>
   );
 }
