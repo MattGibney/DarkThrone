@@ -8,8 +8,6 @@ export default function Footer() {
       <div className="max-w-screen-lg mx-auto justify-around flex-wrap gap-0 text-zinc-400 grid grid-cols-4">
         <div className="w-full mb-6 sm:mb-0">
           <Logo variant="short" />
-          {/* <p className='text-3xl font-display text-zinc-500'>DarkThrone</p> */}
-          {/* <p className='text-zinc-400 text-sm'>Reborn</p> */}
           <div className="mt-4">
             <iframe
               src="https://status.darkthronereborn.com/badge?theme=dark"
@@ -38,7 +36,9 @@ export default function Footer() {
         <div className="w-full mb-6 sm:mb-0">
           <h5 className="text-2xl font-display mb-2">Project</h5>
           <ul>
-            <FooterLink label="About" />
+            <li>
+              <NavigationLink linkData={screens['roadmap']} />
+            </li>
             <li>
               <NavigationLink linkData={screens['contributors']} />
             </li>
@@ -65,11 +65,4 @@ export default function Footer() {
       </div>
     </div>
   );
-}
-
-interface FooterLinkProps {
-  label: string;
-}
-function FooterLink(props: FooterLinkProps) {
-  return <li className="text-red-300">{props.label}</li>;
 }

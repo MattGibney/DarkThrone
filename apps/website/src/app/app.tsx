@@ -2,6 +2,10 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import Layout from '../components/layout/layout';
 import HomePage from './page/home';
 import PrivacyPage from './page/legal/privacy';
+import NewsPage from './page/news/news';
+import RoadmapPage from './page/roadmap/roadmap';
+import ContactPage from './page/contact/contact';
+import TermsPage from './page/legal/terms';
 
 export type NavigationItem = {
   name: string;
@@ -11,11 +15,11 @@ export type NavigationItem = {
 
 export const screens: { [k: string]: NavigationItem } = {
   home: { name: 'Home', href: '/', element: HomePage },
-  news: { name: 'News', href: '/news', element: HomePage },
-  roadmap: { name: 'Roadmap', href: '/roadmap', element: HomePage },
-  contact: { name: 'Contact', href: '/contact', element: HomePage },
+  news: { name: 'News', href: '/news', element: NewsPage },
+  roadmap: { name: 'Roadmap', href: '/roadmap', element: RoadmapPage },
+  contact: { name: 'Contact', href: '/contact', element: ContactPage },
   privacy: { name: 'Privacy', href: '/privacy', element: PrivacyPage },
-  terms: { name: 'Terms & Conditions', href: '/terms', element: HomePage },
+  terms: { name: 'Terms & Conditions', href: '/terms', element: TermsPage },
 
   // External Links
   github: {
