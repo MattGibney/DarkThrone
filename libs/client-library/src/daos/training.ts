@@ -1,7 +1,7 @@
 import DarkThroneClient, { APIError, APIResponse } from '..';
 import type { PlayerUnits } from '@darkthrone/interfaces';
 
-export default class TrainingController {
+export default class TrainingDAO {
   private root: DarkThroneClient;
 
   constructor(root: DarkThroneClient) {

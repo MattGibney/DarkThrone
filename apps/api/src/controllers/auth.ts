@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
+import { ValidAuthResponse } from '@darkthrone/interfaces';
 
 export default {
   POST_login: async (req: Request, res: Response) => {
@@ -67,13 +68,11 @@ export default {
       return;
     }
 
-    res.cookie('DTAC', newSession.token, {
-      httpOnly: true,
-      secure: true,
-      expires: newSession.expiresAt,
-    });
-
-    res.status(200).send(await newSession.serialise());
+    const authResponse: ValidAuthResponse = {
+      session: await newSession.serialise(),
+      token: newSession.token,
+    };
+    res.status(200).send(authResponse);
   },
 
   POST_register: async (req: Request, res: Response) => {
@@ -166,13 +165,11 @@ export default {
       return;
     }
 
-    res.cookie('DTAC', newSession.token, {
-      httpOnly: true,
-      secure: true,
-      expires: newSession.expiresAt,
-    });
-
-    res.status(200).send(await newSession.serialise());
+    const authResponse: ValidAuthResponse = {
+      session: await newSession.serialise(),
+      token: newSession.token,
+    };
+    res.status(200).send(authResponse);
   },
 
   GET_currentUser: async (req: Request, res: Response) => {
@@ -222,7 +219,6 @@ export default {
     }
 
     await session.invalidate();
-    res.clearCookie('DTAC');
     res.status(200).json({});
   },
 
