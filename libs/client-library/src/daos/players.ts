@@ -5,7 +5,7 @@ import type {
   PlayerObject,
 } from '@darkthrone/interfaces';
 
-export default class PlayersController {
+export default class PlayersDAO {
   private root: DarkThroneClient;
 
   constructor(root: DarkThroneClient) {

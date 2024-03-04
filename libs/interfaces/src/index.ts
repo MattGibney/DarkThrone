@@ -51,3 +51,8 @@ export type PlayerNameValidation = {
   isValid: boolean;
   issues: string[];
 };
+
+export type ValidAuthResponse = {
+  session: UserSessionObject;
+  token: string;
+};
