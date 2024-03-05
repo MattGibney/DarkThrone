@@ -15,16 +15,15 @@ async function prepareScript() {
   await runCmdAndLog(exec, 'Reset Cache', 'npx nx reset');
 }
 
-async function buildScript(id: string) {
+async function buildScript(id: string, commitHash: string) {
   console.log('Building the script \n');
-
-  if (!SERVER_HOST || !SERVER_USER || !SERVER_PASS) {
-    process.exit(1);
-  }
 
   await runCmdAndLog(exec, 'Building the Placeholder Site', 'npx nx run placeholder-site:build:production');
   await runCmdAndLog(exec, 'Building the Web App', 'npx nx run web-app:build:production');
   await runCmdAndLog(exec, 'Building the API', 'npx nx run api:build:production');
+
+  // Find and replace '__COMMIT_HASH__' with the actual commit hash in all the files
+  await runCmdAndLog(exec, 'Replace Commit Hash', `find dist/apps -type f -name '*.js' -exec sed -i '' s/__COMMIT_HASH__/${commitHash}/g {} +`);
 
   await runCmdAndLog(exec, 'Archive files', `cd dist/apps/ && tar -czvf ${id}.tar.gz placeholder-site web-app api && mv ${id}.tar.gz ../ && cd ../../`);
 }
@@ -32,12 +31,14 @@ async function buildScript(id: string) {
 async function deployScript(id: string) {
   console.log('Deploying the script \n');
 
+  if (!SERVER_HOST || !SERVER_USER || !SERVER_PASS) {
+    process.exit(1);
+  }
+
   const ssh = new SSH({
     host: SERVER_HOST || '',
     user: SERVER_USER || '',
     pass: SERVER_PASS || '',
-    // agent: process.env.SSH_AUTH_SOCK,
-    // agentForward: true
   });
 
   await runCmdAndLog(exec, 'Transfer the file', `sshpass -p "${SERVER_PASS}" scp -o StrictHostKeyChecking=no dist/${id}.tar.gz ${SERVER_USER}@${SERVER_HOST}:/home/matt/Code/DTR/builds`);
@@ -58,9 +59,10 @@ async function deployScript(id: string) {
   console.log(Array(40).join('-'));
 
   const id = ulid();
+  const commitHash = await runCmdAndLog(exec, 'Get the commit hash', 'git rev-parse --short HEAD') as string;
 
   await prepareScript();
-  await buildScript(id);
+  await buildScript(id, commitHash.trim());
   await deployScript(id);
 })();
 

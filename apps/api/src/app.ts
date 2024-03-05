@@ -79,7 +79,7 @@ const application = (
   });
 
   app.use(async (req, res, next) => {
-    if (!req.headers.authorization) return;
+    if (!req.headers.authorization) return next();
 
     const [type, token] = req.headers.authorization.split(' ');
     if (!token) return next();
@@ -117,7 +117,7 @@ const application = (
   });
 
   app.get('/healthcheck', (req, res) => {
-    res.send({ message: 'OK' });
+    res.send({ message: 'OK', commitHash: '__COMMIT_HASH__' });
   });
 
   app.use(router);
