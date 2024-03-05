@@ -8,6 +8,7 @@ import {
 } from '@darkthrone/react-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Footer from '../../components/layout/footer';
 
 interface LoginPageProps {
   client: DarkThroneClient;
@@ -101,7 +102,7 @@ export default function LoginPage(props: LoginPageProps) {
           </form>
         </div>
 
-        <p className="mt-10 text-center text-sm text-zinc-500">
+        <p className="my-10 text-center text-sm text-zinc-500">
           Not a member?{' '}
           <Link
             to="/register"
@@ -110,6 +111,8 @@ export default function LoginPage(props: LoginPageProps) {
             Create an account now
           </Link>
         </p>
+
+        <Footer />
       </div>
     </main>
   );
