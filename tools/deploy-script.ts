@@ -23,7 +23,7 @@ async function buildScript(id: string, commitHash: string) {
   await runCmdAndLog(exec, 'Building the API', 'npx nx run api:build:production');
 
   // Find and replace '__COMMIT_HASH__' with the actual commit hash in all the files
-  await runCmdAndLog(exec, 'Replace Commit Hash', `find dist/apps -type f -name '*.js' -exec sed -i '' s/__COMMIT_HASH__/${commitHash}/g {} +`);
+  await runCmdAndLog(exec, 'Replace Commit Hash', `find dist/apps -type f -name '*.js' -exec sed -i s/__COMMIT_HASH__/${commitHash}/g {} +`);
 
   await runCmdAndLog(exec, 'Archive files', `cd dist/apps/ && tar -czvf ${id}.tar.gz placeholder-site web-app api && mv ${id}.tar.gz ../ && cd ../../`);
 }
