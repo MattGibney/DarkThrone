@@ -1,7 +1,13 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { UnitTypes } from '@darkthrone/game-data';
 
-export type UnitType = {
+export enum UnitType {
+  SUPPORT = 'support',
+  OFFENSE = 'offense',
+  DEFENSE = 'defense',
+}
+
+export type Unit = {
   attack: number;
   defence: number;
   cost: number;
@@ -9,7 +15,7 @@ export type UnitType = {
   canTrain: boolean;
   canUntrain: boolean;
   name: string;
-  type: 'support' | 'offense' | 'defense';
+  type: UnitType;
 };
 
 export type PlayerRace = 'human' | 'elf' | 'goblin' | 'undead';

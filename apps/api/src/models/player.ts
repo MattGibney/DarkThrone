@@ -3,6 +3,7 @@ import {
   PlayerClass,
   PlayerNameValidation,
   PlayerObject,
+  UnitType,
 } from '@darkthrone/interfaces';
 import { PlayerRace } from '@darkthrone/interfaces';
 import { Context } from '../app';
@@ -43,7 +44,7 @@ export default class PlayerModel {
     const isAuthed = this.ctx.authedPlayer?.id === this.id;
 
     const armySize = this.units
-      .filter((unit) => UnitTypes[unit.unitType].type !== 'support')
+      .filter((unit) => UnitTypes[unit.unitType].type !== UnitType.SUPPORT)
       .reduce((acc, unit) => acc + unit.quantity, 0);
 
     const playerObject: PlayerObject = {
