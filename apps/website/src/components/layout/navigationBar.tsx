@@ -15,6 +15,8 @@ export default function NavigationBar() {
       z-20
 
       px-4 lg:px-0
+
+      shadow shadow-zinc-900
     "
     >
       {({ open, close }) => (

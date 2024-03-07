@@ -10,7 +10,7 @@ interface PaginationProps {
   itemsPerPage: number;
   totalItems: number;
 }
-export default function Pagination(props: PaginationProps) {
+export function Pagination(props: PaginationProps) {
   const totalPages = Math.ceil(props.totalItems / props.itemsPerPage);
 
   return (
@@ -39,15 +39,6 @@ export default function Pagination(props: PaginationProps) {
             </LinkBlock>
           );
         })}
-        {/* <LinkBlock>1</LinkBlock>
-        <LinkBlock isCurrent={true}>2</LinkBlock>
-        <LinkBlock>3</LinkBlock>
-        <span className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-zinc-500">
-          ...
-        </span>
-        <LinkBlock>8</LinkBlock>
-        <LinkBlock>9</LinkBlock>
-        <LinkBlock>10</LinkBlock> */}
       </div>
       <div className="-mt-px flex w-0 flex-1 justify-end">
         {props.currentPage < totalPages ? (
@@ -89,3 +80,5 @@ function LinkBlock(props: LinkBlockProps) {
     </button>
   );
 }
+
+export default Pagination;

@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Paginator } from '../../../../libs/pagination';
-import Pagination from '../../../../components/pagination';
+import Pagination from '../../../../../../../libs/react-components/src/lib/pagination/pagination';
 
 interface AttackListPageProps {
   client: DarkThroneClient;
