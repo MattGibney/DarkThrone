@@ -1,4 +1,3 @@
-import { UnitTypes } from '@darkthrone/game-data';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
 
@@ -12,9 +11,6 @@ export default function OverviewPage(props: OverviewPageProps) {
     (acc, unit) => acc + unit.quantity,
     0,
   );
-  const armySize = props.client.authenticatedPlayer.units
-    .filter((unit) => UnitTypes[unit.unitType].type !== 'support')
-    .reduce((acc, unit) => acc + unit.quantity, 0);
 
   const stats = [
     {
@@ -23,7 +19,9 @@ export default function OverviewPage(props: OverviewPageProps) {
     },
     {
       name: 'Army Size',
-      value: new Intl.NumberFormat('en-GB').format(armySize),
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.armySize,
+      ),
     },
     { name: 'Level', value: props.client.authenticatedPlayer.level },
     {
