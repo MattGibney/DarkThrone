@@ -72,7 +72,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-16"
                     >
                       Rank
                     </th>
@@ -80,13 +80,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                     >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
-                    >
-                      Level
+                      Username
                     </th>
                     <th
                       scope="col"
@@ -97,6 +91,18 @@ export default function AttackListPage(props: AttackListPageProps) {
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                    >
+                      Army Size
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-20"
+                    >
+                      Level
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-20"
                     >
                       Race
                     </th>
@@ -118,10 +124,13 @@ export default function AttackListPage(props: AttackListPageProps) {
                         {player.name}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        {player.level}
+                        {new Intl.NumberFormat('en-GB').format(player.gold)}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        {new Intl.NumberFormat('en-GB').format(player.gold)}
+                        {new Intl.NumberFormat('en-GB').format(player.armySize)}
+                      </td>
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                        {player.level}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                         <Avatar race={player.race} size="small" />

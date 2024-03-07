@@ -63,6 +63,10 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
       value: new Intl.NumberFormat().format(player.gold),
     },
     {
+      name: 'Army Size',
+      value: new Intl.NumberFormat().format(player.armySize),
+    },
+    {
       name: 'Level',
       value: player.level,
     },
@@ -141,21 +145,22 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
           </ul>
         </nav>
 
-        <div className="bg-zinc-800 text-zinc-200 rounded-lg text-sm">
-          {/* <h3 className='font-bold mb-4'>Statistics</h3> */}
-
-          <dl className="divide-y divide-white/10">
-            {statistics.map((statistic, index) => (
-              <div key={index} className="p-4">
-                <dt className="text-sm font-medium leading-6 text-white">
-                  {statistic.name}
-                </dt>
-                <dd className="mt-1 text-sm leading-6 text-gray-400 sm:col-span-2 sm:mt-0">
-                  {statistic.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
+        <div>
+          <h3 className="font-bold mb-2 mx-2">Statistics</h3>
+          <div className="bg-zinc-800 text-zinc-200 rounded-lg text-sm">
+            <dl className="divide-y divide-white/10">
+              {statistics.map((statistic, index) => (
+                <div key={index} className="px-4 py-2">
+                  <dt className="text-sm font-medium leading-6 text-white">
+                    {statistic.name}
+                  </dt>
+                  <dd className="mt-1 text-sm leading-6 text-gray-400 sm:col-span-2 sm:mt-0">
+                    {statistic.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </div>
     </div>
