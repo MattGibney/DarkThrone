@@ -51,3 +51,9 @@ export type PlayerNameValidation = {
   isValid: boolean;
   issues: string[];
 };
+
+export type NewsPost = {
+  title: string;
+  content: string;
+  date: Date;
+};
