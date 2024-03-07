@@ -1,10 +1,10 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Button, InputField, Logo } from '@darkthrone/react-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
 import { useNavigate } from 'react-router-dom';
-import { PlayerRace } from '@darkthrone/interfaces';
+import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
 
 //TODO: This should be handled by i18n
 const validationMessages = {
@@ -23,6 +23,8 @@ interface CreatePlayerPageProps {
 export default function CreatePlayerPage(props: CreatePlayerPageProps) {
   const navigate = useNavigate();
 
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
   const [playerName, setPlayerName] = useState<string>('');
   const [playerNameStatus, setPlayerNameStatus] = useState<
     { isValid: boolean; message: string } | undefined
@@ -32,9 +34,17 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     undefined,
   );
 
-  const [selectedClass, setSelectedClass] = useState<
-    'fighter' | 'cleric' | 'thief' | 'assassin' | undefined
-  >(undefined);
+  const [selectedClass, setSelectedClass] = useState<PlayerClass | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    setIsFormValid(
+      playerNameStatus?.isValid === true &&
+        selectedRace !== undefined &&
+        selectedClass !== undefined,
+    );
+  }, [playerNameStatus, selectedRace, selectedClass]);
 
   async function validatePlayerName() {
     if (playerName.length === 0) {
@@ -236,7 +246,12 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
               </div>
             </section>
 
-            <Button text="Create Player" variant="primary" type="submit" />
+            <Button
+              text="Create Player"
+              variant="primary"
+              type="submit"
+              isDisabled={!isFormValid}
+            />
           </form>
         </div>
       </div>
