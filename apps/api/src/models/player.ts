@@ -11,7 +11,7 @@ import UserModel from './user';
 import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
-import { levelXPArray } from '@darkthrone/game-data';
+import { UnitTypes, levelXPArray } from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
 import { Paginator } from '../lib/paginator';
 
@@ -42,6 +42,10 @@ export default class PlayerModel {
   async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
     const isAuthed = this.ctx.authedPlayer?.id === this.id;
 
+    const armySize = this.units
+      .filter((unit) => UnitTypes[unit.unitType].type !== 'support')
+      .reduce((acc, unit) => acc + unit.quantity, 0);
+
     const playerObject: PlayerObject = {
       id: this.id,
       name: this.displayName,
@@ -51,6 +55,7 @@ export default class PlayerModel {
       gold: this.gold,
       level: levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
       overallRank: this.overallRank,
+      armySize: armySize,
     };
 
     if (!isAuthed) return playerObject;
