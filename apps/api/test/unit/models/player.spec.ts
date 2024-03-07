@@ -18,7 +18,7 @@ const mockPlayerRow: PlayerRow = {
 
 const mockPlayerUnits = [
   {
-    unitType: 'support',
+    unitType: 'worker',
     quantity: 10,
     calculateAttackStrength: jest.fn().mockReturnValue(40),
     calculateDefenceStrength: jest.fn().mockReturnValue(50),
@@ -43,6 +43,7 @@ describe('Model: Player', () => {
         'gold',
         'level',
         'overallRank',
+        'armySize',
       ]);
     });
     it('should return a AuthedPlayerObject if the object is for the authenticated player', async () => {
@@ -64,6 +65,7 @@ describe('Model: Player', () => {
         'gold',
         'level',
         'overallRank',
+        'armySize',
         'attackStrength',
         'defenceStrength',
         'attackTurns',
@@ -91,12 +93,13 @@ describe('Model: Player', () => {
         level: 1,
         experience: 30,
         overallRank: 1,
+        armySize: 0,
         attackTurns: 10,
         attackStrength: 44, // 40 from the mockPlayerUnits + 5% bonus for human
         defenceStrength: 50,
         units: [
           {
-            unitType: 'support',
+            unitType: 'worker',
             quantity: 10,
           },
         ],
