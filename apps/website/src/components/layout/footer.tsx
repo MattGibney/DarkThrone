@@ -51,7 +51,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <h5 className="text-2xl font-display mb-2">Legal</h5>
           <ul>
             <li>
@@ -61,7 +61,7 @@ export default function Footer() {
               <NavigationLink linkData={screens['terms']} />
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

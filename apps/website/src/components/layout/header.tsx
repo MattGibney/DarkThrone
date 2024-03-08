@@ -22,12 +22,12 @@ export default function Header() {
       >
         <ul className="flex gap-4">
           {/* <li>English</li> */}
-          <li>
+          {/* <li>
             <NavigationLink linkData={screens['privacy']} />
           </li>
           <li>
             <NavigationLink linkData={screens['contact']} />
-          </li>
+          </li> */}
         </ul>
         <ul className="flex gap-4">
           <li>
