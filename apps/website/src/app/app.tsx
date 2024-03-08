@@ -6,6 +6,7 @@ import NewsPage from './page/news/news';
 import RoadmapPage from './page/roadmap/roadmap';
 import ContactPage from './page/contact/contact';
 import TermsPage from './page/legal/terms';
+import { environment } from '../environments/environment';
 
 export type NavigationItem = {
   name: string;
@@ -22,6 +23,11 @@ export const screens: { [k: string]: NavigationItem } = {
   terms: { name: 'Terms & Conditions', href: '/terms', element: TermsPage },
 
   // External Links
+  play: {
+    name: 'Play Now',
+    href: environment.webAppUrl,
+    element: Outlet,
+  },
   github: {
     name: 'Github',
     href: 'https://github.com/MattGibney/DarkThrone',
@@ -29,7 +35,7 @@ export const screens: { [k: string]: NavigationItem } = {
   },
   discord: {
     name: 'Discord',
-    href: 'https://discord.gg/EXHuUrTy3X',
+    href: 'https://discord.gg/6rEPCvSka9',
     element: Outlet,
   },
   status: {
@@ -49,7 +55,7 @@ export const screens: { [k: string]: NavigationItem } = {
   },
 };
 
-export const navigation = ['home', 'news', 'roadmap'].map((item) => {
+export const navigation = ['home', 'news', 'roadmap', 'play'].map((item) => {
   return screens[item];
 });
 
