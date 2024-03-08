@@ -18,14 +18,14 @@ async function prepareScript() {
 async function buildScript(id: string, commitHash: string) {
   console.log('Building the script \n');
 
-  await runCmdAndLog(exec, 'Building the Placeholder Site', 'npx nx run placeholder-site:build:production');
+  await runCmdAndLog(exec, 'Building the Website', 'npx nx run website:build:production');
   await runCmdAndLog(exec, 'Building the Web App', 'npx nx run web-app:build:production');
   await runCmdAndLog(exec, 'Building the API', 'npx nx run api:build:production');
 
   // Find and replace '__COMMIT_HASH__' with the actual commit hash in all the files
   await runCmdAndLog(exec, 'Replace Commit Hash', `find dist/apps -type f -name '*.js' -exec sed -i s/__COMMIT_HASH__/${commitHash}/g {} +`);
 
-  await runCmdAndLog(exec, 'Archive files', `cd dist/apps/ && tar -czvf ${id}.tar.gz placeholder-site web-app api && mv ${id}.tar.gz ../ && cd ../../`);
+  await runCmdAndLog(exec, 'Archive files', `cd dist/apps/ && tar -czvf ${id}.tar.gz website web-app api && mv ${id}.tar.gz ../ && cd ../../`);
 }
 
 async function deployScript(id: string) {
