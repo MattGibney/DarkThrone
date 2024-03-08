@@ -14,6 +14,7 @@ export default function AttackListPage(props: AttackListPageProps) {
   const navigate = useNavigate();
 
   const playerID = props.client.authenticatedPlayer?.id;
+  const playerLevel = props.client.authenticatedPlayer?.level;
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
   const currentPageNumber = pageParam ? Math.max(1, parseInt(pageParam)) : 1;
@@ -61,9 +62,15 @@ export default function AttackListPage(props: AttackListPageProps) {
     return null;
   }
 
+  const attackLevelRange=7
+  const minLevel=Math.max(1,playerLevel-attackLevelRange)
+  const maxLevel=playerLevel+attackLevelRange
   return (
     <main>
       <SubNavigation />
+      <h2 className="text-lg font-semibold text-zinc-200 text-center">
+        You may attack a player from levels {minLevel} to {maxLevel}.
+      </h2>
       <div className="sm:px-6 lg:px-8">
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
