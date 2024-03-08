@@ -4,6 +4,7 @@ import { classNames } from '../../../../utils';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
+import { attackableLevels } from '@darkthrone/game-data';
 
 interface AttackViewPlayerPageProps {
   client: DarkThroneClient;
@@ -41,11 +42,15 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
   if (player === null) return <div>Player not found</div>;
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
+  const isAttackable = attackableLevels(
+    player.level,
+    props.client.authenticatedPlayer?.level,
+  );
   const items = [
     {
       name: 'Attack',
       navigate: `/attack/${player.id}`,
-      isDisabled: isViewingSelf,
+      isDisabled: isViewingSelf || !isAttackable,
     },
     // {
     //   name: 'Message Player',

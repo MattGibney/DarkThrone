@@ -6,6 +6,7 @@ import SubNavigation from '../../../../components/layout/subNavigation';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Paginator } from '../../../../libs/pagination';
 import Pagination from '../../../../components/pagination';
+import { attackableMinLevel, attackableMaxLevel } from '@darkthrone/game-data';
 
 interface AttackListPageProps {
   client: DarkThroneClient;
@@ -62,14 +63,12 @@ export default function AttackListPage(props: AttackListPageProps) {
     return null;
   }
 
-  const attackLevelRange=7
-  const minLevel=Math.max(1,playerLevel-attackLevelRange)
-  const maxLevel=playerLevel+attackLevelRange
   return (
     <main>
       <SubNavigation />
       <h2 className="text-lg font-semibold text-zinc-200 text-center">
-        You may attack a player from levels {minLevel} to {maxLevel}.
+        You may attack a player from levels {attackableMinLevel(playerLevel)} to{' '}
+        {attackableMaxLevel(playerLevel)}.
       </h2>
       <div className="sm:px-6 lg:px-8">
         <div className="mt-8 flow-root">
