@@ -58,3 +58,15 @@ export const levelXPArray: number[] = [
   4093000, 4184000, 4276000, 4369000, 4463000, 4558000, 4654000, 4751000,
   4849000, 4948000, 5048000, 5149000, 5251000,
 ];
+
+const attackLevelRange = 7;
+
+export const attackableLevels = (
+  player1_level: number,
+  player2_level: number,
+): boolean => Math.abs(player1_level - player2_level) <= attackLevelRange
+
+export const attackableMinLevel = (playerLevel: number): number =>
+  Math.max(1, playerLevel - attackLevelRange);
+export const attackableMaxLevel = (playerLevel: number): number =>
+  playerLevel + attackLevelRange;
