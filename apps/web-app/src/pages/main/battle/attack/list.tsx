@@ -13,6 +13,7 @@ interface AttackListPageProps {
 export default function AttackListPage(props: AttackListPageProps) {
   const navigate = useNavigate();
 
+  const playerID = props.client.authenticatedPlayer?.id
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
   const currentPageNumber = pageParam ? Math.max(1, parseInt(pageParam)) : 1;
@@ -112,7 +113,12 @@ export default function AttackListPage(props: AttackListPageProps) {
                   {players.map((player, playerIdx) => (
                     <tr
                       key={playerIdx}
-                      className="even:bg-zinc-800/50 cursor-pointer"
+                      className={(() => {
+                        if (player.id === playerID) {
+                          return "bg-zinc-400/50 cursor-pointer"
+                        }
+                        return "even:bg-zinc-800/50 cursor-pointer"
+                      })()}
                       onClick={() => {
                         navigate(`/player/${player.id}`);
                       }}
