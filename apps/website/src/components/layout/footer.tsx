@@ -5,7 +5,7 @@ import NavigationLink from '../navigationLink';
 export default function Footer() {
   return (
     <div className="bg-zinc-900 py-12 px-4 xl:px-0">
-      <div className="max-w-screen-lg mx-auto justify-around flex-wrap gap-0 text-zinc-400 grid grid-cols-4">
+      <div className="max-w-screen-lg mx-auto justify-around flex-wrap gap-0 text-zinc-400 grid grid-cols-1 sm:grid-cols-3">
         <div className="w-full mb-6 sm:mb-0">
           <Logo variant="short" />
           <div className="mt-4">
