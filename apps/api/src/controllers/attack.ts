@@ -1,5 +1,8 @@
 import { APIError } from '@darkthrone/client-library';
 import { Request, Response } from 'express';
+import {
+  attackableLevels,
+} from '@darkthrone/game-data';
 
 export default {
   POST_attackPlayer: async (req: Request, res: Response) => {
@@ -42,6 +45,18 @@ export default {
           {
             code: 'attack_target_not_found',
             title: 'Target not found',
+          },
+        ],
+      });
+      return;
+    }
+
+    if (!attackableLevels(req.ctx.authedPlayer.level, targetPlayer.level)) {
+      res.status(400).send({
+        errors: [
+          {
+            code: 'attack_outside_range',
+            title: 'attacker outside range',
           },
         ],
       });
