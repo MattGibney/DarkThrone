@@ -4,7 +4,10 @@ import { ValidAuthResponse } from '@darkthrone/interfaces';
 
 export default {
   POST_login: async (req: Request, res: Response) => {
-    const { email, password, rememberMe } = req.body;
+    const { password, rememberMe } = req.body;
+    let { email } = req.body;
+
+    email = email.trim().toLowerCase();
 
     const apiErrors: APIError[] = [];
     if (!email) {
@@ -76,7 +79,10 @@ export default {
   },
 
   POST_register: async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    let { email } = req.body;
+
+    email = email.trim().toLowerCase();
 
     const apiErrors: APIError[] = [];
     if (!email) {
