@@ -3,6 +3,11 @@ import { PlayerObject } from '@darkthrone/interfaces';
 import { Alert, Avatar, Button } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  attackableLevels,
+  attackableMaxLevel,
+  attackableMinLevel,
+} from '@darkthrone/game-data';
 
 interface AttackPlayerPageProps {
   client: DarkThroneClient;
@@ -66,6 +71,19 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
   if (isViewingSelf) {
     return <div>You cannot attack yourself</div>;
+  }
+
+  const currentPlayerLevel = props.client.authenticatedPlayer?.level;
+  const isAttackable = attackableLevels(player.level, currentPlayerLevel);
+
+  if (!isAttackable) {
+    return (
+      <div>
+        You can only attack players with levels between{' '}
+        {attackableMinLevel(currentPlayerLevel)} and{' '}
+        {attackableMaxLevel(currentPlayerLevel)}
+      </div>
+    );
   }
 
   return (
