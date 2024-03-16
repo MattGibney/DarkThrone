@@ -44,7 +44,7 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
   const isAttackable = attackableLevels(
     player.level,
-    props.client.authenticatedPlayer?.level,
+    props.client.authenticatedPlayer?.level || 0,
   );
   const items = [
     {

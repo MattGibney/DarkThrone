@@ -73,7 +73,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
     return <div>You cannot attack yourself</div>;
   }
 
-  const currentPlayerLevel = props.client.authenticatedPlayer?.level;
+  const currentPlayerLevel = props.client.authenticatedPlayer?.level || 0;
   const isAttackable = attackableLevels(player.level, currentPlayerLevel);
 
   if (!isAttackable) {
