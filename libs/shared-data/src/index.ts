@@ -2,6 +2,18 @@ import { NewsPost } from '@darkthrone/interfaces';
 
 export const newsPosts: NewsPost[] = [
   {
+    title: 'fpopa - joining the development team',
+    content: `Hey, everyone!
+
+I am very happy to join Moppler in building this game. I won't promise to deliver stuff on a regular basis, but I do enjoy contributing to a game my brother and I used to play years ago.
+
+I've been fixing and improving small stuff here and there in the past weeks. I think Moppler did a nice job with the current state of the game, so contributing shouldn't be too complicated for any other future joiners.
+
+-fpopa
+`,
+    date: new Date('2024-03-09'),
+  },
+  {
     title: 'Pre-Alpha Launch',
     content: `Hello, Welcome to DarkThrone Reborn!
 
