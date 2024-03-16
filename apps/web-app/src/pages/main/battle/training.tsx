@@ -1,7 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../components/layout/subNavigation';
 import { Button, InputField } from '@darkthrone/react-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UnitTypes } from '@darkthrone/game-data';
 
 interface TrainingScreenProps {
@@ -9,6 +9,24 @@ interface TrainingScreenProps {
 }
 export default function TrainingScreen(props: TrainingScreenProps) {
   const [inpuValues, setInputValuess] = useState<{ [k: string]: number }>({});
+  const [runningTotal, setRunningTotal] = useState(0);
+  const [isValidInput, setIsValidInput] = useState(false);
+
+  useEffect(() => {
+    if (!props.client.authenticatedPlayer) return;
+
+    let total = 0;
+    Object.keys(inpuValues).forEach((unitID) => {
+      const unitData = UnitTypes[unitID];
+      total += inpuValues[unitID] * unitData.cost;
+    });
+
+    setIsValidInput(true);
+    if (total > props.client.authenticatedPlayer.gold) {
+      setIsValidInput(false);
+    }
+    setRunningTotal(total);
+  }, [inpuValues, props.client.authenticatedPlayer]);
 
   const renderUnitTypes = ['worker', 'soldier_1', 'guard_1'].map((unitID) => {
     const typeData = UnitTypes[unitID];
@@ -164,17 +182,29 @@ export default function TrainingScreen(props: TrainingScreenProps) {
           </div>
         </div>
 
-        <div className="flex justify-end gap-x-4 mt-8">
+        <div className="flex justify-end items-center  gap-x-4 mt-8">
+          {runningTotal > 0 ? (
+            <div className={isValidInput ? 'text-white/75' : 'text-red-500/75'}>
+              This will cost {new Intl.NumberFormat().format(runningTotal)}{' '}
+              gold.
+            </div>
+          ) : null}
           <div>
             <Button
               text={'Untrain'}
               type="button"
               onClick={handleUnTrain}
               variant="secondary"
+              isDisabled={!isValidInput}
             />
           </div>
           <div>
-            <Button text={'Train'} type="submit" variant="primary" />
+            <Button
+              text={'Train'}
+              type="submit"
+              variant="primary"
+              isDisabled={!isValidInput}
+            />
           </div>
         </div>
       </form>

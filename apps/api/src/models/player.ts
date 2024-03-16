@@ -29,6 +29,7 @@ export default class PlayerModel {
   public attackTurns: number;
   public gold: number;
   public experience: number;
+  public level: number;
   public overallRank: number;
 
   public units: PlayerUnitsModel[];
@@ -219,6 +220,7 @@ export default class PlayerModel {
     this.attackTurns = row.attack_turns;
     this.gold = row.gold;
     this.experience = row.experience;
+    this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
     this.overallRank = row.overall_rank;
   }
 
