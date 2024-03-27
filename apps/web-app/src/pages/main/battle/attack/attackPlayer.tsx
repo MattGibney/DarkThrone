@@ -61,7 +61,6 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
     }
 
     if (attackResponse.data.isAttackerVictor) {
-      console.log("refreshing player")
       props.client.emit('playerUpdate');
     }
 
