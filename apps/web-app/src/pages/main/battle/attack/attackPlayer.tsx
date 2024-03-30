@@ -60,6 +60,10 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
       return;
     }
 
+    if (attackResponse.data.isAttackerVictor) {
+      props.client.emit('playerUpdate');
+    }
+
     navigate(`/war-history/${attackResponse.data.id}`);
   }
 
