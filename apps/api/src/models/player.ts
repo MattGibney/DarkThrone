@@ -66,12 +66,23 @@ export default class PlayerModel {
     const attackStrength = await this.calculateAttackStrength();
     const defenceStrength = await this.calculateDefenceStrength();
 
+    const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const depositHistory = await this.ctx.daoFactory.player.fetchBankHistory(
+      this.ctx.logger,
+      this.id,
+      date24HoursAgo,
+    );
+
     const authedPlayerObject: AuthedPlayerObject = Object.assign(playerObject, {
       attackStrength: attackStrength,
       defenceStrength: defenceStrength,
       attackTurns: this.attackTurns,
       experience: this.experience,
       goldInBank: this.goldInBank,
+      depositHistory: depositHistory.map((history) => ({
+        amount: history.amount,
+        date: history.created_at,
+      })),
       units: this.units.map((unit) => ({
         unitType: unit.unitType,
         quantity: unit.quantity,
@@ -84,6 +95,12 @@ export default class PlayerModel {
   async depositGold(amount: number) {
     this.gold -= amount;
     this.goldInBank += amount;
+
+    await this.ctx.daoFactory.player.createBankHistory(
+      this.ctx.logger,
+      this.id,
+      amount,
+    );
 
     this.save();
   }
