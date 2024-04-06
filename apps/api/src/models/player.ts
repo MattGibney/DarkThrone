@@ -28,6 +28,7 @@ export default class PlayerModel {
   public createdAt: Date;
   public attackTurns: number;
   public gold: number;
+  public goldInBank: number;
   public experience: number;
   public level: number;
   public overallRank: number;
@@ -70,6 +71,7 @@ export default class PlayerModel {
       defenceStrength: defenceStrength,
       attackTurns: this.attackTurns,
       experience: this.experience,
+      goldInBank: this.goldInBank,
       units: this.units.map((unit) => ({
         unitType: unit.unitType,
         quantity: unit.quantity,
@@ -77,6 +79,13 @@ export default class PlayerModel {
     });
 
     return authedPlayerObject;
+  }
+
+  async depositGold(amount: number) {
+    this.gold -= amount;
+    this.goldInBank += amount;
+
+    this.save();
   }
 
   async calculateAttackStrength(): Promise<number> {
@@ -201,6 +210,7 @@ export default class PlayerModel {
         avatar_url: this.avatarURL,
         attack_turns: this.attackTurns,
         gold: this.gold,
+        gold_in_bank: this.goldInBank,
         experience: this.experience,
         overall_rank: this.overallRank,
       },
@@ -219,8 +229,9 @@ export default class PlayerModel {
     this.createdAt = row.created_at;
     this.attackTurns = row.attack_turns;
     this.gold = row.gold;
+    this.goldInBank = row.gold_in_bank;
     this.experience = row.experience;
-    this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
+    this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1;
     this.overallRank = row.overall_rank;
   }
 

@@ -2,7 +2,7 @@ import DarkThroneClient from '@darkthrone/client-library';
 import { Button } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
-import BankNavigation from './components/bankNavigation';
+// import BankNavigation from './components/bankNavigation';
 
 interface BankDepositPageProps {
   client: DarkThroneClient;
@@ -18,6 +18,19 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     setMaxDepositAmount(maxDeposit);
   }, [props.client.authenticatedPlayer?.gold]);
 
+  async function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const depositRequest = await props.client.banking.deposit(depositAmount);
+
+    if (depositRequest.status === 'fail') {
+      console.error(depositRequest.data);
+      return;
+    }
+
+    setDepositAmount(0);
+  }
+
   if (!props.client.authenticatedPlayer) return null;
 
   return (
@@ -25,7 +38,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
       <SubNavigation />
 
       <div className="my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden">
-        <BankNavigation />
+        {/* <BankNavigation /> */}
 
         <div className="bg-zinc-800/50 p-8 flex justify-around text-zinc-300">
           <div className="flex flex-col items-center">
@@ -38,14 +51,16 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           </div>
           <div className="flex flex-col items-center">
             <div className="text-yellow-500 text-2xl font-bold">
-              {new Intl.NumberFormat().format(0)}
+              {new Intl.NumberFormat().format(
+                props.client.authenticatedPlayer.goldInBank,
+              )}
             </div>
             <p>Gold in Bank</p>
           </div>
         </div>
         <form
           className="flex flex-col gap-y-6 bg-zinc-800 p-8"
-          onSubmit={() => null}
+          onSubmit={handleDeposit}
         >
           {/* {invalidMessages.length > 0 ? (
             <Alert messages={invalidMessages} type={'error'} />
