@@ -12,6 +12,7 @@ const mockPlayerRow: PlayerRow = {
   created_at: new Date(),
   attack_turns: 10,
   gold: 20,
+  gold_in_bank: 40,
   experience: 30,
   overall_rank: 1,
 };
@@ -51,6 +52,11 @@ describe('Model: Player', () => {
         authedPlayer: {
           id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
         } as unknown as PlayerModel,
+        daoFactory: {
+          player: {
+            fetchBankHistory: jest.fn().mockResolvedValue([]),
+          },
+        },
       } as unknown as Context;
 
       const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
@@ -70,6 +76,8 @@ describe('Model: Player', () => {
         'defenceStrength',
         'attackTurns',
         'experience',
+        'goldInBank',
+        'depositHistory',
         'units',
       ]);
     });
@@ -78,6 +86,11 @@ describe('Model: Player', () => {
         authedPlayer: {
           id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
         } as unknown as PlayerModel,
+        daoFactory: {
+          player: {
+            fetchBankHistory: jest.fn().mockResolvedValue([]),
+          },
+        },
       } as unknown as Context;
 
       const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
@@ -97,6 +110,8 @@ describe('Model: Player', () => {
         attackTurns: 10,
         attackStrength: 44, // 40 from the mockPlayerUnits + 5% bonus for human
         defenceStrength: 50,
+        depositHistory: [],
+        goldInBank: 40,
         units: [
           {
             unitType: 'worker',
