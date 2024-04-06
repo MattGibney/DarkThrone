@@ -4,22 +4,36 @@ import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 // import BankNavigation from './components/bankNavigation';
 
+// TODO: Make dynamic based on structure upgrades
+const MAX_DEPOSITS = 3;
+
 interface BankDepositPageProps {
   client: DarkThroneClient;
 }
 export default function BankDepositPage(props: BankDepositPageProps) {
   const [depositAmount, setDepositAmount] = useState<number>(0);
   const [maxDepositAmount, setMaxDepositAmount] = useState<number>(0);
+  const [depositsRemaining, setDepositsRemaining] =
+    useState<number>(MAX_DEPOSITS);
 
   useEffect(() => {
-    const maxDeposit = Math.floor(
-      props.client.authenticatedPlayer?.gold || 0 * 0.8,
-    );
+    const playerGold = props.client.authenticatedPlayer?.gold;
+    if (!playerGold) return;
+
+    const maxDeposit = Math.floor(playerGold * 0.8);
     setMaxDepositAmount(maxDeposit);
   }, [props.client.authenticatedPlayer?.gold]);
 
+  useEffect(() => {
+    const depositsMade =
+      props.client.authenticatedPlayer?.depositHistory.length || 0;
+    setDepositsRemaining(MAX_DEPOSITS - depositsMade);
+  }, [props.client.authenticatedPlayer?.depositHistory]);
+
   async function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (depositsRemaining < 1) return;
 
     const depositRequest = await props.client.banking.deposit(depositAmount);
 
@@ -68,7 +82,9 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           <div className="flex justify-between items-center text-zinc-400">
             <div>
               Deposits Remaining:{' '}
-              <span className="text-lg font-semibold text-white">3</span>
+              <span className="text-lg font-semibold text-white">
+                {depositsRemaining}
+              </span>
             </div>
             <input
               type="number"
@@ -85,7 +101,11 @@ export default function BankDepositPage(props: BankDepositPageProps) {
               You may deposit up to 80% of your gold at one time.
             </p>
             <div>
-              <Button text={'Deposit'} type="submit" />
+              <Button
+                text={'Deposit'}
+                type="submit"
+                isDisabled={depositsRemaining < 1}
+              />
             </div>
           </div>
         </form>

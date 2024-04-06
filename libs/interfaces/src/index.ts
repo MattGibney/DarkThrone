@@ -39,7 +39,13 @@ export interface AuthedPlayerObject extends PlayerObject {
   experience: number;
   attackTurns: number;
   goldInBank: number;
+  depositHistory: DepositHistory[];
   units: PlayerUnits[];
+}
+
+export interface DepositHistory {
+  amount: number;
+  date: Date;
 }
 
 export interface PlayerUnits {
