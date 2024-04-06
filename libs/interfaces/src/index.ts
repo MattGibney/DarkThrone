@@ -38,6 +38,7 @@ export interface AuthedPlayerObject extends PlayerObject {
   defenceStrength: number;
   experience: number;
   attackTurns: number;
+  goldInBank: number;
   units: PlayerUnits[];
 }
 

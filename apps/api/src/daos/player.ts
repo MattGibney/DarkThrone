@@ -15,6 +15,7 @@ export type PlayerRow = {
   created_at: Date;
   attack_turns: number;
   gold: number;
+  gold_in_bank: number;
   experience: number;
   overall_rank: number;
 };
