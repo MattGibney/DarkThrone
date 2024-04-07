@@ -44,9 +44,7 @@ export default class PlayerModel {
   async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
     const isAuthed = this.ctx.authedPlayer?.id === this.id;
 
-    const armySize = this.units
-      .filter((unit) => UnitTypes[unit.unitType].type !== UnitType.SUPPORT)
-      .reduce((acc, unit) => acc + unit.quantity, 0);
+    const armySize = this.armySize;
 
     const playerObject: PlayerObject = {
       id: this.id,
@@ -77,6 +75,12 @@ export default class PlayerModel {
     });
 
     return authedPlayerObject;
+  }
+
+  get armySize(): number {
+    return this.units
+      .filter((unit) => UnitTypes[unit.unitType].type !== UnitType.SUPPORT)
+      .reduce((acc, unit) => acc + unit.quantity, 0);
   }
 
   async calculateAttackStrength(): Promise<number> {
@@ -220,7 +224,7 @@ export default class PlayerModel {
     this.attackTurns = row.attack_turns;
     this.gold = row.gold;
     this.experience = row.experience;
-    this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
+    this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1;
     this.overallRank = row.overall_rank;
   }
 
