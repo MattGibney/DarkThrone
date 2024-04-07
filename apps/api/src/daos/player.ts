@@ -193,11 +193,13 @@ export default class PlayerDao {
     logger: Logger,
     playerID: string,
     amount: number,
+    type: 'deposit' | 'withdraw',
   ): Promise<void> {
     try {
       await this.database('bank_history').insert({
         player_id: playerID,
         amount,
+        transaction_type: type,
       });
     } catch (error) {
       logger.error(error, 'DAO: Failed to create bank history');
@@ -208,12 +210,18 @@ export default class PlayerDao {
     logger: Logger,
     playerID: string,
     dateFrom: Date,
-  ): Promise<{ amount: number; created_at: Date }[]> {
+  ): Promise<
+    {
+      amount: number;
+      transaction_type: 'deposit' | 'withdraw';
+      created_at: Date;
+    }[]
+  > {
     try {
       const history = await this.database('bank_history')
         .where({ player_id: playerID })
         .andWhere('created_at', '>=', dateFrom)
-        .select('amount', 'created_at');
+        .select('amount', 'transaction_type', 'created_at');
 
       return history;
     } catch (error) {

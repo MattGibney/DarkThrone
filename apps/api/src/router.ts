@@ -59,6 +59,7 @@ authedRouter.post('/training/train', TrainingController.POST_trainUnits);
 authedRouter.post('/training/untrain', TrainingController.POST_unTrainUnits);
 
 authedRouter.post('/bank/deposit', BankingController.POST_deposit);
+authedRouter.post('/bank/withdraw', BankingController.POST_withdraw);
 
 router.use(authedRouter);
 

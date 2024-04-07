@@ -1,5 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Button } from '@darkthrone/react-components';
+import { Alert, Button } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 // import BankNavigation from './components/bankNavigation';
@@ -11,38 +11,80 @@ interface BankDepositPageProps {
   client: DarkThroneClient;
 }
 export default function BankDepositPage(props: BankDepositPageProps) {
-  const [depositAmount, setDepositAmount] = useState<number>(0);
-  const [maxDepositAmount, setMaxDepositAmount] = useState<number>(0);
+  const [inputAmount, setInputAmount] = useState<number>(0);
+  // const [maxDepositAmount, setMaxDepositAmount] = useState<number>(0);
   const [depositsRemaining, setDepositsRemaining] =
     useState<number>(MAX_DEPOSITS);
 
-  useEffect(() => {
-    const playerGold = props.client.authenticatedPlayer?.gold;
-    if (!playerGold) return;
-
-    const maxDeposit = Math.floor(playerGold * 0.8);
-    setMaxDepositAmount(maxDeposit);
-  }, [props.client.authenticatedPlayer?.gold]);
+  const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    const depositsMade =
-      props.client.authenticatedPlayer?.depositHistory.length || 0;
+    const player = props.client.authenticatedPlayer;
+    if (!player) return;
+
+    const depositsMade = player.depositHistory.filter(
+      (history) => history.type === 'deposit',
+    ).length;
     setDepositsRemaining(MAX_DEPOSITS - depositsMade);
-  }, [props.client.authenticatedPlayer?.depositHistory]);
+  }, [props.client.authenticatedPlayer]);
 
   async function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const playerGold = props.client.authenticatedPlayer?.gold;
+    if (!playerGold) return;
 
-    if (depositsRemaining < 1) return;
+    if (depositsRemaining < 1) {
+      setInvalidMessages(['You have reached the maximum deposits allowed.']);
+      return;
+    }
 
-    const depositRequest = await props.client.banking.deposit(depositAmount);
+    const maxDeposit = Math.floor(playerGold * 0.8);
+    if (inputAmount < 1) {
+      setInvalidMessages(['You must deposit at least 1 gold.']);
+      return;
+    }
+    if (inputAmount > maxDeposit) {
+      setInvalidMessages([
+        'You may only deposit up to 80% of your gold at one time.',
+        `The maximum deposit amount is ${maxDeposit} gold.`,
+      ]);
+      return;
+    }
+
+    const depositRequest = await props.client.banking.deposit(inputAmount);
 
     if (depositRequest.status === 'fail') {
       console.error(depositRequest.data);
       return;
     }
 
-    setDepositAmount(0);
+    setInputAmount(0);
+  }
+
+  async function handleWithdraw() {
+    const playerGoldInBank = props.client.authenticatedPlayer?.goldInBank;
+    if (!playerGoldInBank) return;
+
+    if (playerGoldInBank < 1) {
+      setInvalidMessages(['You do not have any gold in the bank to withdraw.']);
+      return;
+    }
+
+    if (inputAmount > playerGoldInBank) {
+      setInvalidMessages([
+        'You cannot withdraw more gold than you have in the bank',
+      ]);
+      return;
+    }
+
+    const withdrawRequest = await props.client.banking.withdraw(inputAmount);
+
+    if (withdrawRequest.status === 'fail') {
+      console.error(withdrawRequest.data);
+      return;
+    }
+
+    setInputAmount(0);
   }
 
   if (!props.client.authenticatedPlayer) return null;
@@ -76,9 +118,9 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           className="flex flex-col gap-y-6 bg-zinc-800 p-8"
           onSubmit={handleDeposit}
         >
-          {/* {invalidMessages.length > 0 ? (
+          {invalidMessages.length > 0 ? (
             <Alert messages={invalidMessages} type={'error'} />
-          ) : null} */}
+          ) : null}
           <div className="flex justify-between items-center text-zinc-400">
             <div>
               Deposits Remaining:{' '}
@@ -88,24 +130,26 @@ export default function BankDepositPage(props: BankDepositPageProps) {
             </div>
             <input
               type="number"
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(parseInt(e.target.value) || 0)}
-              // onFocus={() => setInvalidMessages([])}
+              value={inputAmount}
+              onChange={(e) => setInputAmount(parseInt(e.target.value) || 0)}
+              onFocus={() => setInvalidMessages([])}
               className="rounded-md border-0 py-1.5 bg-zinc-700 text-zinc-200 ring-1 ring-inset ring-zinc-500 focus:ring-2 focus:ring-inset focus:ring-yellow-600 invalid:ring-red-600 sm:text-sm sm:leading-6"
               min={0}
-              max={maxDepositAmount}
+              // max={maxDepositAmount}
             />
           </div>
           <div className="flex justify-between items-end">
             <p className="text-sm text-zinc-300/50">
               You may deposit up to 80% of your gold at one time.
             </p>
-            <div>
+            <div className="flex gap-x-4">
               <Button
-                text={'Deposit'}
-                type="submit"
-                isDisabled={depositsRemaining < 1}
+                text={'Withdraw'}
+                variant="primary-outline"
+                type="button"
+                onClick={handleWithdraw}
               />
+              <Button text={'Deposit'} type="submit" />
             </div>
           </div>
         </form>

@@ -82,6 +82,7 @@ export default class PlayerModel {
       depositHistory: depositHistory.map((history) => ({
         amount: history.amount,
         date: history.created_at,
+        type: history.transaction_type,
       })),
       units: this.units.map((unit) => ({
         unitType: unit.unitType,
@@ -100,6 +101,23 @@ export default class PlayerModel {
       this.ctx.logger,
       this.id,
       amount,
+      'deposit',
+    );
+
+    this.save();
+  }
+
+  async withdrawGold(amount: number) {
+    this.ctx.logger.info({ amount }, 'Withdrawing gold');
+
+    this.gold += amount;
+    this.goldInBank -= amount;
+
+    await this.ctx.daoFactory.player.createBankHistory(
+      this.ctx.logger,
+      this.id,
+      amount,
+      'withdraw',
     );
 
     this.save();
