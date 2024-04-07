@@ -31,32 +31,26 @@ export default class BankingDAO {
     }
   }
 
-  // async attackPlayer(
-  //   targetID: string,
-  //   attackTurns: number,
-  // ): Promise<
-  //   APIResponse<'ok', WarHistoryObject> | APIResponse<'fail', APIError[]>
-  // > {
-  //   if (!this.root.authenticatedPlayer) {
-  //     return {
-  //       status: 'fail',
-  //       data: [{ code: 'CL465', title: 'You are not authenticated' }],
-  //     };
-  //   }
+  async withdraw(
+    amount: number,
+  ): Promise<
+    APIResponse<'ok', { amount: number }> | APIResponse<'fail', APIError[]>
+  > {
+    try {
+      const withdrawResponse = await this.root.http.post<{ amount: number }>(
+        '/bank/withdraw',
+        { amount },
+      );
 
-  //   try {
-  //     const attackResponse = await this.root.http.post<WarHistoryObject>(
-  //       '/attack',
-  //       { targetID, attackTurns },
-  //     );
+      this.root.emit('playerUpdate');
 
-  //     return { status: 'ok', data: attackResponse.data };
-  //   } catch (err: unknown) {
-  //     const axiosError = err as { response: { data: { errors: APIError[] } } };
-  //     return {
-  //       status: 'fail',
-  //       data: axiosError.response.data.errors as APIError[],
-  //     };
-  //   }
-  // }
+      return { status: 'ok', data: withdrawResponse.data };
+    } catch (err: unknown) {
+      const axiosError = err as { response: { data: { errors: APIError[] } } };
+      return {
+        status: 'fail',
+        data: axiosError.response.data.errors as APIError[],
+      };
+    }
+  }
 }

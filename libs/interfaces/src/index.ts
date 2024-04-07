@@ -46,6 +46,7 @@ export interface AuthedPlayerObject extends PlayerObject {
 export interface DepositHistory {
   amount: number;
   date: Date;
+  type: 'deposit' | 'withdraw';
 }
 
 export interface PlayerUnits {
