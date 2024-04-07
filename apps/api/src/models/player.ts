@@ -45,9 +45,7 @@ export default class PlayerModel {
   async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
     const isAuthed = this.ctx.authedPlayer?.id === this.id;
 
-    const armySize = this.units
-      .filter((unit) => UnitTypes[unit.unitType].type !== UnitType.SUPPORT)
-      .reduce((acc, unit) => acc + unit.quantity, 0);
+    const armySize = this.armySize;
 
     const playerObject: PlayerObject = {
       id: this.id,
@@ -121,6 +119,12 @@ export default class PlayerModel {
     );
 
     this.save();
+  }
+
+  get armySize(): number {
+    return this.units
+      .filter((unit) => UnitTypes[unit.unitType].type !== UnitType.SUPPORT)
+      .reduce((acc, unit) => acc + unit.quantity, 0);
   }
 
   async calculateAttackStrength(): Promise<number> {

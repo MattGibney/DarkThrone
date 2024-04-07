@@ -2,6 +2,7 @@ import { PlayerRow } from '../../../src/daos/player';
 import { Context } from '../../../src/app';
 import PlayerModel from '../../../src/models/player';
 import PlayerUnitsModel from '../../../src/models/playerUnits';
+import UserModel from '../../../src/models/user';
 
 const mockPlayerRow: PlayerRow = {
   id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
@@ -119,6 +120,29 @@ describe('Model: Player', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('GET armySize', () => {
+    it('should return the sum of all unit quantities', async () => {
+      const mockCTX = {} as unknown as Context;
+      const playerUnits = [
+        {
+          unitType: 'worker',
+          quantity: 5,
+        },
+        {
+          unitType: 'soldier_1',
+          quantity: 3,
+        },
+        {
+          unitType: 'guard_1',
+          quantity: 2,
+        },
+      ] as PlayerUnitsModel[];
+
+      const player = new PlayerModel(mockCTX, mockPlayerRow, playerUnits);
+      expect(player.armySize).toEqual(5);
     });
   });
 
@@ -317,6 +341,31 @@ describe('Model: Player', () => {
           defender_experience: 0,
         },
       );
+    });
+  });
+
+  describe('fetchAllForUser', () => {
+    it('should return an array of PlayerModels', async () => {
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            fetchAllForUser: jest.fn().mockResolvedValue([mockPlayerRow]),
+          },
+        },
+        modelFactory: {
+          playerUnits: {
+            fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
+          },
+        },
+      } as unknown as Context;
+
+      const players = await PlayerModel.fetchAllForUser(
+        mockCTX,
+        {} as UserModel,
+      );
+
+      expect(players).toHaveLength(1);
+      expect(players[0]).toBeInstanceOf(PlayerModel);
     });
   });
 });

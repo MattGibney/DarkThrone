@@ -64,7 +64,7 @@ const attackLevelRange = 7;
 export const attackableLevels = (
   player1_level: number,
   player2_level: number,
-): boolean => Math.abs(player1_level - player2_level) <= attackLevelRange
+): boolean => Math.abs(player1_level - player2_level) <= attackLevelRange;
 
 export const attackableMinLevel = (playerLevel: number): number =>
   Math.max(1, playerLevel - attackLevelRange);
