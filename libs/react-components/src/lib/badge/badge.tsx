@@ -10,7 +10,7 @@ const styles = tv({
         body: 'bg-yellow-400/10 text-yellow-500 ring-yellow-400/20',
       },
       gray: {
-        body: 'bg-gray-400/10 text-gray-400 ring-gray-400/20',
+        body: 'bg-zinc-400/10 text-zinc-400 ring-zinc-400/20',
       },
     },
   },

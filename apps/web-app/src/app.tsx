@@ -11,7 +11,6 @@ import PlayerSelectLayout from './playerSelectLayout';
 import CreatePlayerPage from './pages/playerSelect/create';
 import OverviewPage from './pages/main/home/overview';
 import AttackListPage from './pages/main/battle/attack/list';
-import BattlePage from './pages/main/battle';
 import AttackViewPlayerPage from './pages/main/battle/attack/viewPlayer';
 import AttackPlayerPage from './pages/main/battle/attack/attackPlayer';
 import WarHistoryView from './pages/main/battle/warHistory/viewHistory';
@@ -20,6 +19,8 @@ import TrainingScreen from './pages/main/battle/training';
 import NewsPage from './pages/main/home/news';
 import { UserSessionObject } from '@darkthrone/interfaces';
 import environment from './environments/environment';
+import BankDepositPage from './pages/main/structures/bank/deposit';
+import BankHistoryPage from './pages/main/structures/bank/history';
 
 export type SubNavigationItem = {
   name: string;
@@ -60,7 +61,7 @@ export const globalNavigation: NavigationItem[] = [
     name: 'Battle',
     href: '/attack',
     shouldRender: true,
-    component: BattlePage,
+    component: GenericOutlet,
     children: [
       {
         name: 'Attack',
@@ -102,10 +103,26 @@ export const globalNavigation: NavigationItem[] = [
       },
     ],
   },
-  // {
-  //   name: 'Structures',
-  //   href: '/bank'
-  // },
+  {
+    name: 'Structures',
+    href: '/bank/deposit',
+    shouldRender: true,
+    component: GenericOutlet,
+    children: [
+      {
+        name: 'Bank',
+        to: '/bank/deposit',
+        shouldRender: true,
+        component: BankDepositPage,
+      },
+      {
+        name: 'History',
+        to: '/bank/history',
+        shouldRender: false,
+        component: BankHistoryPage,
+      },
+    ],
+  },
   // {
   //   name: 'Alliances',
   //   href: '/my-alliances'

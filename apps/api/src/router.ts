@@ -1,6 +1,7 @@
 import Router from 'express';
 import AttackController from './controllers/attack';
 import AuthController from './controllers/auth';
+import BankingController from './controllers/banking';
 import PlayersController from './controllers/player';
 import TrainingController from './controllers/training';
 import WarHistoryController from './controllers/warHistory';
@@ -56,6 +57,9 @@ authedRouter.get('/war-history', WarHistoryController.GET_fetchAll);
 
 authedRouter.post('/training/train', TrainingController.POST_trainUnits);
 authedRouter.post('/training/untrain', TrainingController.POST_unTrainUnits);
+
+authedRouter.post('/bank/deposit', BankingController.POST_deposit);
+authedRouter.post('/bank/withdraw', BankingController.POST_withdraw);
 
 router.use(authedRouter);
 
