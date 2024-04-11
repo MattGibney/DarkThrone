@@ -2,6 +2,31 @@ import { NewsPost } from '@darkthrone/interfaces';
 
 export const newsPosts: NewsPost[] = [
   {
+    title: 'Introducing Banking',
+    content: `It's finally here!
+Banking has been added to the game. You can now deposit your gold into the bank to keep it safe from thieves.
+
+## Depositing
+
+We're following the lead of the original game here. It's only possible to deposit a maximum of 80% of your gold at a time. This keeps gold in circulation and the economy healthy. There is also a cap on the number of deposits you can make in a 24 hour period. You get 3 deposits every 24 hours. A deposit slot is reset 24 hours after it's made. This means that if you make a deposit at 12:00, it'll be reset at 12:00 the next day.
+
+Keep this in mind when attacking other players, you don't want to be cought with your gold at risk! In a future update, we'll include the ability to increase the number of deposit slots available to you. This will be done in the form of structure upgrades.
+
+## Withdrawing
+
+Unlike the original game. It's possible to withdraw your gold. You can withdraw as much as you like, whenever you like. There is no limit to the number of withdrawals you can make.
+
+It's currently not possible to spend gold that it deposited in the bank. If you want to use it (for example to train additional units) you'll need to withdraw it first. You'd better be quick though. You wouldn't want it to be stolen by another player!
+
+---
+
+I hope you enjoy this new feature. I'm looking forward to seeing how it changes the game. Development isn't too quick at the moment as I'm working on this in my spare time. I'm looking forward to working with the community to make this game the best it can be. Thank you all for your support!
+
+-Moppler
+`,
+    date: new Date('2024-04-11'),
+  },
+  {
     title: 'fpopa - joining the development team',
     content: `Hey, everyone!
 

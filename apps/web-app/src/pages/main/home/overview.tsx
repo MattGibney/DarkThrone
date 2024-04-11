@@ -94,7 +94,7 @@ export default function OverviewPage(props: OverviewPageProps) {
       </div>
 
       {/* lg:grid-cols-4 */}
-      <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 md:grid-cols-4 rounded-xl overflow-hidden">
+      <dl className="mx-auto grid grid-cols-1 gap-px bg-zinc-900/5 sm:grid-cols-2 md:grid-cols-4 rounded-xl overflow-hidden">
         {stats.map((stat) => (
           <div
             key={stat.name}
