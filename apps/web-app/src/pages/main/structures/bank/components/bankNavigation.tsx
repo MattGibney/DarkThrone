@@ -4,13 +4,13 @@ import { classNames } from '../../../../../utils';
 const tabs = [
   { name: 'Deposit', href: '/bank/deposit' },
   { name: 'Bank History', href: '/bank/history' },
-  { name: 'Economy', href: '/bank/economy' },
+  // { name: 'Economy', href: '/bank/economy' },
 ];
 
 export default function BankNavigation() {
   return (
     <nav
-      className="isolate flex divide-x divide-gray-700 rounded-lg shadow mb-8"
+      className="isolate flex divide-x divide-zinc-700 rounded-lg shadow mb-8"
       aria-label="Tabs"
     >
       {tabs.map((tab, tabIdx) => (
@@ -18,7 +18,7 @@ export default function BankNavigation() {
           to={tab.href}
           key={tabIdx}
           className={classNames(
-            'text-gray-200 hover:text-gray-300',
+            'text-zinc-200 hover:text-zinc-300',
             tabIdx === 0 ? 'rounded-l-lg' : '',
             tabIdx === tabs.length - 1 ? 'rounded-r-lg' : '',
             'group relative min-w-0 flex-1 overflow-hidden bg-zinc-800 py-4 px-4 text-center text-sm font-medium hover:bg-zinc-700 focus:z-10',

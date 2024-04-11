@@ -159,7 +159,7 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
                   <dt className="text-sm font-medium leading-6 text-white">
                     {statistic.name}
                   </dt>
-                  <dd className="mt-1 text-sm leading-6 text-gray-400 sm:col-span-2 sm:mt-0">
+                  <dd className="mt-1 text-sm leading-6 text-zinc-400 sm:col-span-2 sm:mt-0">
                     {statistic.value}
                   </dd>
                 </div>
