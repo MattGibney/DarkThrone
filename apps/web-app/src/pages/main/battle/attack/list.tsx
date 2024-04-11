@@ -66,7 +66,7 @@ export default function AttackListPage(props: AttackListPageProps) {
   return (
     <main>
       <SubNavigation />
-      <h2 className="text-lg font-semibold text-zinc-200 text-center">
+      <h2 className="text-base font-semibold text-zinc-300 text-center">
         You may attack a player from levels {attackableMinLevel(playerLevel)} to{' '}
         {attackableMaxLevel(playerLevel)}.
       </h2>
@@ -121,7 +121,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                       key={playerIdx}
                       className={(() => {
                         if (player.id === playerID) {
-                          return 'bg-zinc-400/50 cursor-pointer';
+                          return 'bg-yellow-300/10 cursor-pointer';
                         }
                         return 'even:bg-zinc-800/50 cursor-pointer';
                       })()}
