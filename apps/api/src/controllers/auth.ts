@@ -7,6 +7,7 @@ export default {
     const { password, rememberMe } = req.body;
     let { email } = req.body;
 
+    if (!email) email = '';
     email = email.trim().toLowerCase();
 
     const apiErrors: APIError[] = [];
