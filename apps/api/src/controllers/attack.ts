@@ -1,8 +1,6 @@
 import { APIError } from '@darkthrone/client-library';
 import { Request, Response } from 'express';
-import {
-  attackableLevels,
-} from '@darkthrone/game-data';
+import { attackableLevels } from '@darkthrone/game-data';
 
 export default {
   POST_attackPlayer: async (req: Request, res: Response) => {
