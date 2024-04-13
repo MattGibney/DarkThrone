@@ -14,12 +14,10 @@
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "cache": true
+      "inputs": ["production", "^production"]
     },
     "@nx/jest:jest": {
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "cache": true,
       "options": {
         "passWithNoTests": true
       },
@@ -31,16 +29,14 @@
       }
     },
     "@nx/vite:test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "cache": true
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
     },
     "@nx/eslint:lint": {
       "inputs": [
         "default",
         "{workspaceRoot}/.eslintrc.json",
         "{workspaceRoot}/.eslintignore"
-      ],
-      "cache": true
+      ]
     }
   },
   "namedInputs": {
