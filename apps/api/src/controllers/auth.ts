@@ -80,9 +80,9 @@ export default {
   },
 
   POST_register: async (req: Request, res: Response) => {
-    const { password } = req.body;
-    let { email } = req.body;
+    let { email, password } = req.body;
 
+    if (!email) email = '';
     email = email.trim().toLowerCase();
 
     const apiErrors: APIError[] = [];
@@ -92,12 +92,8 @@ export default {
         title: 'Email required',
       });
     }
-    if (!password) {
-      apiErrors.push({
-        code: 'register_password_required',
-        title: 'Password required',
-      });
-    }
+    if (!password) password = '';
+
     if (password.length < 7) {
       apiErrors.push({
         code: 'register_password_too_short',
@@ -180,17 +176,6 @@ export default {
   },
 
   GET_currentUser: async (req: Request, res: Response) => {
-    if (!req.ctx.authedUser) {
-      res.status(401).send({
-        errors: [
-          {
-            code: 'not_authenticated',
-            title: 'Not authenticated',
-          },
-        ],
-      });
-      return;
-    }
     res.status(200).json({
       user: await req.ctx.authedUser.session.serialise(),
       player: req.ctx.authedPlayer
@@ -200,40 +185,16 @@ export default {
   },
 
   POST_logout: async (req: Request, res: Response) => {
-    if (!req.ctx.authedUser) {
-      res.status(401).send({
-        errors: [
-          {
-            code: 'not_authenticated',
-            title: 'Not authenticated',
-          },
-        ],
-      });
-      return;
-    }
-
     const { session } = req.ctx.authedUser;
-    if (!session) {
-      res.status(500).json({
-        errors: [
-          {
-            code: 'logout_failed',
-            title: 'Logout failed',
-          },
-        ],
-      });
-      return;
-    }
-
     await session.invalidate();
     res.status(200).json({});
   },
 
   POST_assumePlayer: async (req: Request, res: Response) => {
-    const { playerId } = req.body;
+    const { playerID } = req.body;
 
     const apiErrors: APIError[] = [];
-    if (!playerId) {
+    if (!playerID) {
       apiErrors.push({
         code: 'assume_player_player_id_required',
         title: 'Player ID required',
@@ -247,7 +208,7 @@ export default {
 
     const player = await req.ctx.modelFactory.player.fetchByID(
       req.ctx,
-      playerId,
+      playerID,
     );
     if (!player) {
       res.status(404).json({
@@ -255,6 +216,19 @@ export default {
           {
             code: 'assume_player_player_not_found',
             title: 'Player not found',
+          },
+        ],
+      });
+      return;
+    }
+
+    if (player.userID !== req.ctx.authedUser.model.id) {
+      res.status(403).json({
+        errors: [
+          {
+            code: 'assume_player_not_your_player',
+            // eslint-disable-next-line quotes
+            title: "You can't assume another player's account",
           },
         ],
       });
