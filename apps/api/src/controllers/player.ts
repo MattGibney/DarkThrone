@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 export default {
   GET_fetchAllPlayers: async (req: Request, res: Response) => {
     const { page, pageSize } = req.query;
-    const pageNumber = Math.max(parseInt(page as string), 1);
+    const pageNumber = Math.max(parseInt(page as string) || 1, 1);
     const pageSizeNumber = Math.max(
       1,
-      Math.min(200, parseInt(pageSize as string)),
+      Math.min(200, parseInt(pageSize as string) || 0),
     );
 
     const paginator = await req.ctx.modelFactory.player.fetchAllPaginated(
@@ -38,6 +38,7 @@ export default {
       req.ctx,
       req.params.id,
     );
+
     if (!player) {
       res.status(404).json({
         errors: [
