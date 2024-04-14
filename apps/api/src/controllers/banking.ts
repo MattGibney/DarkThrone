@@ -52,7 +52,9 @@ export default {
 
     await req.ctx.authedPlayer.depositGold(amount);
 
-    res.status(200).send('OK');
+    res.status(200).send({
+      message: 'OK',
+    });
   },
 
   POST_withdraw: async (req: Request, res: Response) => {
@@ -85,6 +87,6 @@ export default {
 
     await req.ctx.authedPlayer.withdrawGold(amount);
 
-    res.status(200).send('OK');
+    res.status(200).send({ message: 'OK' });
   },
 };
