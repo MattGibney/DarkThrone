@@ -5,6 +5,7 @@ import { Config } from '../../../config/environment';
 import { UserRow } from '../../../src/daos/user';
 import { PlayerRow } from '../../../src/daos/player';
 import { UserSessionRow } from '../../../src/daos/userSession';
+import deepmerge from 'deepmerge';
 
 interface makeMockApplicationProps {
   config?: Partial<Config>;
@@ -61,14 +62,19 @@ export default function makeApplication(
     ) as unknown as DaoFactory;
   }
   if (options.authenticatedPlayer) {
-    daoFactory = Object.assign(
+    daoFactory = deepmerge(
       {
         player: {
           fetchByID: jest.fn().mockResolvedValue(options.authenticatedPlayer),
+          fetchBankHistory: jest.fn().mockResolvedValue([]),
+          update: jest.fn().mockResolvedValue({}),
         },
-      },
-      daoFactory,
-    ) as unknown as DaoFactory;
+        playerUnits: {
+          fetchUnitsForPlayer: jest.fn().mockResolvedValue([]),
+        },
+      } as unknown as DaoFactory,
+      daoFactory as Partial<DaoFactory>,
+    );
   }
 
   return {

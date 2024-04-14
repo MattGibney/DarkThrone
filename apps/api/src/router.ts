@@ -8,6 +8,7 @@ import WarHistoryController from './controllers/warHistory';
 
 const router = Router();
 const authedRouter = Router();
+
 authedRouter.use((req, res, next) => {
   if (!req.ctx.authedUser) {
     res.status(401).send({
@@ -55,9 +56,11 @@ authedRouter.post(
 authedRouter.get('/war-history/:id', WarHistoryController.GET_fetchByID);
 authedRouter.get('/war-history', WarHistoryController.GET_fetchAll);
 
+// Training
 authedRouter.post('/training/train', TrainingController.POST_trainUnits);
 authedRouter.post('/training/untrain', TrainingController.POST_unTrainUnits);
 
+// Banking
 authedRouter.post('/bank/deposit', BankingController.POST_deposit);
 authedRouter.post('/bank/withdraw', BankingController.POST_withdraw);
 
