@@ -28,8 +28,21 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     setDepositsRemaining(MAX_DEPOSITS - depositsMade);
   }, [props.client.authenticatedPlayer]);
 
-  async function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleDeposit(e?: React.FormEvent<HTMLFormElement>) {
+    if (e) e.preventDefault();
+
+    deposit(inputAmount);
+  }
+
+  function handleDepositMax() {
+    const playerGold = props.client.authenticatedPlayer?.gold;
+    if (!playerGold) return;
+
+    const maxDeposit = Math.floor(playerGold * 0.8);
+    deposit(maxDeposit);
+  }
+
+  async function deposit(amount: number) {
     const playerGold = props.client.authenticatedPlayer?.gold;
     if (!playerGold) return;
 
@@ -39,11 +52,11 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     }
 
     const maxDeposit = Math.floor(playerGold * 0.8);
-    if (inputAmount < 1) {
+    if (amount < 1) {
       setInvalidMessages(['You must deposit at least 1 gold.']);
       return;
     }
-    if (inputAmount > maxDeposit) {
+    if (amount > maxDeposit) {
       setInvalidMessages([
         'You may only deposit up to 80% of your gold at one time.',
         `The maximum deposit amount is ${maxDeposit} gold.`,
@@ -51,36 +64,10 @@ export default function BankDepositPage(props: BankDepositPageProps) {
       return;
     }
 
-    const depositRequest = await props.client.banking.deposit(inputAmount);
+    const depositRequest = await props.client.banking.deposit(amount);
 
     if (depositRequest.status === 'fail') {
       console.error(depositRequest.data);
-      return;
-    }
-
-    setInputAmount(0);
-  }
-
-  async function handleWithdraw() {
-    const playerGoldInBank = props.client.authenticatedPlayer?.goldInBank;
-    if (!playerGoldInBank) return;
-
-    if (playerGoldInBank < 1) {
-      setInvalidMessages(['You do not have any gold in the bank to withdraw.']);
-      return;
-    }
-
-    if (inputAmount > playerGoldInBank) {
-      setInvalidMessages([
-        'You cannot withdraw more gold than you have in the bank',
-      ]);
-      return;
-    }
-
-    const withdrawRequest = await props.client.banking.withdraw(inputAmount);
-
-    if (withdrawRequest.status === 'fail') {
-      console.error(withdrawRequest.data);
       return;
     }
 
@@ -121,7 +108,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           {invalidMessages.length > 0 ? (
             <Alert messages={invalidMessages} type={'error'} />
           ) : null}
-          <div className="flex justify-between items-center text-zinc-400">
+          <div className="flex flex-col sm:flex-row gap-y-2 justify-between items-center text-zinc-400">
             <div>
               Deposits Remaining:{' '}
               <span className="text-lg font-semibold text-white">
@@ -138,19 +125,19 @@ export default function BankDepositPage(props: BankDepositPageProps) {
               // max={maxDepositAmount}
             />
           </div>
-          <div className="flex justify-between items-end">
-            <p className="text-sm text-zinc-300/50">
-              You may deposit up to 80% of your gold at one time.
-            </p>
+          <div className="flex flex-col gap-y-4">
             <div className="flex gap-x-4">
               <Button
-                text={'Withdraw'}
+                text={'Deposit Max'}
                 variant="primary-outline"
                 type="button"
-                onClick={handleWithdraw}
+                onClick={handleDepositMax}
               />
               <Button text={'Deposit'} type="submit" />
             </div>
+            <p className="text-sm text-zinc-300/50">
+              You may deposit up to 80% of your gold at one time.
+            </p>
           </div>
         </form>
       </div>
