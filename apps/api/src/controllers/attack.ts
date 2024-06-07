@@ -28,6 +28,14 @@ export default {
       });
     }
 
+    const attackStrength = await req.ctx.authedPlayer.calculateAttackStrength();
+    if (attackStrength === 0) {
+      apiErrors.push({
+        code: 'attack_target_no_attack',
+        title: 'You have 0 attack strength. You cannot attack.',
+      });
+    }
+
     if (apiErrors.length > 0) {
       res.status(400).send({ errors: apiErrors });
       return;
