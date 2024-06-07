@@ -35,7 +35,7 @@ export const screens: { [k: string]: NavigationItem } = {
   },
   discord: {
     name: 'Discord',
-    href: 'https://discord.gg/6rEPCvSka9',
+    href: 'https://discord.gg/ygYCytkx7Y',
     element: Outlet,
   },
   status: {
