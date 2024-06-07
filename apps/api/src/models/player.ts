@@ -175,6 +175,12 @@ export default class PlayerModel {
     return Math.floor(goldPerTurn);
   }
 
+  determineIsVictor(attackerStrength: number, defenderStrength: number) {
+    if (attackerStrength === 0) return false;
+
+    return attackerStrength > defenderStrength;
+  }
+
   async attackPlayer(
     targetPlayer: PlayerModel,
     attackTurns: number,
@@ -185,7 +191,10 @@ export default class PlayerModel {
     const targetPlayerDefenceStrength =
       await targetPlayer.calculateDefenceStrength();
 
-    const isVictor = playerAttackStrength > targetPlayerDefenceStrength;
+    const isVictor = this.determineIsVictor(
+      playerAttackStrength,
+      targetPlayerDefenceStrength,
+    );
 
     // Calculate XP
     const victorExperience = Math.floor(
