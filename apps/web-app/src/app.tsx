@@ -119,7 +119,7 @@ export const globalNavigation: NavigationItem[] = [
       {
         name: 'Bank',
         to: '/bank/withdraw',
-        shouldRender: true,
+        shouldRender: false,
         component: BankWithdrawPage,
       },
       {
