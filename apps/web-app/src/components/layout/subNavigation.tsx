@@ -41,15 +41,11 @@ export default function SubNavigation() {
             id="tabs"
             name="tabs"
             className="block w-full rounded-md border-none bg-white/5 py-2 pl-3 pr-10 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-yellow-500 sm:text-sm"
-            // defaultValue={tabs.find((tab) => tab.to).name}
+            defaultValue={activeTab?.name}
             onChange={(e) => navigate(e.target.value)}
           >
             {tabs.map((tab) => (
-              <option
-                key={tab.name}
-                value={tab.to}
-                selected={tab === activeTab}
-              >
+              <option key={tab.name} value={tab.to}>
                 {tab.name}
               </option>
             ))}
