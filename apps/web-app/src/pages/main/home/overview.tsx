@@ -1,5 +1,7 @@
+import { Tooltip } from 'react-tooltip';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
+import { levelXPArray } from '@darkthrone/game-data';
 
 interface OverviewPageProps {
   client: DarkThroneClient;
@@ -16,19 +18,37 @@ export default function OverviewPage(props: OverviewPageProps) {
     {
       name: 'Population',
       value: new Intl.NumberFormat('en-GB').format(population),
+      tooltip: {
+        id: 'tooltip-population',
+	content: '+25 per calendar day (at midnight)'
+      }
     },
     {
       name: 'Army Size',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.armySize,
       ),
+      tooltip: {}
     },
-    { name: 'Level', value: props.client.authenticatedPlayer.level },
+    {
+      name: 'Level',
+      value: props.client.authenticatedPlayer.level,
+      tooltip: {
+	id: 'tooltip-level',
+        content: 'Next level at ' + new Intl.NumberFormat('en-GB').format(
+          levelXPArray[props.client.authenticatedPlayer.level]
+        )
+      }
+    },
     {
       name: 'Experience',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.experience,
       ),
+      tooltip: {
+        id: 'tooltip-experience',
+	content: 'Gain by winning battles as attacker or defender'
+      }
     },
 
     {
@@ -36,24 +56,28 @@ export default function OverviewPage(props: OverviewPageProps) {
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.attackTurns,
       ),
+      tooltip: {}
     },
     {
       name: 'Gold',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.gold,
       ),
+      tooltip: {}
     },
     {
       name: 'Attack Strength',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.attackStrength,
       ),
+      tooltip: {}
     },
     {
       name: 'Defence Strength',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.defenceStrength,
       ),
+      tooltip: {}
     },
   ];
 
@@ -104,7 +128,16 @@ export default function OverviewPage(props: OverviewPageProps) {
               {stat.name}
             </dt>
             <dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-zinc-200">
-              {stat.value}
+              <a
+                data-tooltip-id={stat.tooltip.id}
+                data-tooltip-place="right"
+                data-tooltip-content={stat.tooltip.content}>
+                  {stat.value}
+              </a>
+              <Tooltip
+                id={stat.tooltip.id}
+                style={{ fontSize: "0.5em" }}
+              />
             </dd>
           </div>
         ))}
