@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "prestart": "npx knex migrate:latest",
+    "start": "node main.js"
+  }
+}
