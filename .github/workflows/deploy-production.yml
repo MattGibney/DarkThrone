@@ -99,7 +99,7 @@ jobs:
     - name: build
       run: npx nx build website
       env:
-        VITE_GAME_APP_URL: "https://play.darkthrone.com"
+        VITE_GAME_APP_URL: "https://play.darkthronereborn.com"
 
     - name: Upload to S3
       uses: shallwefootball/s3-upload-action@master
@@ -176,7 +176,7 @@ jobs:
     - name: build
       run: npx nx run web-app:build:production
       env:
-        VITE_GAME_API_URL: "https://api.darkthrone.com"
+        VITE_GAME_API_URL: "https://api.darkthronereborn.com"
 
     - name: Upload to S3
       uses: shallwefootball/s3-upload-action@master
