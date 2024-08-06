@@ -98,6 +98,8 @@ jobs:
 
     - name: build
       run: npx nx build website
+      with:
+        VITE_GAME_APP_URL: "https://play.darkthrone.com"
 
     - name: Upload to S3
       uses: shallwefootball/s3-upload-action@master
@@ -173,6 +175,8 @@ jobs:
 
     - name: build
       run: npx nx run web-app:build:production
+      with:
+        VITE_GAME_API_URL: "https://api.darkthrone.com"
 
     - name: Upload to S3
       uses: shallwefootball/s3-upload-action@master
