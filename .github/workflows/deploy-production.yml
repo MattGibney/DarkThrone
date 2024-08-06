@@ -58,20 +58,20 @@ jobs:
     - name: Run DB Migrations
       run: npx nx run api:knex migrate:latest
       env:
-        API_RDS_HOSTNAME: localhost
-        API_RDS_PORT: 5432
-        API_RDS_USERNAME: "postgres"
-        API_RDS_PASSWORD: "postgres"
-        API_RDS_DB_NAME: "postgres"
+        RDS_HOSTNAME: localhost
+        RDS_PORT: 5432
+        RDS_USERNAME: "postgres"
+        RDS_PASSWORD: "postgres"
+        RDS_DB_NAME: "postgres"
 
     - name: Run tests
       run: npx nx run-many --all --target=test --parallel
       env:
-        API_RDS_HOSTNAME: localhost
-        API_RDS_PORT: 5432
-        API_RDS_USERNAME: "postgres"
-        API_RDS_PASSWORD: "postgres"
-        API_RDS_DB_NAME: "postgres"
+        RDS_HOSTNAME: localhost
+        RDS_PORT: 5432
+        RDS_USERNAME: "postgres"
+        RDS_PASSWORD: "postgres"
+        RDS_DB_NAME: "postgres"
 
     - name: Run Linting
       run: npx nx run-many --all --target=lint --parallel
