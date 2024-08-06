@@ -179,7 +179,7 @@ jobs:
       with:
         aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-        aws_bucket: adcaptcha-production-static-sites
+        aws_bucket: darkthrone-production-static-sites
         source_dir: './dist/apps/web-app'
         destination_dir: 'web-app'
 
