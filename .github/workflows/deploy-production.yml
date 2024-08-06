@@ -98,7 +98,7 @@ jobs:
 
     - name: build
       run: npx nx build website
-      with:
+      env:
         VITE_GAME_APP_URL: "https://play.darkthrone.com"
 
     - name: Upload to S3
@@ -175,7 +175,7 @@ jobs:
 
     - name: build
       run: npx nx run web-app:build:production
-      with:
+      env:
         VITE_GAME_API_URL: "https://api.darkthrone.com"
 
     - name: Upload to S3
