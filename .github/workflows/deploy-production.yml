@@ -6,13 +6,84 @@ on:
       - main
 
 jobs:
-  deploy:
+  prepare:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
 
     - name: Checkout source code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+            POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run DB Migrations
+      run: npx nx run api:knex migrate:latest
+      env:
+        API_RDS_HOSTNAME: localhost
+        API_RDS_PORT: 5432
+        API_RDS_USERNAME: "postgres"
+        API_RDS_PASSWORD: "postgres"
+        API_RDS_DB_NAME: "postgres"
+
+    - name: Run tests
+      run: npx nx run-many --all --target=test --parallel
+      env:
+        API_RDS_HOSTNAME: localhost
+        API_RDS_PORT: 5432
+        API_RDS_USERNAME: "postgres"
+        API_RDS_PASSWORD: "postgres"
+        API_RDS_DB_NAME: "postgres"
+
+    - name: Run Linting
+      run: npx nx run-many --all --target=lint --parallel
+
+  website:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v3
       with:
         lfs: true
 
@@ -25,11 +96,98 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Run Script
-      run: npx ts-node tools/deploy-script.ts
+    - name: build
+      run: npx nx build website
+
+    - name: Upload to S3
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        aws_bucket: darkthrone-production-static-sites
+        source_dir: './dist/apps/website'
+        destination_dir: 'website'
+
+    - name: Invalidate CloudFront
+      uses: chetan/invalidate-cloudfront-action@v2
       env:
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
-        SERVER_PASS: ${{ secrets.SERVER_PASS }}
-        VITE_GAME_APP_URL: ${{ secrets.GAME_APP_URL }}
-        VITE_GAME_API_URL: ${{ secrets.GAME_API_URL }}
+        DISTRIBUTION: 'EXWY69IXGBFPY'
+        PATHS: "/index.html"
+        AWS_REGION: "eu-west-2"
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  api:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: build
+      run: npx nx run api:build:production
+
+    - name: Generate deployment package
+      run: cd ./dist/apps/api && zip -r ../../../deploy.zip . -x '*.git*'
+
+    - name: Deploy to EB (WEB)
+      uses: einaregilsson/beanstalk-deploy@v21
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: "Prod Dark Throne"
+        environment_name: ProdDarkThrone-web
+        version_label: ${{ github.sha }}
+        region: eu-west-2
+        deployment_package: deploy.zip
+        use_existing_version_if_available: true
+
+  webApp:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: build
+      run: npx nx run web-app:build:production
+
+    - name: Upload to S3
+      uses: shallwefootball/s3-upload-action@master
+      with:
+        aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        aws_bucket: adcaptcha-production-static-sites
+        source_dir: './dist/apps/web-app'
+        destination_dir: 'web-app'
+
+    - name: Invalidate CloudFront
+      uses: chetan/invalidate-cloudfront-action@v2
+      env:
+        DISTRIBUTION: 'EYZ4RS2PYIRL'
+        PATHS: "/index.html"
+        AWS_REGION: "eu-west-2"
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
