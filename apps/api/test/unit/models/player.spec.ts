@@ -368,4 +368,32 @@ describe('Model: Player', () => {
       expect(players[0]).toBeInstanceOf(PlayerModel);
     });
   });
+
+  describe('determineIsVictor', () => {
+    const player = new PlayerModel(
+      {} as unknown as Context,
+      {} as unknown as PlayerRow,
+      [],
+    );
+    it('should return true if the attacker strength is greater than the defender strength', async () => {
+      const isVictor = await player.determineIsVictor(10, 5);
+
+      expect(isVictor).toEqual(true);
+    });
+    it('should return false if the attacker strength is less than the defender strength', async () => {
+      const isVictor = await player.determineIsVictor(5, 10);
+
+      expect(isVictor).toEqual(false);
+    });
+    it('should return false if the attacker strength is equal to the defender strength', async () => {
+      const isVictor = await player.determineIsVictor(10, 10);
+
+      expect(isVictor).toEqual(false);
+    });
+    it('should return false if the attacker and defender has no strength', async () => {
+      const isVictor = await player.determineIsVictor(0, 0);
+
+      expect(isVictor).toEqual(false);
+    });
+  });
 });

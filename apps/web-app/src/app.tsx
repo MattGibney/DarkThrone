@@ -21,6 +21,7 @@ import { UserSessionObject } from '@darkthrone/interfaces';
 import environment from './environments/environment';
 import BankDepositPage from './pages/main/structures/bank/deposit';
 import BankHistoryPage from './pages/main/structures/bank/history';
+import BankWithdrawPage from './pages/main/structures/bank/withdraw';
 
 export type SubNavigationItem = {
   name: string;
@@ -114,6 +115,12 @@ export const globalNavigation: NavigationItem[] = [
         to: '/bank/deposit',
         shouldRender: true,
         component: BankDepositPage,
+      },
+      {
+        name: 'Bank',
+        to: '/bank/withdraw',
+        shouldRender: false,
+        component: BankWithdrawPage,
       },
       {
         name: 'History',

@@ -44,3 +44,4 @@ apps/api/.env.local
 # Database storage
 apps/api/data
 .nx/cache
+.nx/workspace-data

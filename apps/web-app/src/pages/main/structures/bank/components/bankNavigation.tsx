@@ -3,6 +3,7 @@ import { classNames } from '../../../../../utils';
 
 const tabs = [
   { name: 'Deposit', href: '/bank/deposit' },
+  { name: 'Withdraw', href: '/bank/withdraw' },
   { name: 'Bank History', href: '/bank/history' },
   // { name: 'Economy', href: '/bank/economy' },
 ];
