@@ -91,7 +91,7 @@ export default function AttackListPage(props: AttackListPageProps) {
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-6 sm:w-32"
                     >
                       Gold
                     </th>
@@ -136,7 +136,14 @@ export default function AttackListPage(props: AttackListPageProps) {
                         {player.name}
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        {new Intl.NumberFormat('en-GB').format(player.gold)}
+                        <span className="block sm:hidden">
+                          {new Intl.NumberFormat('en-GB', {
+                            notation: 'compact',
+                          }).format(player.gold)}
+                        </span>
+                        <span className="hidden sm:block">
+                          {new Intl.NumberFormat('en-GB').format(player.gold)}
+                        </span>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                         {new Intl.NumberFormat('en-GB').format(player.armySize)}

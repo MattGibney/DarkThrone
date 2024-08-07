@@ -2,6 +2,25 @@ import { NewsPost } from '@darkthrone/interfaces';
 
 export const newsPosts: NewsPost[] = [
   {
+    title: 'Some Quality of life updates',
+    content: `Hello everyone!
+It's been a little while since the last update. This update is only a small one with some quality of life updates.
+
+### Deposit Max Button
+The banking page has been updated. We've split Depositing and Withdrawing into two separate tabs. This should make it easier to see what you can do with your gold. We've also added a "Deposit Max" button. This will deposit the maximum amount of gold you can at once. This should make it easier to deposit your gold quickly.
+
+### Players with 0 attack strength can no longer attack
+It is no longer possible to attack another player if you have 0 attack strength.
+
+### Attack List Mobile View
+There was a graphic bug causing the table for attack list to be too wide on mobile. This has been fixed, it should now render corrently always.
+
+### Discord Invite Link
+The Discord invite link wasn't working. This has been fixed. You can now join the Discord server from the game.
+`,
+    date: new Date('2024-06-7'),
+  },
+  {
     title: 'Introducing Banking',
     content: `It's finally here!
 Banking has been added to the game. You can now deposit your gold into the bank to keep it safe from thieves.
