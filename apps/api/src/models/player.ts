@@ -96,6 +96,8 @@ export default class PlayerModel {
   }
 
   async depositGold(amount: number) {
+    this.ctx.logger.debug({ amount }, 'Depositing gold');
+
     this.gold -= amount;
     this.goldInBank += amount;
 
@@ -110,7 +112,7 @@ export default class PlayerModel {
   }
 
   async withdrawGold(amount: number) {
-    this.ctx.logger.info({ amount }, 'Withdrawing gold');
+    this.ctx.logger.debug({ amount }, 'Withdrawing gold');
 
     this.gold += amount;
     this.goldInBank -= amount;

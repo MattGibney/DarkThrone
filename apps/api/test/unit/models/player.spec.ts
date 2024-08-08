@@ -344,31 +344,6 @@ describe('Model: Player', () => {
     });
   });
 
-  describe('fetchAllForUser', () => {
-    it('should return an array of PlayerModels', async () => {
-      const mockCTX = {
-        daoFactory: {
-          player: {
-            fetchAllForUser: jest.fn().mockResolvedValue([mockPlayerRow]),
-          },
-        },
-        modelFactory: {
-          playerUnits: {
-            fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
-          },
-        },
-      } as unknown as Context;
-
-      const players = await PlayerModel.fetchAllForUser(
-        mockCTX,
-        {} as UserModel,
-      );
-
-      expect(players).toHaveLength(1);
-      expect(players[0]).toBeInstanceOf(PlayerModel);
-    });
-  });
-
   describe('determineIsVictor', () => {
     const player = new PlayerModel(
       {} as unknown as Context,
@@ -394,6 +369,160 @@ describe('Model: Player', () => {
       const isVictor = await player.determineIsVictor(0, 0);
 
       expect(isVictor).toEqual(false);
+    });
+  });
+
+  describe('depositGold', () => {
+    it('should update the player gold and goldInBank', async () => {
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            createBankHistory: jest.fn().mockResolvedValue({}),
+            update: jest.fn().mockResolvedValue(mockPlayerRow),
+          },
+        },
+        logger: {
+          debug: jest.fn(),
+        },
+      } as unknown as Context;
+
+      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+
+      const saveMock = jest.fn().mockResolvedValue({});
+      player.save = saveMock;
+
+      await player.depositGold(10);
+
+      expect(mockCTX.logger.debug).toHaveBeenCalledWith(
+        { amount: 10 },
+        'Depositing gold',
+      );
+      expect(mockCTX.daoFactory.player.createBankHistory).toHaveBeenCalledWith(
+        mockCTX.logger,
+        player.id,
+        10,
+        'deposit',
+      );
+      expect(saveMock).toHaveBeenCalled();
+    });
+  });
+
+  describe('withdrawGold', () => {
+    it('should update the player gold and goldInBank', async () => {
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            createBankHistory: jest.fn().mockResolvedValue({}),
+            update: jest.fn().mockResolvedValue(mockPlayerRow),
+          },
+        },
+        logger: {
+          debug: jest.fn(),
+        },
+      } as unknown as Context;
+
+      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+
+      const saveMock = jest.fn().mockResolvedValue({});
+      player.save = saveMock;
+
+      await player.withdrawGold(10);
+
+      expect(mockCTX.logger.debug).toHaveBeenCalledWith(
+        { amount: 10 },
+        'Withdrawing gold',
+      );
+      expect(mockCTX.daoFactory.player.createBankHistory).toHaveBeenCalledWith(
+        mockCTX.logger,
+        player.id,
+        10,
+        'withdraw',
+      );
+      expect(saveMock).toHaveBeenCalled();
+    });
+  });
+
+  describe('(static) fetchAllForUser', () => {
+    it('should return an array of PlayerModels', async () => {
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            fetchAllForUser: jest.fn().mockResolvedValue([mockPlayerRow]),
+          },
+        },
+        modelFactory: {
+          playerUnits: {
+            fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
+          },
+        },
+      } as unknown as Context;
+
+      const players = await PlayerModel.fetchAllForUser(
+        mockCTX,
+        {} as UserModel,
+      );
+
+      expect(players).toHaveLength(1);
+      expect(players[0]).toBeInstanceOf(PlayerModel);
+    });
+  });
+
+  describe('{static} fetchAll', () => {
+    it('should return an array of PlayerModels', async () => {
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            fetchAll: jest.fn().mockResolvedValue([mockPlayerRow]),
+          },
+        },
+        modelFactory: {
+          playerUnits: {
+            fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
+          },
+        },
+      } as unknown as Context;
+
+      const players = await PlayerModel.fetchAll(mockCTX);
+
+      expect(players).toHaveLength(1);
+      expect(players[0]).toBeInstanceOf(PlayerModel);
+    });
+  });
+
+  describe('(static) fetchAllPaginated', () => {
+    it('should return a paginated array of PlayerModels', async () => {
+      const mockCTX = {
+        daoFactory: {
+          player: {
+            fetchAllPaginated: jest
+              .fn()
+              .mockImplementation((ctx, paginator) => {
+                paginator.totalItemCount = 1;
+                paginator.dataRows = [mockPlayerRow];
+                return Promise.resolve(paginator);
+              }),
+          },
+        },
+        modelFactory: {
+          playerUnits: {
+            fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
+          },
+        },
+        logger: {},
+      } as unknown as Context;
+
+      const paginator = await PlayerModel.fetchAllPaginated(mockCTX, 1, 10);
+
+      expect(mockCTX.daoFactory.player.fetchAllPaginated).toHaveBeenCalledWith(
+        mockCTX.logger,
+        paginator,
+      );
+
+      expect(paginator.page).toBe(1);
+      expect(paginator.pageSize).toBe(10);
+      expect(paginator.totalItemCount).toBe(1);
+      expect(paginator.items.length).toBe(1);
+      expect(paginator.items[0]).toBeInstanceOf(PlayerModel);
     });
   });
 });
