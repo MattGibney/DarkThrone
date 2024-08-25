@@ -32,6 +32,7 @@ export interface InputFieldProps {
   autoComplete?: string;
   required?: boolean;
   onBlur?: () => void;
+  onFocus?: () => void;
   validationMessage?: string;
   validationState?: 'neutral' | 'valid' | 'invalid';
   value: string;
@@ -60,6 +61,7 @@ export function InputField(props: InputFieldProps) {
           value={props.value}
           onChange={(e) => props.setValue(e.target.value)}
           onBlur={props.onBlur}
+          onFocus={props.onFocus}
           onWheel={(e) => e.currentTarget.blur()}
         />
       </div>

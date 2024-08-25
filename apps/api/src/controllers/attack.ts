@@ -1,9 +1,10 @@
 import { APIError } from '@darkthrone/client-library';
 import { Request, Response } from 'express';
 import { attackableLevels } from '@darkthrone/game-data';
+import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
-  POST_attackPlayer: async (req: Request, res: Response) => {
+  POST_attackPlayer: protectPrivateAPI(async (req: Request, res: Response) => {
     const { targetID, attackTurns } = req.body;
 
     const apiErrors: APIError[] = [];
@@ -75,5 +76,5 @@ export default {
     );
 
     res.status(200).send(warHistory.serialise());
-  },
+  }),
 };

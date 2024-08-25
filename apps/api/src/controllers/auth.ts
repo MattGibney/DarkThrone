@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
 import { ValidAuthResponse } from '@darkthrone/interfaces';
+import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
   POST_login: async (req: Request, res: Response) => {
@@ -175,22 +176,22 @@ export default {
     res.status(200).send(authResponse);
   },
 
-  GET_currentUser: async (req: Request, res: Response) => {
+  GET_currentUser: protectPrivateAPI(async (req: Request, res: Response) => {
     res.status(200).json({
       user: await req.ctx.authedUser.session.serialise(),
       player: req.ctx.authedPlayer
         ? await req.ctx.authedPlayer.serialise()
         : undefined,
     });
-  },
+  }),
 
-  POST_logout: async (req: Request, res: Response) => {
+  POST_logout: protectPrivateAPI(async (req: Request, res: Response) => {
     const { session } = req.ctx.authedUser;
     await session.invalidate();
     res.status(200).json({});
-  },
+  }),
 
-  POST_assumePlayer: async (req: Request, res: Response) => {
+  POST_assumePlayer: protectPrivateAPI(async (req: Request, res: Response) => {
     const { playerID } = req.body;
 
     const apiErrors: APIError[] = [];
@@ -242,16 +243,18 @@ export default {
       user: await req.ctx.authedUser.session.serialise(),
       player: await player.serialise(),
     });
-  },
+  }),
 
-  POST_unassumePlayer: async (req: Request, res: Response) => {
-    req.ctx.logger.debug('POST_unassumePlayer');
-    await req.ctx.authedUser.session.unassumePlayer();
+  POST_unassumePlayer: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      req.ctx.logger.debug('POST_unassumePlayer');
+      await req.ctx.authedUser.session.unassumePlayer();
 
-    res.status(200).json({
-      user: await req.ctx.authedUser.session.serialise(),
-      player: undefined,
-    });
-    return;
-  },
+      res.status(200).json({
+        user: await req.ctx.authedUser.session.serialise(),
+        player: undefined,
+      });
+      return;
+    },
+  ),
 };

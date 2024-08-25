@@ -1,5 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Alert, Button } from '@darkthrone/react-components';
+import { Alert, Button, InputField } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useState } from 'react';
 import BankNavigation from './components/bankNavigation';
@@ -12,7 +12,9 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
 
   const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
 
-  async function handleWithdraw() {
+  async function handleWithdraw(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     const playerGoldInBank = props.client.authenticatedPlayer?.goldInBank;
     if (!playerGoldInBank) return;
 
@@ -73,7 +75,13 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
             <Alert messages={invalidMessages} type={'error'} />
           ) : null}
           <div className="flex justify-end items-center text-zinc-400">
-            <input
+            <InputField
+              type="number"
+              value={inputAmount.toString()}
+              setValue={(value) => setInputAmount(parseInt(value) || 0)}
+              onFocus={() => setInvalidMessages([])}
+            />
+            {/* <input
               type="number"
               value={inputAmount}
               onChange={(e) => setInputAmount(parseInt(e.target.value) || 0)}
@@ -81,7 +89,7 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
               className="rounded-md border-0 py-1.5 bg-zinc-700 text-zinc-200 ring-1 ring-inset ring-zinc-500 focus:ring-2 focus:ring-inset focus:ring-yellow-600 invalid:ring-red-600 sm:text-sm sm:leading-6 min-w-48"
               min={0}
               max={props.client.authenticatedPlayer.goldInBank}
-            />
+            /> */}
           </div>
           <div className="flex justify-end items-end">
             <div className="flex gap-x-4">

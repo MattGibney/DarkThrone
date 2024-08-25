@@ -116,7 +116,7 @@ export default class AuthDAO {
   }
 
   async assumePlayer(
-    playerId: string,
+    playerID: string,
   ): Promise<
     APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
   > {
@@ -124,7 +124,7 @@ export default class AuthDAO {
       const response = await this.root.http.post<{
         user: UserSessionObject;
         player: AuthedPlayerObject;
-      }>('/auth/assume-player', { playerId });
+      }>('/auth/assume-player', { playerID });
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
