@@ -3,6 +3,7 @@ import { PlayerUnits } from '@darkthrone/interfaces';
 import { Request, Response } from 'express';
 import PlayerUnitsModel from '../models/playerUnits';
 import { APIError } from '@darkthrone/client-library';
+import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 const validateTrainingInputs = (desiredUnits: PlayerUnits[]): APIError[] => {
   // Used for both training and untraining units.
@@ -29,7 +30,7 @@ const validateTrainingInputs = (desiredUnits: PlayerUnits[]): APIError[] => {
 };
 
 export default {
-  POST_trainUnits: async (req: Request, res: Response) => {
+  POST_trainUnits: protectPrivateAPI(async (req: Request, res: Response) => {
     const desiredUnits = req.body as PlayerUnits[];
 
     const errors = validateTrainingInputs(desiredUnits);
@@ -110,9 +111,9 @@ export default {
     await req.ctx.authedPlayer.save();
 
     res.status(200).send({ message: 'Training Complete' });
-  },
+  }),
 
-  POST_unTrainUnits: async (req: Request, res: Response) => {
+  POST_unTrainUnits: protectPrivateAPI(async (req: Request, res: Response) => {
     const desiredUnits = req.body as PlayerUnits[];
 
     const errors = validateTrainingInputs(desiredUnits);
@@ -191,7 +192,7 @@ export default {
     await req.ctx.authedPlayer.save();
 
     res.status(200).send({ message: 'UnTraining Complete' });
-  },
+  }),
 };
 
 export function splitUnitsToCreateAndUpdate(

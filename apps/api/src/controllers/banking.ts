@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
-  POST_deposit: async (req: Request, res: Response) => {
+  POST_deposit: protectPrivateAPI(async (req: Request, res: Response) => {
     const { amount } = req.body;
 
     if (amount <= 0) {
@@ -55,9 +56,9 @@ export default {
     res.status(200).send({
       message: 'OK',
     });
-  },
+  }),
 
-  POST_withdraw: async (req: Request, res: Response) => {
+  POST_withdraw: protectPrivateAPI(async (req: Request, res: Response) => {
     const { amount } = req.body;
 
     if (amount <= 0) {
@@ -88,5 +89,5 @@ export default {
     await req.ctx.authedPlayer.withdrawGold(amount);
 
     res.status(200).send({ message: 'OK' });
-  },
+  }),
 };

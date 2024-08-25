@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
+import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
-  GET_fetchByID: async (req: Request, res: Response) => {
+  GET_fetchByID: protectPrivateAPI(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const apiErrors: APIError[] = [];
@@ -36,9 +37,9 @@ export default {
     }
 
     res.status(200).send(warHistory.serialise());
-  },
+  }),
 
-  GET_fetchAll: async (req: Request, res: Response) => {
+  GET_fetchAll: protectPrivateAPI(async (req: Request, res: Response) => {
     const warHistory = await req.ctx.modelFactory.warHistory.fetchAllForPlayer(
       req.ctx,
       req.ctx.authedPlayer,
@@ -47,5 +48,5 @@ export default {
     res
       .status(200)
       .send(warHistory.map((warHistory) => warHistory.serialise()));
-  },
+  }),
 };

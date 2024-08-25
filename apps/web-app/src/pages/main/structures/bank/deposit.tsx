@@ -1,5 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Alert, Button } from '@darkthrone/react-components';
+import { Alert, Button, InputField } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import BankNavigation from './components/bankNavigation';
@@ -28,8 +28,8 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     setDepositsRemaining(MAX_DEPOSITS - depositsMade);
   }, [props.client.authenticatedPlayer]);
 
-  async function handleDeposit(e?: React.FormEvent<HTMLFormElement>) {
-    if (e) e.preventDefault();
+  async function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
     deposit(inputAmount);
   }
@@ -115,14 +115,11 @@ export default function BankDepositPage(props: BankDepositPageProps) {
                 {depositsRemaining}
               </span>
             </div>
-            <input
+            <InputField
               type="number"
-              value={inputAmount}
-              onChange={(e) => setInputAmount(parseInt(e.target.value) || 0)}
+              value={inputAmount.toString()}
+              setValue={(value) => setInputAmount(parseInt(value) || 0)}
               onFocus={() => setInvalidMessages([])}
-              className="rounded-md border-0 py-1.5 bg-zinc-700 text-zinc-200 ring-1 ring-inset ring-zinc-500 focus:ring-2 focus:ring-inset focus:ring-yellow-600 invalid:ring-red-600 sm:text-sm sm:leading-6"
-              min={0}
-              // max={maxDepositAmount}
             />
           </div>
           <div className="flex flex-col gap-y-4">

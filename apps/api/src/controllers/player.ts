@@ -1,97 +1,108 @@
 import { Request, Response } from 'express';
+import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
-  GET_fetchAllPlayers: async (req: Request, res: Response) => {
-    const { page, pageSize } = req.query;
-    const pageNumber = Math.max(parseInt(page as string) || 1, 1);
-    const pageSizeNumber = Math.max(
-      1,
-      Math.min(200, parseInt(pageSize as string) || 0),
-    );
-
-    const paginator = await req.ctx.modelFactory.player.fetchAllPaginated(
-      req.ctx,
-      pageNumber,
-      pageSizeNumber,
-    );
-
-    res.status(200).json(await paginator.serialise());
-  },
-
-  GET_fetchPlayersForUser: async (req: Request, res: Response) => {
-    const players = await req.ctx.modelFactory.player.fetchAllForUser(
-      req.ctx,
-      req.ctx.authedUser.model,
-    );
-
-    res
-      .status(200)
-      .json(
-        await Promise.all(
-          players.map(async (player) => await player.serialise()),
-        ),
+  GET_fetchAllPlayers: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const { page, pageSize } = req.query;
+      const pageNumber = Math.max(parseInt(page as string) || 1, 1);
+      const pageSizeNumber = Math.max(
+        1,
+        Math.min(200, parseInt(pageSize as string) || 0),
       );
-  },
 
-  GET_fetchPlayerByID: async (req: Request, res: Response) => {
-    const player = await req.ctx.modelFactory.player.fetchByID(
-      req.ctx,
-      req.params.id,
-    );
-
-    if (!player) {
-      res.status(404).json({
-        errors: [
-          {
-            code: 'player_not_found',
-            title: 'Player not found',
-          },
-        ],
-      });
-      return;
-    }
-
-    res.status(200).json(await player.serialise());
-  },
-
-  POST_fetchAllMatchingIDs: async (req: Request, res: Response) => {
-    const { playerIDs } = req.body;
-
-    const players = await req.ctx.modelFactory.player.fetchAllMatchingIDs(
-      req.ctx,
-      playerIDs,
-    );
-    res
-      .status(200)
-      .json(
-        await Promise.all(
-          players.map(async (player) => await player.serialise()),
-        ),
-      );
-  },
-
-  POST_validatePlayerName: async (req: Request, res: Response) => {
-    const { displayName } = req.body;
-
-    const nameValidation =
-      await req.ctx.modelFactory.player.validateDisplayName(
+      const paginator = await req.ctx.modelFactory.player.fetchAllPaginated(
         req.ctx,
-        displayName,
+        pageNumber,
+        pageSizeNumber,
       );
-    if (!nameValidation.isValid) {
-      res.status(400).json({
-        errors: nameValidation.issues.map((issue) => ({
-          code: issue,
-          title: issue,
-        })),
-      });
-      return;
-    }
 
-    res.status(200).json({ valid: true });
-  },
+      res.status(200).json(await paginator.serialise());
+    },
+  ),
 
-  POST_createPlayer: async (req: Request, res: Response) => {
+  GET_fetchPlayersForUser: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const players = await req.ctx.modelFactory.player.fetchAllForUser(
+        req.ctx,
+        req.ctx.authedUser.model,
+      );
+
+      res
+        .status(200)
+        .json(
+          await Promise.all(
+            players.map(async (player) => await player.serialise()),
+          ),
+        );
+    },
+  ),
+
+  GET_fetchPlayerByID: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const player = await req.ctx.modelFactory.player.fetchByID(
+        req.ctx,
+        req.params.id,
+      );
+
+      if (!player) {
+        res.status(404).json({
+          errors: [
+            {
+              code: 'player_not_found',
+              title: 'Player not found',
+            },
+          ],
+        });
+        return;
+      }
+
+      res.status(200).json(await player.serialise());
+    },
+  ),
+
+  POST_fetchAllMatchingIDs: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const { playerIDs } = req.body;
+
+      const players = await req.ctx.modelFactory.player.fetchAllMatchingIDs(
+        req.ctx,
+        playerIDs,
+      );
+      res
+        .status(200)
+        .json(
+          await Promise.all(
+            players.map(async (player) => await player.serialise()),
+          ),
+        );
+    },
+  ),
+
+  POST_validatePlayerName: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const { displayName } = req.body;
+
+      const nameValidation =
+        await req.ctx.modelFactory.player.validateDisplayName(
+          req.ctx,
+          displayName,
+        );
+      if (!nameValidation.isValid) {
+        res.status(400).json({
+          errors: nameValidation.issues.map((issue) => ({
+            code: issue,
+            title: issue,
+          })),
+        });
+        return;
+      }
+
+      res.status(200).json({ valid: true });
+    },
+  ),
+
+  POST_createPlayer: protectPrivateAPI(async (req: Request, res: Response) => {
     const { displayName, selectedRace, selectedClass } = req.body;
 
     const nameValidation =
@@ -116,5 +127,5 @@ export default {
       selectedClass,
     );
     res.status(200).json(await player.serialise());
-  },
+  }),
 };
