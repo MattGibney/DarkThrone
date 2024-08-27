@@ -1,5 +1,6 @@
 import {
   AuthedPlayerObject,
+  FortificationUpgrade,
   PlayerClass,
   PlayerNameValidation,
   PlayerObject,
@@ -12,7 +13,11 @@ import UserModel from './user';
 import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
-import { UnitTypes, levelXPArray } from '@darkthrone/game-data';
+import {
+  UnitTypes,
+  fortificationUpgrades,
+  levelXPArray,
+} from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
 import { Paginator } from '../lib/paginator';
 
@@ -32,6 +37,12 @@ export default class PlayerModel {
   public experience: number;
   public level: number;
   public overallRank: number;
+  public structureUpgrades: {
+    fortification: number;
+    economy: number;
+    armory: number;
+    housing: number;
+  };
 
   public units: PlayerUnitsModel[];
 
@@ -82,6 +93,7 @@ export default class PlayerModel {
         unitType: unit.unitType,
         quantity: unit.quantity,
       })),
+      structureUpgrades: this.structureUpgrades,
     });
 
     return authedPlayerObject;
@@ -131,6 +143,10 @@ export default class PlayerModel {
     return this.units
       .filter((unit) => UnitTypes[unit.unitType].type !== UnitType.SUPPORT)
       .reduce((acc, unit) => acc + unit.quantity, 0);
+  }
+
+  get fortification(): FortificationUpgrade {
+    return fortificationUpgrades[this.structureUpgrades.fortification];
   }
 
   async calculateAttackStrength(): Promise<number> {
@@ -287,6 +303,7 @@ export default class PlayerModel {
     this.experience = row.experience;
     this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1;
     this.overallRank = row.overall_rank;
+    this.structureUpgrades = row.structureUpgrades;
   }
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {

@@ -1,5 +1,9 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { UnitType, type Unit } from '@darkthrone/interfaces';
+import {
+  FortificationUpgrade,
+  UnitType,
+  type Unit,
+} from '@darkthrone/interfaces';
 
 export const UnitTypes: { [k: string]: Unit } = {
   citizen: {
@@ -57,6 +61,13 @@ export const levelXPArray: number[] = [
   3401000, 3484000, 3568000, 3653000, 3739000, 3826000, 3914000, 4003000,
   4093000, 4184000, 4276000, 4369000, 4463000, 4558000, 4654000, 4751000,
   4849000, 4948000, 5048000, 5149000, 5251000,
+];
+
+export const fortificationUpgrades: FortificationUpgrade[] = [
+  {
+    name: 'Manor',
+    level: 1,
+  },
 ];
 
 const attackLevelRange = 7;

@@ -18,6 +18,12 @@ export type PlayerRow = {
   gold_in_bank: number;
   experience: number;
   overall_rank: number;
+  structureUpgrades: {
+    fortification: number;
+    economy: number;
+    armory: number;
+    housing: number;
+  };
 };
 
 export default class PlayerDao {
