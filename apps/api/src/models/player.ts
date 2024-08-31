@@ -85,6 +85,7 @@ export default class PlayerModel {
       attackTurns: this.attackTurns,
       experience: this.experience,
       goldInBank: this.goldInBank,
+      citizensPerDay: this.citizensPerDay,
       depositHistory: depositHistory.map((history) => ({
         amount: history.amount,
         date: history.created_at,
@@ -214,7 +215,7 @@ export default class PlayerModel {
     return Math.floor(goldPerTurn);
   }
 
-  async calculateNewCitizens(): Promise<number> {
+  get citizensPerDay(): number {
     const housingUpgrade = housingUpgrades[this.structureUpgrades.housing];
     return 25 + housingUpgrade.citizensPerDay;
   }
