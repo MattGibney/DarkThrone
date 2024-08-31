@@ -43,9 +43,6 @@ export interface AuthedPlayerObject extends PlayerObject {
   units: PlayerUnits[];
   structureUpgrades: {
     fortification: number;
-    economy: number;
-    armory: number;
-    housing: number;
   };
 }
 
@@ -84,7 +81,13 @@ export type ValidAuthResponse = {
   token: string;
 };
 
-export type FortificationUpgrade = {
+export type StructureUpgrade = {
   name: string;
-  level: number;
+  levelRequirement: number;
+  cost: number;
+};
+
+export type FortificationUpgrade = StructureUpgrade & {
+  defenceBonusPercentage: number;
+  goldPerTurn: number;
 };

@@ -66,9 +66,23 @@ export const levelXPArray: number[] = [
 export const fortificationUpgrades: FortificationUpgrade[] = [
   {
     name: 'Manor',
-    level: 1,
+    levelRequirement: 1,
+    cost: 0,
+    defenceBonusPercentage: 5,
+    goldPerTurn: 10000,
+  },
+  {
+    name: 'Village',
+    levelRequirement: 5,
+    goldPerTurn: 2000,
+    defenceBonusPercentage: 10,
+    cost: 100000,
   },
 ];
+
+export const structureUpgrades = {
+  fortification: fortificationUpgrades,
+};
 
 const attackLevelRange = 7;
 
