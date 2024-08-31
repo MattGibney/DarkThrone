@@ -101,7 +101,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                       )}{' '}
                       <span className="text-gold">Gold</span>
                     </p>
-                    <p className="bg-cyan-600/40 border border-cyan-700/80 text-sm font-medium text-red-50 p-2 rounded-md">
+                    <p className="bg-cyan-800/40 border border-cyan-900/80 text-sm font-medium text-cyan-40 p-2 rounded-md">
                       You need to be level{' '}
                       {upgrades.fortification.next.levelRequirement} to upgrade
                     </p>
@@ -174,7 +174,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                       )}{' '}
                       <span className="text-gold">Gold</span>
                     </p>
-                    <p className="bg-cyan-600/40 border border-cyan-700/80 text-sm font-medium text-red-50 p-2 rounded-md">
+                    <p className="bg-cyan-800/40 border border-cyan-900/80 text-sm font-medium text-cyan-40 p-2 rounded-md">
                       Your fortification must be at least{' '}
                       {
                         structureUpgrades.fortification[
