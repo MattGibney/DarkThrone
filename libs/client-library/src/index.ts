@@ -9,6 +9,7 @@ import type {
   AuthedPlayerObject,
   UserSessionObject,
 } from '@darkthrone/interfaces';
+import StructuresDAO from './daos/structures';
 
 export type APIError = {
   code: string;
@@ -44,6 +45,7 @@ export default class DarkThroneClient {
   public auth: AuthDAO;
   public banking: BankingDAO;
   public players: PlayersDAO;
+  public structures: StructuresDAO;
   public training: TrainingDAO;
   public warHistory: WarHistoryController;
 
@@ -62,6 +64,7 @@ export default class DarkThroneClient {
     this.auth = new AuthDAO(this);
     this.banking = new BankingDAO(this);
     this.players = new PlayersDAO(this);
+    this.structures = new StructuresDAO(this);
     this.training = new TrainingDAO(this);
     this.warHistory = new WarHistoryController(this);
 

@@ -20,9 +20,6 @@ export type PlayerRow = {
   overall_rank: number;
   structureUpgrades: {
     fortification: number;
-    economy: number;
-    armory: number;
-    housing: number;
   };
 };
 

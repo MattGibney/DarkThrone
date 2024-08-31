@@ -3,6 +3,7 @@ import AttackController from './controllers/attack';
 import AuthController from './controllers/auth';
 import BankingController from './controllers/banking';
 import PlayersController from './controllers/player';
+import StructuresController from './controllers/structures';
 import TrainingController from './controllers/training';
 import WarHistoryController from './controllers/warHistory';
 
@@ -63,5 +64,8 @@ router.post('/training/untrain', TrainingController.POST_unTrainUnits);
 // Banking
 router.post('/bank/deposit', BankingController.POST_deposit);
 router.post('/bank/withdraw', BankingController.POST_withdraw);
+
+// Structures
+router.post('/structures/upgrade', StructuresController.POST_upgradeStructure);
 
 export default router;
