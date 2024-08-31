@@ -13,9 +13,7 @@ export default async function addCitizens(ctx: Context) {
         'citizen',
       );
 
-    const newCitizens = await player.calculateNewCitizens();
-
-    playerCitizens.quantity += newCitizens;
+    playerCitizens.quantity += player.citizensPerDay;
     await playerCitizens.save();
   }
 
