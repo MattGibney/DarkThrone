@@ -1,6 +1,6 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
-import { fortificationUpgrades } from '@darkthrone/game-data';
+import { fortificationUpgrades, housingUpgrades } from '@darkthrone/game-data';
 import { Button } from '@darkthrone/react-components';
 import { structureUpgrades } from '@darkthrone/game-data';
 
@@ -12,10 +12,16 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
 
   const currentFortificationLevel =
     props.client.authenticatedPlayer.structureUpgrades.fortification;
+  const currentHousingLevel =
+    props.client.authenticatedPlayer.structureUpgrades.housing;
   const upgrades = {
     fortification: {
       current: fortificationUpgrades[currentFortificationLevel],
       next: fortificationUpgrades[currentFortificationLevel + 1],
+    },
+    housing: {
+      current: housingUpgrades[currentHousingLevel],
+      next: housingUpgrades[currentHousingLevel + 1],
     },
   };
 
@@ -95,7 +101,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                       )}{' '}
                       <span className="text-gold">Gold</span>
                     </p>
-                    <p className="bg-red-700/40 border border-red-700/80 text-sm font-medium text-red-50 p-2 rounded-md">
+                    <p className="bg-cyan-600/40 border border-cyan-700/80 text-sm font-medium text-red-50 p-2 rounded-md">
                       You need to be level{' '}
                       {upgrades.fortification.next.levelRequirement} to upgrade
                     </p>
@@ -114,6 +120,82 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     {new Intl.NumberFormat().format(
                       upgrades.fortification.next.cost,
                     )}{' '}
+                    Gold
+                  </Button>
+                )}
+              </>
+            ) : (
+              <p className="text-zinc-200">
+                There are currently no more available fortification upgrades
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 text-center text-zinc-200">
+          <div className="bg-zinc-800 p-8 flex flex-col gap-y-4 text-sm">
+            <h3 className="font-semibold text-lg">Current Housing</h3>
+            <div>
+              <p className="text-white font-bold">
+                {upgrades.housing.current.name}
+              </p>
+              <p>
+                Daily Citizens:{' '}
+                {new Intl.NumberFormat().format(
+                  upgrades.housing.current.citizensPerDay,
+                )}
+              </p>
+            </div>
+          </div>
+          <div className="bg-zinc-800/50 p-8 flex flex-col gap-y-4 text-sm">
+            <h3 className="font-semibold text-lg">Next Housing</h3>
+            {upgrades.housing.next ? (
+              <>
+                <div>
+                  <p className="text-white font-bold">
+                    {upgrades.housing.next.name}
+                  </p>
+                  <p>
+                    Daily Citizens:{' '}
+                    {new Intl.NumberFormat().format(
+                      upgrades.housing.next.citizensPerDay,
+                    )}
+                  </p>
+                </div>
+
+                {props.client.authenticatedPlayer.structureUpgrades
+                  .fortification <
+                upgrades.housing.next.requiredFortificationLevel ? (
+                  <>
+                    <p>
+                      Cost:{' '}
+                      {new Intl.NumberFormat().format(
+                        upgrades.housing.next.cost,
+                      )}{' '}
+                      <span className="text-gold">Gold</span>
+                    </p>
+                    <p className="bg-cyan-600/40 border border-cyan-700/80 text-sm font-medium text-red-50 p-2 rounded-md">
+                      Your fortification must be at least{' '}
+                      {
+                        structureUpgrades.fortification[
+                          upgrades.housing.next.requiredFortificationLevel
+                        ].name
+                      }{' '}
+                      to upgrade
+                    </p>
+                  </>
+                ) : (
+                  <Button
+                    variant="primary-outline"
+                    onClick={() => handleUpgrade('housing')}
+                    type="button"
+                    isDisabled={
+                      props.client.authenticatedPlayer.gold <
+                      upgrades.housing.next.cost
+                    }
+                  >
+                    Upgrade for{' '}
+                    {new Intl.NumberFormat().format(upgrades.housing.next.cost)}{' '}
                     Gold
                   </Button>
                 )}
