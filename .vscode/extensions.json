@@ -6,6 +6,7 @@
     "ryanluker.vscode-coverage-gutters",
     "christian-kohler.npm-intellisense",
     "maxvanderschee.web-accessibility",
-    "tory.unique-id-generator"
+    "tory.unique-id-generator",
+    "ms-playwright.playwright"
   ]
 }
