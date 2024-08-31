@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/web-app/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
@@ -56,19 +57,19 @@
         "production": {
           "buildTarget": "web-app:build:production"
         }
-      }
+      },
+      "dependsOn": ["build"]
     },
     "test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["{workspaceRoot}/coverage/apps/web-app"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "reportsDirectory": "../../coverage/apps/web-app"
+        "jestConfig": "apps/test/jest.config.ts"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": []
+  }
 }
