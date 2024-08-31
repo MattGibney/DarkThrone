@@ -28,6 +28,27 @@ export default {
         return;
       }
 
+      if (nextStructureUpgrade.type === 'fortification') {
+        if (
+          nextStructureUpgrade.levelRequirement > req.ctx.authedPlayer.level
+        ) {
+          apiErrors.push({
+            code: 'upgrade_structure_level_requirement_not_met',
+            title: 'Level requirement not met',
+          });
+        }
+      } else {
+        if (
+          nextStructureUpgrade.requiredFortificationLevel >
+          req.ctx.authedPlayer.structureUpgrades.fortification
+        ) {
+          apiErrors.push({
+            code: 'upgrade_structure_fortification_requirement_not_met',
+            title: 'Fortification requirement not met',
+          });
+        }
+      }
+
       if (req.ctx.authedPlayer.gold < nextStructureUpgrade.cost) {
         res.status(400).send({
           errors: [

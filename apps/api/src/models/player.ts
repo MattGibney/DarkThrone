@@ -17,6 +17,7 @@ import PlayerUnitsModel from './playerUnits';
 import {
   UnitTypes,
   fortificationUpgrades,
+  housingUpgrades,
   levelXPArray,
   structureUpgrades,
 } from '@darkthrone/game-data';
@@ -41,6 +42,7 @@ export default class PlayerModel {
   public overallRank: number;
   public structureUpgrades: {
     fortification: number;
+    housing: number;
   };
 
   public units: PlayerUnitsModel[];
@@ -210,6 +212,11 @@ export default class PlayerModel {
     goldPerTurn += fortificationGoldPerTurn;
 
     return Math.floor(goldPerTurn);
+  }
+
+  async calculateNewCitizens(): Promise<number> {
+    const housingUpgrade = housingUpgrades[this.structureUpgrades.housing];
+    return 25 + housingUpgrade.citizensPerDay;
   }
 
   determineIsVictor(attackerStrength: number, defenderStrength: number) {

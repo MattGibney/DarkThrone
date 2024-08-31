@@ -13,7 +13,9 @@ export default async function addCitizens(ctx: Context) {
         'citizen',
       );
 
-    playerCitizens.quantity += 25;
+    const newCitizens = await player.calculateNewCitizens();
+
+    playerCitizens.quantity += newCitizens;
     await playerCitizens.save();
   }
 
