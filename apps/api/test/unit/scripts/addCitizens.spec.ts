@@ -3,7 +3,10 @@ import { Context } from '../../../src/app';
 
 describe('addCitizens', () => {
   it('should increment attack turns for all players', async () => {
-    const mockPlayers = [{ id: 'PLR-1' }, { id: 'PLR-2' }];
+    const mockPlayers = [
+      { id: 'PLR-1', citizensPerDay: 25 },
+      { id: 'PLR-2', citizensPerDay: 25 },
+    ];
     const mockPlayerUnits = [
       {
         id: 'UNIT-1',
