@@ -13,6 +13,7 @@ describe('POST_upgradeStructure.spec', () => {
       authenticatedPlayer: {
         structureUpgrades: {
           fortification: 0,
+          housing: 0,
         },
       },
     });
@@ -43,6 +44,7 @@ describe('POST_upgradeStructure.spec', () => {
       authenticatedPlayer: {
         structureUpgrades: {
           fortification: 0,
+          housing: 0,
         },
       },
     });
@@ -74,6 +76,7 @@ describe('POST_upgradeStructure.spec', () => {
         gold: 0,
         structureUpgrades: {
           fortification: 0,
+          housing: 0,
         },
       },
     });
@@ -106,6 +109,7 @@ describe('POST_upgradeStructure.spec', () => {
         gold: 100001,
         structureUpgrades: {
           fortification: 0,
+          housing: 0,
         },
       },
     });
@@ -122,6 +126,7 @@ describe('POST_upgradeStructure.spec', () => {
         gold: 1,
         structureUpgrades: {
           fortification: 1,
+          housing: 0,
         },
       }),
     );

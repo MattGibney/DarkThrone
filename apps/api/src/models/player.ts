@@ -331,7 +331,10 @@ export default class PlayerModel {
     this.experience = row.experience;
     this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1;
     this.overallRank = row.overall_rank;
-    this.structureUpgrades = row.structureUpgrades;
+    this.structureUpgrades = {
+      fortification: row.structureUpgrades?.fortification || 0,
+      housing: row.structureUpgrades?.housing || 0,
+    };
   }
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {

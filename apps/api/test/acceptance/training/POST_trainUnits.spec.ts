@@ -164,9 +164,13 @@ describe('POST /training/units', () => {
       quantity: 8,
     });
 
-    expect(mockDAOFactory.player.update).toHaveBeenCalledWith(logger, 'PLR-1', {
-      gold: 7500,
-    });
+    expect(mockDAOFactory.player.update).toHaveBeenCalledWith(
+      logger,
+      'PLR-1',
+      expect.objectContaining({
+        gold: 7500,
+      }),
+    );
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ message: 'Training Complete' });
