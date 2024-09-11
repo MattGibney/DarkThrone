@@ -33,8 +33,8 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
     <main className="max-w-7xl mx-auto">
       <SubNavigation />
 
-      <div className="max-w-3xl mx-auto rounded-lg overflow-hidden flex flex-col gap-y-8">
-        <div className="bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
+      <div className="max-w-3xl mx-auto flex flex-col gap-y-8">
+        <div className="bg-zinc-800/50 rounded-lg p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
           <div>
             Gold{' '}
             <span className="text-white font-bold text-md">
@@ -52,7 +52,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
             </span>
           </div>
         </div>
-        <div className="grid grid-cols-2 text-center text-zinc-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 rounded-lg overflow-hidden text-center text-zinc-200">
           <div className="bg-zinc-800 p-8 flex flex-col gap-y-4 text-sm">
             <h3 className="font-semibold text-lg">Current Fortification</h3>
             <div>
@@ -132,7 +132,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 text-center text-zinc-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 rounded-lg overflow-hidden text-center text-zinc-200">
           <div className="bg-zinc-800 p-8 flex flex-col gap-y-4 text-sm">
             <h3 className="font-semibold text-lg">Current Housing</h3>
             <div>
