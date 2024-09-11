@@ -26,7 +26,12 @@ describe('GET_currentUser', () => {
       daoFactory: {
         player: {
           fetchBankHistory: jest.fn().mockResolvedValue([]),
-          fetchByID: jest.fn().mockResolvedValue({}),
+          fetchByID: jest.fn().mockResolvedValue({
+            structureUpgrades: {
+              fortification: 0,
+              housing: 0,
+            },
+          }),
         },
         playerUnits: {
           fetchUnitsForPlayer: jest.fn().mockResolvedValue([]),
@@ -38,7 +43,12 @@ describe('GET_currentUser', () => {
           player_id: 'PLR-1',
         },
       },
-      authenticatedPlayer: {},
+      authenticatedPlayer: {
+        structureUpgrades: {
+          fortification: 0,
+          housing: 0,
+        },
+      },
     });
 
     const res = await request(application)

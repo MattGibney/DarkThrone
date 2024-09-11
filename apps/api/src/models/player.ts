@@ -1,8 +1,10 @@
 import {
   AuthedPlayerObject,
+  FortificationUpgrade,
   PlayerClass,
   PlayerNameValidation,
   PlayerObject,
+  StructureUpgrade,
   UnitType,
 } from '@darkthrone/interfaces';
 import { PlayerRace } from '@darkthrone/interfaces';
@@ -12,7 +14,13 @@ import UserModel from './user';
 import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
-import { UnitTypes, levelXPArray } from '@darkthrone/game-data';
+import {
+  UnitTypes,
+  fortificationUpgrades,
+  housingUpgrades,
+  levelXPArray,
+  structureUpgrades,
+} from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
 import { Paginator } from '../lib/paginator';
 
@@ -32,6 +40,10 @@ export default class PlayerModel {
   public experience: number;
   public level: number;
   public overallRank: number;
+  public structureUpgrades: {
+    fortification: number;
+    housing: number;
+  };
 
   public units: PlayerUnitsModel[];
 
@@ -73,6 +85,7 @@ export default class PlayerModel {
       attackTurns: this.attackTurns,
       experience: this.experience,
       goldInBank: this.goldInBank,
+      citizensPerDay: this.citizensPerDay,
       depositHistory: depositHistory.map((history) => ({
         amount: history.amount,
         date: history.created_at,
@@ -82,6 +95,7 @@ export default class PlayerModel {
         unitType: unit.unitType,
         quantity: unit.quantity,
       })),
+      structureUpgrades: this.structureUpgrades,
     });
 
     return authedPlayerObject;
@@ -133,6 +147,22 @@ export default class PlayerModel {
       .reduce((acc, unit) => acc + unit.quantity, 0);
   }
 
+  get fortification(): FortificationUpgrade {
+    return fortificationUpgrades[this.structureUpgrades.fortification];
+  }
+
+  async upgradeStructure(
+    type: keyof typeof structureUpgrades,
+    desiredUpgrade: StructureUpgrade,
+  ) {
+    this.ctx.logger.debug({ type }, 'Upgrading structure');
+
+    this.gold -= desiredUpgrade.cost;
+    this.structureUpgrades[type] += 1;
+
+    this.save();
+  }
+
   async calculateAttackStrength(): Promise<number> {
     let offense = this.units.reduce(
       (acc, unit) => acc + unit.calculateAttackStrength(),
@@ -162,6 +192,10 @@ export default class PlayerModel {
       // Clerics get a 5% bonus to defence strength
       defence *= 1.05;
     }
+
+    const fortificationBonus = this.fortification.defenceBonusPercentage;
+    defence *= 1 + fortificationBonus / 100;
+
     return Math.floor(defence);
   }
 
@@ -174,7 +208,16 @@ export default class PlayerModel {
       // Thieves get a 5% bonus to gold per turn
       goldPerTurn *= 1.05;
     }
+
+    const fortificationGoldPerTurn = this.fortification.goldPerTurn;
+    goldPerTurn += fortificationGoldPerTurn;
+
     return Math.floor(goldPerTurn);
+  }
+
+  get citizensPerDay(): number {
+    const housingUpgrade = housingUpgrades[this.structureUpgrades.housing];
+    return 25 + housingUpgrade.citizensPerDay;
   }
 
   determineIsVictor(attackerStrength: number, defenderStrength: number) {
@@ -267,6 +310,7 @@ export default class PlayerModel {
         gold_in_bank: this.goldInBank,
         experience: this.experience,
         overall_rank: this.overallRank,
+        structureUpgrades: this.structureUpgrades,
       },
     );
 
@@ -287,6 +331,10 @@ export default class PlayerModel {
     this.experience = row.experience;
     this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1;
     this.overallRank = row.overall_rank;
+    this.structureUpgrades = {
+      fortification: row.structureUpgrades?.fortification || 0,
+      housing: row.structureUpgrades?.housing || 0,
+    };
   }
 
   static async fetchAllForUser(ctx: Context, user: UserModel) {

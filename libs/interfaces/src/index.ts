@@ -39,8 +39,13 @@ export interface AuthedPlayerObject extends PlayerObject {
   experience: number;
   attackTurns: number;
   goldInBank: number;
+  citizensPerDay: number;
   depositHistory: DepositHistory[];
   units: PlayerUnits[];
+  structureUpgrades: {
+    fortification: number;
+    housing: number;
+  };
 }
 
 export interface DepositHistory {
@@ -76,4 +81,22 @@ export type NewsPost = {
 export type ValidAuthResponse = {
   session: UserSessionObject;
   token: string;
+};
+
+export type StructureUpgrade = {
+  name: string;
+  cost: number;
+  requiredFortificationLevel: number;
+};
+
+export type FortificationUpgrade = StructureUpgrade & {
+  type: 'fortification';
+  defenceBonusPercentage: number;
+  goldPerTurn: number;
+  levelRequirement: number;
+};
+
+export type HousingUpgrade = StructureUpgrade & {
+  type: 'housing';
+  citizensPerDay: number;
 };
