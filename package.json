@@ -22,7 +22,7 @@
     "cors": "^2.8.5",
     "deepmerge": "^4.3.1",
     "eslint-plugin-prettier": "^5.2.1",
-    "express": "~4.19.2",
+    "express": "~4.20.0",
     "font-awesome-pro": "file:vendor/font-awesome-pro-5.15.4.tgz",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
