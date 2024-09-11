@@ -16,6 +16,10 @@ const mockPlayerRow: PlayerRow = {
   gold_in_bank: 40,
   experience: 30,
   overall_rank: 1,
+  structureUpgrades: {
+    fortification: 0,
+    housing: 0,
+  },
 };
 
 const mockPlayerUnits = [
@@ -78,8 +82,10 @@ describe('Model: Player', () => {
         'attackTurns',
         'experience',
         'goldInBank',
+        'citizensPerDay',
         'depositHistory',
         'units',
+        'structureUpgrades',
       ]);
     });
     it('correctly populates all fields', async () => {
@@ -110,7 +116,7 @@ describe('Model: Player', () => {
         armySize: 0,
         attackTurns: 10,
         attackStrength: 44, // 40 from the mockPlayerUnits + 5% bonus for human
-        defenceStrength: 50,
+        defenceStrength: 52,
         depositHistory: [],
         goldInBank: 40,
         units: [
@@ -119,6 +125,11 @@ describe('Model: Player', () => {
             quantity: 10,
           },
         ],
+        citizensPerDay: 26,
+        structureUpgrades: {
+          fortification: 0,
+          housing: 0,
+        },
       });
     });
   });
@@ -193,25 +204,25 @@ describe('Model: Player', () => {
 
   describe('calculateDefenceStrength', () => {
     [
-      { race: 'human', class: 'fighter', expected: 100 },
-      { race: 'human', class: 'cleric', expected: 105 },
-      { race: 'human', class: 'thief', expected: 100 },
-      { race: 'human', class: 'assassin', expected: 100 },
+      { race: 'human', class: 'fighter', expected: 105 },
+      { race: 'human', class: 'cleric', expected: 110 },
+      { race: 'human', class: 'thief', expected: 105 },
+      { race: 'human', class: 'assassin', expected: 105 },
 
-      { race: 'elf', class: 'fighter', expected: 105 },
-      { race: 'elf', class: 'cleric', expected: 110 },
-      { race: 'elf', class: 'thief', expected: 105 },
-      { race: 'elf', class: 'assassin', expected: 105 },
+      { race: 'elf', class: 'fighter', expected: 110 },
+      { race: 'elf', class: 'cleric', expected: 115 },
+      { race: 'elf', class: 'thief', expected: 110 },
+      { race: 'elf', class: 'assassin', expected: 110 },
 
-      { race: 'goblin', class: 'fighter', expected: 105 },
-      { race: 'goblin', class: 'cleric', expected: 110 },
-      { race: 'goblin', class: 'thief', expected: 105 },
-      { race: 'goblin', class: 'assassin', expected: 105 },
+      { race: 'goblin', class: 'fighter', expected: 110 },
+      { race: 'goblin', class: 'cleric', expected: 115 },
+      { race: 'goblin', class: 'thief', expected: 110 },
+      { race: 'goblin', class: 'assassin', expected: 110 },
 
-      { race: 'undead', class: 'fighter', expected: 100 },
-      { race: 'undead', class: 'cleric', expected: 105 },
-      { race: 'undead', class: 'thief', expected: 100 },
-      { race: 'undead', class: 'assassin', expected: 100 },
+      { race: 'undead', class: 'fighter', expected: 105 },
+      { race: 'undead', class: 'cleric', expected: 110 },
+      { race: 'undead', class: 'thief', expected: 105 },
+      { race: 'undead', class: 'assassin', expected: 105 },
     ].map((testCase) => {
       it(`calculate attack strength for a ${testCase.race} ${testCase.class}`, async () => {
         const mockCTX = {} as unknown as Context;
@@ -243,7 +254,7 @@ describe('Model: Player', () => {
       const player = new PlayerModel(mockCTX, mockPlayerRow, []);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
-      expect(goldPerTurn).toEqual(0);
+      expect(goldPerTurn).toEqual(10000);
     });
     it('should return the sum of goldPerTurn for each unit', async () => {
       const mockCTX = {} as unknown as Context;
@@ -251,7 +262,7 @@ describe('Model: Player', () => {
       const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
-      expect(goldPerTurn).toEqual(100);
+      expect(goldPerTurn).toEqual(10100);
     });
     it('should add 5% bonus for thief players', async () => {
       const mockCTX = {} as unknown as Context;
@@ -264,7 +275,7 @@ describe('Model: Player', () => {
       const player = new PlayerModel(mockCTX, thiefPlayerRow, mockPlayerUnits);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
-      expect(goldPerTurn).toEqual(105);
+      expect(goldPerTurn).toEqual(10105); // Includes the housing bonus
     });
   });
 

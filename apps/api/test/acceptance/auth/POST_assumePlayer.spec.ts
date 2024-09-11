@@ -83,9 +83,14 @@ describe('POST_assumePlayer', () => {
     const { application, daoFactory, logger } = makeApplication({
       daoFactory: {
         player: {
-          fetchByID: jest
-            .fn()
-            .mockResolvedValue({ id: 'PLR-1', user_id: 'USR-2' }),
+          fetchByID: jest.fn().mockResolvedValue({
+            id: 'PLR-1',
+            user_id: 'USR-2',
+            structureUpgrades: {
+              fortification: 0,
+              housing: 0,
+            },
+          }),
           fetchBankHistory: jest.fn().mockResolvedValue([]),
         },
         playerUnits: {

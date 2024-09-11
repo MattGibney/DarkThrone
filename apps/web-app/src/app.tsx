@@ -22,6 +22,7 @@ import environment from './environments/environment';
 import BankDepositPage from './pages/main/structures/bank/deposit';
 import BankHistoryPage from './pages/main/structures/bank/history';
 import BankWithdrawPage from './pages/main/structures/bank/withdraw';
+import UpgradesScreen from './pages/main/structures/upgrades/upgrades';
 
 export type SubNavigationItem = {
   name: string;
@@ -127,6 +128,12 @@ export const globalNavigation: NavigationItem[] = [
         to: '/bank/history',
         shouldRender: false,
         component: BankHistoryPage,
+      },
+      {
+        name: 'Upgrades',
+        to: '/upgrades',
+        shouldRender: true,
+        component: UpgradesScreen,
       },
     ],
   },

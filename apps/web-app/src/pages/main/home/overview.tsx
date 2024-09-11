@@ -1,3 +1,4 @@
+import { fortificationUpgrades } from '@darkthrone/game-data';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
 
@@ -30,7 +31,19 @@ export default function OverviewPage(props: OverviewPageProps) {
         props.client.authenticatedPlayer.experience,
       ),
     },
-
+    {
+      name: 'Fortification',
+      value:
+        fortificationUpgrades[
+          props.client.authenticatedPlayer.structureUpgrades.fortification
+        ].name,
+    },
+    {
+      name: 'Citizens Per Day',
+      value: new Intl.NumberFormat('en-GB').format(
+        props.client.authenticatedPlayer.citizensPerDay,
+      ),
+    },
     {
       name: 'Attack Turns',
       value: new Intl.NumberFormat('en-GB').format(
@@ -94,11 +107,11 @@ export default function OverviewPage(props: OverviewPageProps) {
       </div>
 
       {/* lg:grid-cols-4 */}
-      <dl className="mx-auto grid grid-cols-1 gap-px bg-zinc-900/5 sm:grid-cols-2 md:grid-cols-4 rounded-xl overflow-hidden">
+      <dl className="mx-auto grid grid-cols-1 gap-px bg-zinc-900/5 sm:grid-cols-2 md:grid-cols-5 rounded-xl overflow-hidden">
         {stats.map((stat) => (
           <div
             key={stat.name}
-            className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-zinc-800 px-4 py-10 sm:px-6 xl:px-8"
+            className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-zinc-800 px-4 py-8 sm:px-6 xl:px-8"
           >
             <dt className="text-sm font-medium leading-6 text-zinc-400">
               {stat.name}
