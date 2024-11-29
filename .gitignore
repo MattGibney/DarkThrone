@@ -45,3 +45,4 @@ apps/api/.env.local
 apps/api/data
 .nx/cache
 .nx/workspace-data
+vite.config.*.timestamp*
