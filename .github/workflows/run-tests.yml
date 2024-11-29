@@ -8,7 +8,20 @@ on:
 jobs:
   test_and_lint:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:15
+        env:
+            POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
 
     - name: Checkout source code
@@ -23,8 +36,23 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Run Tests
-      run: npx nx run-many -t test --all
+    - name: Run DB Migrations
+      run: npx nx run api:knex migrate:latest
+      env:
+        RDS_HOSTNAME: localhost
+        RDS_PORT: 5432
+        RDS_USERNAME: "postgres"
+        RDS_PASSWORD: "postgres"
+        RDS_DB_NAME: "postgres"
+
+    - name: Run tests
+      run: npx nx run-many --all --target=test --parallel
+      env:
+        RDS_HOSTNAME: localhost
+        RDS_PORT: 5432
+        RDS_USERNAME: "postgres"
+        RDS_PASSWORD: "postgres"
+        RDS_DB_NAME: "postgres"
 
     - name: Run Linting
-      run: npx nx run-many -t lint --all
+      run: npx nx run-many --all --target=lint --parallel

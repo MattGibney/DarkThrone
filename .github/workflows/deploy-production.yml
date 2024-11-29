@@ -1,9 +1,8 @@
 name: Deploy production
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
   prepare:
@@ -12,7 +11,7 @@ jobs:
     steps:
 
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup node
       uses: actions/setup-node@v4
@@ -44,7 +43,7 @@ jobs:
     steps:
 
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup node
       uses: actions/setup-node@v4
@@ -83,7 +82,7 @@ jobs:
     steps:
 
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         lfs: true
 
@@ -126,7 +125,7 @@ jobs:
     steps:
 
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup node
       uses: actions/setup-node@v4
@@ -162,7 +161,7 @@ jobs:
     steps:
 
     - name: Checkout source code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup node
       uses: actions/setup-node@v4
