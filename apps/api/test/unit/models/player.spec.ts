@@ -3,6 +3,7 @@ import { Context } from '../../../src/app';
 import PlayerModel from '../../../src/models/player';
 import PlayerUnitsModel from '../../../src/models/playerUnits';
 import UserModel from '../../../src/models/user';
+import { calculateLevelXP, getLevelXP, calculateLevelFromXP } from '@darkthrone/game-data';
 
 const mockPlayerRow: PlayerRow = {
   id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
@@ -534,6 +535,58 @@ describe('Model: Player', () => {
       expect(paginator.totalItemCount).toBe(1);
       expect(paginator.items.length).toBe(1);
       expect(paginator.items[0]).toBeInstanceOf(PlayerModel);
+    });
+  });
+
+  describe('Level XP Formula', () => {
+    // Original XP values from the game data
+    // Had to add level 1 as 0 XP to the array
+    const originalXPValues = [
+      0, 4000, 8000, 13000, 19000, 26000, 34000, 43000, 53000, 64000, 76000,
+      89000, 103000, 118000, 134000, 151000, 169000, 188000, 208000, 229000,
+      251000, 274000, 298000, 323000, 349000, 376000, 404000, 433000, 463000,
+      494000, 526000, 559000, 593000, 628000, 664000, 701000, 739000, 778000,
+      818000, 859000, 901000, 944000, 988000, 1033000, 1079000, 1126000,
+      1174000, 1223000, 1273000, 1324000, 1376000, 1429000, 1483000, 1538000,
+      1594000, 1651000, 1709000, 1768000, 1828000, 1889000, 1951000, 2014000,
+      2078000, 2143000, 2209000, 2276000, 2344000, 2413000, 2483000, 2554000,
+      2626000, 2699000, 2773000, 2848000, 2924000, 3001000, 3079000, 3158000,
+      3238000, 3319000, 3401000, 3484000, 3568000, 3653000, 3739000, 3826000,
+      3914000, 4003000, 4093000, 4184000, 4276000, 4369000, 4463000, 4558000,
+      4654000, 4751000, 4849000, 4948000, 5048000, 5149000, 5251000,
+    ];
+
+    it('should match original XP values within 1% margin', () => {
+      originalXPValues.forEach((expectedXP, index) => {
+        const level = index + 1;
+        if (level === 1) return; // Skip level 1
+        const calculatedXP = calculateLevelXP(level);
+        const percentDiff = Math.abs((calculatedXP - expectedXP) / expectedXP);
+
+        expect(percentDiff).toBeLessThan(0.01); // Within 1% margin
+      });
+    });
+
+    it('should throw error for invalid levels', () => {
+      expect(() => getLevelXP(0)).toThrow('Level must be between 1 and 100');
+      expect(() => getLevelXP(101)).toThrow('Level must be between 1 and 100');
+    });
+
+    [
+      { experience: 0, expected_level: 1 },
+      { experience: 2000, expected_level: 1 },
+      { experience: 4000, expected_level: 2 },
+      { experience: 6000, expected_level: 2 },
+      { experience: 8000, expected_level: 3 },
+      { experience: 13000, expected_level: 4 },
+      { experience: 19000, expected_level: 5 },
+      { experience: 5251000, expected_level: 100 },
+      { experience: 9999999, expected_level: 100 },
+    ].forEach((testCase) => {
+      it(`should return level ${testCase.expected_level} for ${testCase.experience} XP`, () => {
+        const level = calculateLevelFromXP(testCase.experience);
+        expect(level).toBe(testCase.expected_level);
+      });
     });
   });
 });

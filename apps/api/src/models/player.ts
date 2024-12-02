@@ -18,7 +18,7 @@ import {
   UnitTypes,
   fortificationUpgrades,
   housingUpgrades,
-  levelXPArray,
+  calculateLevelFromXP,
   structureUpgrades,
 } from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
@@ -66,7 +66,7 @@ export default class PlayerModel {
       race: this.race,
       class: this.class,
       gold: this.gold,
-      level: levelXPArray.findIndex((xp) => xp >= this.experience) + 1,
+      level: calculateLevelFromXP(this.experience),
       overallRank: this.overallRank,
       armySize: armySize,
     };
@@ -329,7 +329,7 @@ export default class PlayerModel {
     this.gold = row.gold;
     this.goldInBank = row.gold_in_bank;
     this.experience = row.experience;
-    this.level = levelXPArray.findIndex((xp) => xp >= this.experience) + 1;
+    this.level = calculateLevelFromXP(this.experience);
     this.overallRank = row.overall_rank;
     this.structureUpgrades = {
       fortification: row.structureUpgrades?.fortification || 0,

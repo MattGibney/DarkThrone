@@ -36,7 +36,7 @@ describe('GET_fetchAllPlayers', () => {
       items: [
         {
           armySize: 0,
-          level: 0,
+          level: 1,
         },
       ],
       meta: {
