@@ -254,7 +254,7 @@ describe('Model: Player', () => {
       const player = new PlayerModel(mockCTX, mockPlayerRow, []);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
-      expect(goldPerTurn).toEqual(10000);
+      expect(goldPerTurn).toEqual(1000);
     });
     it('should return the sum of goldPerTurn for each unit', async () => {
       const mockCTX = {} as unknown as Context;
@@ -262,7 +262,7 @@ describe('Model: Player', () => {
       const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
-      expect(goldPerTurn).toEqual(10100);
+      expect(goldPerTurn).toEqual(1100);
     });
     it('should add 5% bonus for thief players', async () => {
       const mockCTX = {} as unknown as Context;
@@ -275,7 +275,7 @@ describe('Model: Player', () => {
       const player = new PlayerModel(mockCTX, thiefPlayerRow, mockPlayerUnits);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
-      expect(goldPerTurn).toEqual(10105); // Includes the housing bonus
+      expect(goldPerTurn).toEqual(1105); // Includes the housing bonus
     });
   });
 

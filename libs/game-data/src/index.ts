@@ -76,7 +76,7 @@ export const fortificationUpgrades: FortificationUpgrade[] = [
     levelRequirement: 1,
     cost: 0,
     defenceBonusPercentage: 5,
-    goldPerTurn: 10000,
+    goldPerTurn: 1000,
     requiredFortificationLevel: 0,
     type: 'fortification',
   },
