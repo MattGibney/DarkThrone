@@ -2,6 +2,7 @@
 import {
   FortificationUpgrade,
   HousingUpgrade,
+  StructureType,
   UnitType,
   type Unit,
 } from '@darkthrone/interfaces';
@@ -65,281 +66,145 @@ export const levelXPArray: number[] = [
 ];
 
 /**
- * These all have a type param as the housing upgrades are polymorphic and
- * having this additional prop makes it far easier to ensure type safety. There
- * may be a nicer way to do this. If you know of one, PLEASE PLEASE raise a PR.
- * I'd love to know a better way to handle this.
+ * Create Fortification Upgrade
+ * @param name
+ * @param levelRequirement
+ * @param cost
+ * @param defenceBonusPercentage
+ * @param goldPerTurn
+ * @param requiredFortificationLevel
+ * @returns FortificationUpgrade
+ * @example
+ * createFortificationUpgrade('Manor', 1, 0, 5, 1000, 0);
+ * // returns { name: 'Manor', levelRequirement: 1, cost: 0, defenceBonusPercentage: 5, goldPerTurn: 1000, requiredFortificationLevel: 0, type: 'fortification' }
  */
+const createFortificationUpgrade = (
+  name: string,
+  levelRequirement: number,
+  cost: number,
+  defenceBonusPercentage: number,
+  goldPerTurn: number,
+  requiredFortificationLevel: number,
+): FortificationUpgrade => ({
+  name,
+  levelRequirement,
+  cost,
+  defenceBonusPercentage,
+  goldPerTurn,
+  requiredFortificationLevel,
+  type: StructureType.FORTIFICATION,
+});
+
+const calculateFortificationLevelRequirement = (index: number): number =>
+  index === 0 ? 1 : 5 * index;
+
+const calculateFortificationDefenceBonusPercentage = (index: number): number =>
+  5 * index + 5;
+
+const calculateFortificationGoldPerTurn = (index: number): number =>
+  1000 * index + 1000;
+
 export const fortificationUpgrades: FortificationUpgrade[] = [
-  {
-    name: 'Manor',
-    levelRequirement: 1,
-    cost: 0,
-    defenceBonusPercentage: 5,
-    goldPerTurn: 1000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Village',
-    levelRequirement: 5,
-    goldPerTurn: 2000,
-    defenceBonusPercentage: 10,
-    cost: 100000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Town',
-    levelRequirement: 10,
-    goldPerTurn: 3000,
-    defenceBonusPercentage: 15,
-    cost: 250000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Outpost',
-    levelRequirement: 15,
-    goldPerTurn: 4000,
-    defenceBonusPercentage: 20,
-    cost: 500000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Outpost Level 2',
-    levelRequirement: 20,
-    goldPerTurn: 5000,
-    defenceBonusPercentage: 25,
-    cost: 1000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Outpost Level 3',
-    levelRequirement: 25,
-    goldPerTurn: 6000,
-    defenceBonusPercentage: 30,
-    cost: 2000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Stronghold',
-    levelRequirement: 30,
-    goldPerTurn: 7000,
-    defenceBonusPercentage: 35,
-    cost: 3000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Stronghold Level 2',
-    levelRequirement: 35,
-    goldPerTurn: 8000,
-    defenceBonusPercentage: 40,
-    cost: 4000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Stronghold Level 3',
-    levelRequirement: 40,
-    goldPerTurn: 9000,
-    defenceBonusPercentage: 45,
-    cost: 5000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Fortress',
-    levelRequirement: 45,
-    goldPerTurn: 10000,
-    defenceBonusPercentage: 50,
-    cost: 7500000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Fortress Level 2',
-    levelRequirement: 50,
-    goldPerTurn: 11000,
-    defenceBonusPercentage: 55,
-    cost: 10000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Fortress Level 3',
-    levelRequirement: 55,
-    goldPerTurn: 12000,
-    defenceBonusPercentage: 60,
-    cost: 15000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Citadel',
-    levelRequirement: 60,
-    goldPerTurn: 13000,
-    defenceBonusPercentage: 65,
-    cost: 20000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Citadel Level 2',
-    levelRequirement: 65,
-    goldPerTurn: 14000,
-    defenceBonusPercentage: 70,
-    cost: 30000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Citadel Level 3',
-    levelRequirement: 70,
-    goldPerTurn: 15000,
-    defenceBonusPercentage: 75,
-    cost: 40000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Castle',
-    levelRequirement: 75,
-    goldPerTurn: 16000,
-    defenceBonusPercentage: 80,
-    cost: 50000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Castle Level 2',
-    levelRequirement: 80,
-    goldPerTurn: 17000,
-    defenceBonusPercentage: 85,
-    cost: 75000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Castle Level 3',
-    levelRequirement: 85,
-    goldPerTurn: 18000,
-    defenceBonusPercentage: 90,
-    cost: 100000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Kingdom',
-    levelRequirement: 90,
-    goldPerTurn: 19000,
-    defenceBonusPercentage: 95,
-    cost: 150000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Kingdom Level 2',
-    levelRequirement: 95,
-    goldPerTurn: 20000,
-    defenceBonusPercentage: 100,
-    cost: 200000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Kingdom Level 3',
-    levelRequirement: 100,
-    goldPerTurn: 21000,
-    defenceBonusPercentage: 105,
-    cost: 250000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Empire',
-    levelRequirement: 105,
-    goldPerTurn: 22000,
-    defenceBonusPercentage: 110,
-    cost: 300000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Empire Level 2',
-    levelRequirement: 110,
-    goldPerTurn: 23000,
-    defenceBonusPercentage: 115,
-    cost: 350000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-  {
-    name: 'Empire Level 3',
-    levelRequirement: 115,
-    goldPerTurn: 24000,
-    defenceBonusPercentage: 120,
-    cost: 400000000,
-    requiredFortificationLevel: 0,
-    type: 'fortification',
-  },
-];
+  { name: 'Manor', cost: 0 },
+  { name: 'Village', cost: 100000 },
+  { name: 'Town', cost: 250000 },
+  { name: 'Outpost', cost: 500000 },
+  { name: 'Outpost Level 2', cost: 1000000 },
+  { name: 'Outpost Level 3', cost: 2000000 },
+  { name: 'Stronghold', cost: 3000000 },
+  { name: 'Stronghold Level 2', cost: 4000000 },
+  { name: 'Stronghold Level 3', cost: 5000000 },
+  { name: 'Fortress', cost: 7500000 },
+  { name: 'Fortress Level 2', cost: 10000000 },
+  { name: 'Fortress Level 3', cost: 15000000 },
+  { name: 'Citadel', cost: 20000000 },
+  { name: 'Citadel Level 2', cost: 30000000 },
+  { name: 'Citadel Level 3', cost: 40000000 },
+  { name: 'Castle', cost: 50000000 },
+  { name: 'Castle Level 2', cost: 75000000 },
+  { name: 'Castle Level 3', cost: 100000000 },
+  { name: 'Kingdom', cost: 150000000 },
+  { name: 'Kingdom Level 2', cost: 200000000 },
+  { name: 'Kingdom Level 3', cost: 250000000 },
+  { name: 'Empire', cost: 300000000 },
+  { name: 'Empire Level 2', cost: 350000000 },
+  { name: 'Empire Level 3', cost: 400000000 },
+].map((upgrade, index) => {
+  return createFortificationUpgrade(
+    upgrade.name,
+    calculateFortificationLevelRequirement(index),
+    upgrade.cost, // I could not find a pattern for the cost without splitting into a very large piecewise function
+    calculateFortificationDefenceBonusPercentage(index),
+    calculateFortificationGoldPerTurn(index),
+    0,
+  );
+});
+
+/**
+ * This is a factory function that creates a housing upgrade
+ * @param name
+ * @param requiredFortificationLevel
+ * @param cost
+ * @param citizensPerDay
+ * @returns HousingUpgrade
+ * @example
+ * createHousingUpgrade('Hovel', 0, 0, 1);
+ * // returns { name: 'Hovel', requiredFortificationLevel: 0, cost: 0, citizensPerDay: 1, type: 'housing' }
+ */
+const createHousingUpgrade = (
+  name: string,
+  requiredFortificationLevel: number,
+  cost: number,
+  citizensPerDay: number,
+): HousingUpgrade => ({
+  name,
+  requiredFortificationLevel,
+  cost,
+  citizensPerDay,
+  type: StructureType.HOUSING,
+});
+
+/**
+ * Calculate the required fortification level for a housing upgrade
+ * f(x)={x=0:0,x>0:4x-2}
+ * @param index
+ * @returns number
+ */
+const calculateHousingRequiredFortificationLevel = (index: number): number => {
+  if (index === 0) return 0;
+  return 4 * index - 2;
+};
+
+/**
+ * Find the cost of housing using a piecewise function
+ * f(x)={0<=x<=3:500000x,4<=x:250000x^2-1250000x+3500000}
+ * @param index
+ * @returns
+ */
+const calculateHousingCost = (index: number): number => {
+  if (index <= 3) return 500000 * index;
+  return 250000 * Math.pow(index, 2) - 1250000 * index + 3500000;
+};
+
+const calculateHousingCitizensPerDay = (index: number): number =>
+  index === 0 ? 1 : 10 * index;
 
 export const housingUpgrades: HousingUpgrade[] = [
-  {
-    name: 'Hovel',
-    requiredFortificationLevel: 0,
-    cost: 0,
-    citizensPerDay: 1,
-    type: 'housing',
-  },
-  {
-    name: 'Hut',
-    requiredFortificationLevel: 2,
-    cost: 500000,
-    citizensPerDay: 10,
-    type: 'housing',
-  },
-  {
-    name: 'Cottage',
-    requiredFortificationLevel: 6,
-    cost: 1000000,
-    citizensPerDay: 20,
-    type: 'housing',
-  },
-  {
-    name: 'Longhouse',
-    requiredFortificationLevel: 10,
-    cost: 1500000,
-    citizensPerDay: 30,
-    type: 'housing',
-  },
-  {
-    name: 'Manor House',
-    requiredFortificationLevel: 14,
-    cost: 2500000,
-    citizensPerDay: 40,
-    type: 'housing',
-  },
-  {
-    name: 'Keep',
-    requiredFortificationLevel: 18,
-    cost: 3500000,
-    citizensPerDay: 50,
-    type: 'housing',
-  },
-  {
-    name: 'Great Hall',
-    requiredFortificationLevel: 22,
-    cost: 5000000,
-    citizensPerDay: 60,
-    type: 'housing',
-  },
-];
+  'Hovel',
+  'Hut',
+  'Cottage',
+  'Longhouse',
+  'Manor House',
+  'Keep',
+  'Great Hall',
+].map((upgrade, index) => {
+  return createHousingUpgrade(
+    upgrade,
+    calculateHousingRequiredFortificationLevel(index),
+    calculateHousingCost(index),
+    calculateHousingCitizensPerDay(index),
+  );
+});
 
 export const structureUpgrades = {
   fortification: fortificationUpgrades,
