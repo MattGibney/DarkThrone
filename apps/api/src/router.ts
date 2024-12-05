@@ -52,7 +52,7 @@ router.post(
   '/players/matching-ids',
   PlayersController.POST_fetchAllMatchingIDs,
 );
-
+router.get('/players/:id/goldPerTurn', PlayersController.GET_goldPerTurn);
 // War History
 router.get('/war-history/:id', WarHistoryController.GET_fetchByID);
 router.get('/war-history', WarHistoryController.GET_fetchAll);
