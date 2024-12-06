@@ -128,4 +128,28 @@ export default {
     );
     res.status(200).json(await player.serialise());
   }),
+
+  POST_proficiencyPoints: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const { playerID, points } = req.body;
+      const player = await req.ctx.modelFactory.player.fetchByID(
+        req.ctx,
+        playerID,
+      );
+      if (!player) {
+        res.status(404).json({
+          errors: [
+            {
+              code: 'player_not_found',
+              title: 'Player not found',
+            },
+          ],
+        });
+        return;
+      }
+
+      await player.upgradeProficiencyPoints(points);
+      res.status(200).json(await player.serialise());
+    },
+  ),
 };

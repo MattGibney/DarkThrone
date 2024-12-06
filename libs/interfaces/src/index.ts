@@ -9,7 +9,7 @@ export enum UnitType {
 
 export type Unit = {
   attack: number;
-  defence: number;
+  defense: number;
   cost: number;
   goldPerTurn: number;
   canTrain: boolean;
@@ -35,7 +35,7 @@ export interface PlayerObject {
 
 export interface AuthedPlayerObject extends PlayerObject {
   attackStrength: number;
-  defenceStrength: number;
+  defenseStrength: number;
   experience: number;
   attackTurns: number;
   goldInBank: number;
@@ -46,6 +46,14 @@ export interface AuthedPlayerObject extends PlayerObject {
     fortification: number;
     housing: number;
   };
+  proficiencyPoints: {
+    strength: number;
+    constitution: number;
+    wealth: number;
+    dexterity: number;
+    charisma: number;
+  };
+  remainingProficiencyPoints: number;
   goldPerTurn: number;
 }
 
@@ -92,7 +100,7 @@ export type StructureUpgrade = {
 
 export type FortificationUpgrade = StructureUpgrade & {
   type: 'fortification';
-  defenceBonusPercentage: number;
+  defenseBonusPercentage: number;
   goldPerTurn: number;
   levelRequirement: number;
 };

@@ -9,7 +9,7 @@ export default async function overallRank(ctx: Context) {
 
   for (const player of allPlayers) {
     const offence = await player.calculateAttackStrength();
-    const defence = await player.calculateDefenceStrength();
+    const defense = await player.calculateDefenseStrength();
     const goldPerTurn = await player.calculateGoldPerTurn();
 
     const warHistory = await ctx.modelFactory.warHistory.fetchAllForPlayer(
@@ -32,13 +32,13 @@ export default async function overallRank(ctx: Context) {
     const winLossRatio = (attackWinLossRatio + defendWinLossRatio) / 2;
 
     const finalScore = Math.floor(
-      offence + defence + goldPerTurn * winLossRatio,
+      offence + defense + goldPerTurn * winLossRatio,
     );
 
     ctx.logger.debug({
       player: player.id,
       offence,
-      defence,
+      defense,
       goldPerTurn,
       attacks: attacks.length,
       attacksWon: attacksWon.length,

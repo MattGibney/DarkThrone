@@ -70,9 +70,9 @@ export default function OverviewPage(props: OverviewPageProps) {
       ),
     },
     {
-      name: 'Defence Strength',
+      name: 'Defense Strength',
       value: new Intl.NumberFormat('en-GB').format(
-        props.client.authenticatedPlayer.defenceStrength,
+        props.client.authenticatedPlayer.defenseStrength,
       ),
     },
   ];

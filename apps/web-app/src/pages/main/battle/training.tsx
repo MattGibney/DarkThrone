@@ -34,8 +34,8 @@ export default function TrainingScreen(props: TrainingScreenProps) {
     if (typeData.attack) {
       attributes.push(`+ ${typeData.attack} attack`);
     }
-    if (typeData.defence) {
-      attributes.push(`+ ${typeData.defence} defense`);
+    if (typeData.defense) {
+      attributes.push(`+ ${typeData.defense} defense`);
     }
     if (typeData.goldPerTurn) {
       attributes.push(`+ ${typeData.goldPerTurn} gold per turn`);

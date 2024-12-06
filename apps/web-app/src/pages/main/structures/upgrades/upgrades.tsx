@@ -66,8 +66,8 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                 )}
               </p>
               <p>
-                Defence Bonus:{' '}
-                {upgrades.fortification.current.defenceBonusPercentage}%
+                Defense Bonus:{' '}
+                {upgrades.fortification.current.defenseBonusPercentage}%
               </p>
             </div>
           </div>
@@ -86,8 +86,8 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     )}
                   </p>
                   <p>
-                    Defence Bonus:{' '}
-                    {upgrades.fortification.next.defenceBonusPercentage}%
+                    Defense Bonus:{' '}
+                    {upgrades.fortification.next.defenseBonusPercentage}%
                   </p>
                 </div>
 
