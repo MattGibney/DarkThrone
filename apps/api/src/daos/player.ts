@@ -22,6 +22,13 @@ export type PlayerRow = {
     fortification: number;
     housing: number;
   };
+  proficiencyPoints: {
+    strength: number;
+    constitution: number;
+    wealth: number;
+    dexterity: number;
+    charisma: number;
+  };
 };
 
 export default class PlayerDao {

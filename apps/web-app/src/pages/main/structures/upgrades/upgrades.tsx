@@ -29,6 +29,12 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
     await props.client.structures.upgrade(type);
   }
 
+  function applyCharismaBonus(cost: number): number {
+    const charismaBonus =
+      100 - (props.client.authenticatedPlayer?.proficiencyPoints.charisma ?? 0);
+    return Math.floor(cost * charismaBonus) / 100;
+  }
+
   return (
     <main className="max-w-7xl mx-auto">
       <SubNavigation />
@@ -66,8 +72,8 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                 )}
               </p>
               <p>
-                Defence Bonus:{' '}
-                {upgrades.fortification.current.defenceBonusPercentage}%
+                Defense Bonus:{' '}
+                {upgrades.fortification.current.defenseBonusPercentage}%
               </p>
             </div>
           </div>
@@ -86,8 +92,8 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     )}
                   </p>
                   <p>
-                    Defence Bonus:{' '}
-                    {upgrades.fortification.next.defenceBonusPercentage}%
+                    Defense Bonus:{' '}
+                    {upgrades.fortification.next.defenseBonusPercentage}%
                   </p>
                 </div>
 
@@ -97,7 +103,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     <p>
                       Cost:{' '}
                       {new Intl.NumberFormat().format(
-                        upgrades.fortification.next.cost,
+                        applyCharismaBonus(upgrades.fortification.next.cost),
                       )}{' '}
                       <span className="text-gold">Gold</span>
                     </p>
@@ -113,12 +119,12 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     type="button"
                     isDisabled={
                       props.client.authenticatedPlayer.gold <
-                      upgrades.fortification.next.cost
+                      applyCharismaBonus(upgrades.fortification.next.cost)
                     }
                   >
                     Upgrade for{' '}
                     {new Intl.NumberFormat().format(
-                      upgrades.fortification.next.cost,
+                      applyCharismaBonus(upgrades.fortification.next.cost),
                     )}{' '}
                     Gold
                   </Button>
@@ -170,7 +176,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     <p>
                       Cost:{' '}
                       {new Intl.NumberFormat().format(
-                        upgrades.housing.next.cost,
+                        applyCharismaBonus(upgrades.housing.next.cost),
                       )}{' '}
                       <span className="text-gold">Gold</span>
                     </p>
@@ -191,11 +197,13 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     type="button"
                     isDisabled={
                       props.client.authenticatedPlayer.gold <
-                      upgrades.housing.next.cost
+                      applyCharismaBonus(upgrades.housing.next.cost)
                     }
                   >
                     Upgrade for{' '}
-                    {new Intl.NumberFormat().format(upgrades.housing.next.cost)}{' '}
+                    {new Intl.NumberFormat().format(
+                      applyCharismaBonus(upgrades.housing.next.cost),
+                    )}{' '}
                     Gold
                   </Button>
                 )}

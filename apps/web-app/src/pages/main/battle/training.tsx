@@ -21,6 +21,8 @@ export default function TrainingScreen(props: TrainingScreenProps) {
       total += inpuValues[unitID] * unitData.cost;
     });
 
+    total = applyCharismaBonus(total);
+
     setIsValidInput(true);
     if (total > props.client.authenticatedPlayer.gold) {
       setIsValidInput(false);
@@ -34,8 +36,8 @@ export default function TrainingScreen(props: TrainingScreenProps) {
     if (typeData.attack) {
       attributes.push(`+ ${typeData.attack} attack`);
     }
-    if (typeData.defence) {
-      attributes.push(`+ ${typeData.defence} defense`);
+    if (typeData.defense) {
+      attributes.push(`+ ${typeData.defense} defense`);
     }
     if (typeData.goldPerTurn) {
       attributes.push(`+ ${typeData.goldPerTurn} gold per turn`);
@@ -48,6 +50,12 @@ export default function TrainingScreen(props: TrainingScreenProps) {
       cost: typeData.cost,
     };
   });
+
+  function applyCharismaBonus(cost: number): number {
+    const charismaBonus =
+      100 - (props.client.authenticatedPlayer?.proficiencyPoints.charisma ?? 0);
+    return Math.floor(cost * charismaBonus) / 100;
+  }
 
   function setInputValue(inputID: string, value: string) {
     let sanitisedValue = Number(value);
@@ -160,7 +168,9 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                           )}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                          {new Intl.NumberFormat().format(unit.cost)}
+                          {new Intl.NumberFormat().format(
+                            applyCharismaBonus(unit.cost),
+                          )}
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                           <InputField

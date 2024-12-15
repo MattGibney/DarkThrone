@@ -68,4 +68,7 @@ router.post('/bank/withdraw', BankingController.POST_withdraw);
 // Structures
 router.post('/structures/upgrade', StructuresController.POST_upgradeStructure);
 
+// ProficiencyPoints
+router.post('/proficiency-points', PlayersController.POST_proficiencyPoints);
+
 export default router;

@@ -15,6 +15,13 @@ describe('POST_upgradeStructure.spec', () => {
           fortification: 0,
           housing: 0,
         },
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
       },
     });
 
@@ -45,6 +52,13 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+        },
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
         },
       },
     });
@@ -78,6 +92,13 @@ describe('POST_upgradeStructure.spec', () => {
           fortification: 0,
           housing: 0,
         },
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
       },
     });
 
@@ -110,6 +131,13 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+        },
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
         },
       },
     });
