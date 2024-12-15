@@ -96,6 +96,7 @@ describe('Model: Player', () => {
         'units',
         'structureUpgrades',
         'proficiencyPoints',
+        'remainingProficiencyPoints',
       ]);
     });
     it('correctly populates all fields', async () => {
@@ -128,6 +129,7 @@ describe('Model: Player', () => {
         attackStrength: 44, // 40 from the mockPlayerUnits + 5% bonus for human
         defenseStrength: 52,
         depositHistory: [],
+        remainingProficiencyPoints: 0,
         goldInBank: 40,
         goldPerTurn: 10100,
         units: [
@@ -459,6 +461,134 @@ describe('Model: Player', () => {
         const proficiencyPointsRemaining = player.proficiencyPointsRemaining;
         expect(proficiencyPoints).toEqual(testCase.expected.total);
         expect(proficiencyPointsRemaining).toEqual(testCase.expected.remaining);
+      });
+    });
+  });
+
+  describe('upgradePorficiencyPoints', () => {
+    [
+      {
+        experience: 0, // level 1 with 0 proficiency points spent
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
+      },
+      {
+        experience: 64001, // level 10 with 9 proficiency points spent
+        proficiencyPoints: {
+          strength: 9,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
+      },
+    ].map((testCase) => {
+      it('should not upgrade the proficiency points if there are no points to upgrade', async () => {
+        const mockCTX = {
+          daoFactory: {
+            player: {
+              update: jest.fn().mockResolvedValue(mockPlayerRow),
+            },
+          },
+          logger: {
+            debug: jest.fn(),
+          },
+        } as unknown as Context;
+        mockPlayerRow.proficiencyPoints = testCase.proficiencyPoints;
+        mockPlayerRow.experience = testCase.experience;
+
+        const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+
+        const saveMock = jest.fn().mockResolvedValue({});
+        player.save = saveMock;
+        const newProficiencyPoints = {
+          strength: 2,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        };
+        expect(async () => {
+          await player.upgradeProficiencyPoints(newProficiencyPoints);
+        }).rejects.toThrow('Not enough proficiency points');
+
+        expect(mockCTX.logger.debug).toHaveBeenCalledWith(
+          {
+            pointsToAdd: newProficiencyPoints,
+          },
+          'Upgrading proficiency points',
+        );
+        expect(saveMock).not.toHaveBeenCalled();
+      });
+      [
+        {
+          experience: 13001, // level 3 with 0 proficiency points spent
+          proficiencyPoints: {
+            strength: 0,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          },
+        },
+        {
+          experience: 76001, // level 11 with 8 proficiency point spent
+          proficiencyPoints: {
+            strength: 8,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          },
+        },
+      ].map((testCase) => {
+        it('should upgrade the proficiency points', async () => {
+          const mockCTX = {
+            daoFactory: {
+              player: {
+                update: jest.fn().mockResolvedValue(mockPlayerRow),
+              },
+            },
+            logger: {
+              debug: jest.fn(),
+            },
+          } as unknown as Context;
+          mockPlayerRow.proficiencyPoints = testCase.proficiencyPoints;
+          mockPlayerRow.experience = testCase.experience;
+
+          const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+
+          const saveMock = jest.fn().mockResolvedValue({});
+          player.save = saveMock;
+          const newProficiencyPoints = {
+            strength: 2,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          };
+          await player.upgradeProficiencyPoints(newProficiencyPoints);
+
+          expect(mockCTX.logger.debug).toHaveBeenCalledWith(
+            {
+              pointsToAdd: newProficiencyPoints,
+            },
+            'Upgrading proficiency points',
+          );
+          expect(player.proficiencyPoints).toEqual({
+            strength: testCase.proficiencyPoints.strength + 2,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          });
+          expect(saveMock).toHaveBeenCalled();
+        });
       });
     });
   });

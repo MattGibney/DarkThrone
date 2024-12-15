@@ -181,24 +181,29 @@ export default class PlayerModel {
     return this.level - 1 - this.proficiencyPointsTotal;
   }
 
-  async upgradeProficiencyPoints(points: {
+  async upgradeProficiencyPoints(pointsToAdd: {
     strength: number;
     constitution: number;
     wealth: number;
     dexterity: number;
     charisma: number;
   }) {
-    this.ctx.logger.debug({ points }, 'Upgrading proficiency points');
-    const totalPoints = Object.values(points).reduce(
+    this.ctx.logger.debug(
+      { pointsToAdd: pointsToAdd },
+      'Upgrading proficiency points',
+    );
+
+    const totalPointsToAdd = Object.values(pointsToAdd).reduce(
       (acc, point) => acc + point,
       0,
     );
 
-    if (totalPoints > this.proficiencyPointsRemaining) {
+    if (totalPointsToAdd > this.proficiencyPointsRemaining) {
       throw new Error('Not enough proficiency points');
     }
-
-    this.proficiencyPoints = points;
+    for (const [key, value] of Object.entries(pointsToAdd)) {
+      this.proficiencyPoints[key] += value;
+    }
     await this.save();
   }
 
