@@ -32,11 +32,11 @@ describe('GET_fetchPlayersForUser', () => {
     expect(response.body).toEqual([
       {
         armySize: 0,
-        level: 0,
+        level: 1,
       },
       {
         armySize: 0,
-        level: 0,
+        level: 1,
       },
     ]);
   });

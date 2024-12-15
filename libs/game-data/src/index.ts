@@ -49,20 +49,72 @@ export const UnitTypes: { [k: string]: Unit } = {
   },
 };
 
-export const levelXPArray: number[] = [
-  4000, 8000, 13000, 19000, 26000, 34000, 43000, 53000, 64000, 76000, 89000,
-  103000, 118000, 134000, 151000, 169000, 188000, 208000, 229000, 251000,
-  274000, 298000, 323000, 349000, 376000, 404000, 433000, 463000, 494000,
-  526000, 559000, 593000, 628000, 664000, 701000, 739000, 778000, 818000,
-  859000, 901000, 944000, 988000, 1033000, 1079000, 1126000, 1174000, 1223000,
-  1273000, 1324000, 1376000, 1429000, 1483000, 1538000, 1594000, 1651000,
-  1709000, 1768000, 1828000, 1889000, 1951000, 2014000, 2078000, 2143000,
-  2209000, 2276000, 2344000, 2413000, 2483000, 2554000, 2626000, 2699000,
-  2773000, 2848000, 2924000, 3001000, 3079000, 3158000, 3238000, 3319000,
-  3401000, 3484000, 3568000, 3653000, 3739000, 3826000, 3914000, 4003000,
-  4093000, 4184000, 4276000, 4369000, 4463000, 4558000, 4654000, 4751000,
-  4849000, 4948000, 5048000, 5149000, 5251000,
-];
+const MaxLevel = 100;
+/**
+ * Calculate the XP required for a specific level
+ * This is a complexity of O(1) as it is a quadratic equation
+ * Previously, the search was O(n) which was not efficient.
+ * This also allows for an easy level cap change.
+ * @param level
+ * @returns number
+ */
+export const calculateLevelXP = (level: number): number => {
+  if (level <= 1) return 0;
+  // 500x^2 + 1500x - 1000 {x >= 2} where x is the level
+  return Math.floor(500 * Math.pow(level, 2) + 1500 * level - 1000);
+};
+
+/**
+ * Get the XP required for a specific level
+ * @param level
+ * @returns number
+ */
+export const getLevelXP = (level: number): number => {
+  if (level < 1 || level > MaxLevel) {
+    throw new Error(`Level must be between 1 and ${MaxLevel}`);
+  }
+  return calculateLevelXP(level);
+};
+
+/**
+ * Calculate the level from a given XP value
+ * This is a complexity of O(1) as it is a quadratic equation
+ * @param xp
+ * @returns number
+ */
+export const calculateLevelFromXP = (xp: number): number => {
+  const a = 500;
+  const b = 1500;
+  const c = -1000;
+  const _xp = !xp || isNaN(xp) ? 0 : xp;
+  if (_xp < 0) {
+    throw new Error('XP must be greater than or equal to 0');
+  }
+
+  if (_xp < 4000) {
+    return 1;
+  }
+
+  // Adjust c to account for the XP value
+  const adjustedC = c - _xp;
+
+  // Calculate the discriminant
+  const discriminant = b * b - 4 * a * adjustedC;
+
+  if (discriminant < 0) {
+    throw new Error('No valid level for the given XP');
+  }
+
+  // Calculate the two possible roots
+  const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+  const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+
+  // Take the maximum valid root and round down
+  const level = Math.floor(Math.max(root1, root2));
+
+  // Ensure the level does not exceed MaxLevel
+  return Math.min(level, MaxLevel);
+};
 
 /**
  * These all have a type param as the housing upgrades are polymorphic and
