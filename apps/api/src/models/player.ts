@@ -193,6 +193,12 @@ export default class PlayerModel {
       'Upgrading proficiency points',
     );
 
+    for (const [key, value] of Object.entries(pointsToAdd)) {
+      if (value < 0) {
+        throw new Error(`${key} cannot be less than 0`);
+      }
+    }
+
     const totalPointsToAdd = Object.values(pointsToAdd).reduce(
       (acc, point) => acc + point,
       0,

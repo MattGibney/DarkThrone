@@ -148,8 +148,21 @@ export default {
         return;
       }
 
-      await player.upgradeProficiencyPoints(points);
-      res.status(200).json(await player.serialise());
+      await player
+        .upgradeProficiencyPoints(points)
+        .then(async () => {
+          res.status(200).json(await player.serialise());
+        })
+        .catch((err) => {
+          res.status(400).json({
+            errors: [
+              {
+                code: 'invalid_points',
+                title: err.message,
+              },
+            ],
+          });
+        });
     },
   ),
 };
