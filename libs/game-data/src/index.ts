@@ -39,7 +39,7 @@ export const UnitTypes: { [k: string]: Unit } = {
   },
   guard_1: {
     name: 'Guard',
-    type: UnitType.DEFENSE,
+    type: UnitType.DEFENCE,
     attack: 0,
     defence: 3,
     cost: 1500,

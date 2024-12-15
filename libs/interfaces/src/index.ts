@@ -4,7 +4,7 @@ import { UnitTypes } from '@darkthrone/game-data';
 export enum UnitType {
   SUPPORT = 'support',
   OFFENSE = 'offense',
-  DEFENSE = 'defense',
+  DEFENCE = 'defence',
 }
 
 export type Unit = {
