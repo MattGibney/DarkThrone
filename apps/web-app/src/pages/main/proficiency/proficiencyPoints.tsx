@@ -100,7 +100,10 @@ export default function ProficiencyPage(props: ProficiencyPointsProps) {
       setIsSaving(false);
       return;
     }
-    if (Object.values(pointsToAdd).some((value) => value > remainingPoints)) {
+    if (
+      Object.values(pointsToAdd).reduce((acc, value) => acc + value, 0) >
+      props.client.authenticatedPlayer.remainingProficiencyPoints
+    ) {
       setInvalidMessages(['You do not have enough remaining points to save.']);
       setIsSaving(false);
       return;
