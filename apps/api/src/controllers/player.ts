@@ -136,17 +136,6 @@ export default {
         req.ctx,
         req.ctx.authedPlayer.id,
       );
-      if (!player) {
-        res.status(404).json({
-          errors: [
-            {
-              code: 'player_not_found',
-              title: 'Player not found',
-            },
-          ],
-        });
-        return;
-      }
 
       await player
         .upgradeProficiencyPoints(points)
