@@ -12,7 +12,13 @@ type ProficiencyKey =
   | 'wealth'
   | 'dexterity'
   | 'charisma';
-
+const proficiencyMap: Record<ProficiencyKey, string> = {
+  strength: 'Offense',
+  constitution: 'Defense',
+  wealth: 'Income',
+  dexterity: 'Spy & Sentry',
+  charisma: 'Reduced Prices',
+};
 export default function ProficiencyPage(props: ProficiencyPointsProps) {
   const [isChanged, setIsChanged] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -151,7 +157,7 @@ export default function ProficiencyPage(props: ProficiencyPointsProps) {
             <p>Points Pending</p>
           </div>
         </div>
-        <dl className="mx-auto grid grid-cols-1 gap-px bg-zinc-900/5 sm:grid-cols-2 md:grid-cols-5 rounded-xl overflow-hidden">
+        <dl className="mx-auto grid grid-cols-1 gap-px bg-zinc-900/5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 rounded-xl overflow-hidden">
           {Object.entries(points).map(([key, value]) => {
             const originalValue =
               props.client.authenticatedPlayer?.proficiencyPoints[
@@ -161,21 +167,31 @@ export default function ProficiencyPage(props: ProficiencyPointsProps) {
             return (
               <div
                 key={key}
-                className={`flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-zinc-800 px-4 py-8 sm:px-6 xl:px-8 ${
-                  hasChanged ? 'ring-2 ring-emerald-500' : ''
+                className={`flex flex-col gap-y-6 bg-zinc-800 px-4 py-8 sm:px-6 xl:px-8 ${
+                  hasChanged ? 'ring-1 ring-inset ring-yellow-600' : ''
                 }`}
               >
-                <dt className="text-lg font-medium leading-6 text-zinc-300 capitalize">
-                  {key}
+                <dt className="flex flex-col font-medium text-zinc-300 items-center text-center w-full">
+                  <span className="flex flex-row text-lg capitalize">
+                    {key}
+                  </span>
+                  <span className="flex flex-row text-sm capitalize">
+                    ({proficiencyMap[key as ProficiencyKey]})
+                  </span>
                 </dt>
-                <dd className="flex flex-col gap-y-4">
-                  {value}
-                  <div className={'flex gap-x-4'}>
+                <dd className="flex flex-col gap-y-4 w-full items-center">
+                  <div className="flex flex-row text-lg gap-y-4 text-center">
+                    Bonus
+                  </div>
+                  <div className="flex flex-row text-2xl gap-y-4 text-center">
+                    {value} %
+                  </div>
+                  <div className="flex flex-col md:flex-row gap-4">
                     <Button
                       text={'-1'}
                       onClick={() => handleDecrement(key as ProficiencyKey)}
                       isDisabled={!hasChanged}
-                      variant="primary-outline"
+                      variant={hasChanged ? 'primary-outline' : 'secondary'}
                     />
                     <Button
                       text={'+1'}
