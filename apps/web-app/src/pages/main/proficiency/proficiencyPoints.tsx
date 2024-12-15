@@ -101,7 +101,6 @@ export default function ProficiencyPage(props: ProficiencyPointsProps) {
     }
     await props.client.http
       .post('/proficiency-points', {
-        playerID: props.client.authenticatedPlayer.id,
         points: pointsToAdd,
       })
       .then(() => {

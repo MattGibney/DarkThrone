@@ -131,10 +131,10 @@ export default {
 
   POST_proficiencyPoints: protectPrivateAPI(
     async (req: Request, res: Response) => {
-      const { playerID, points } = req.body;
+      const { points } = req.body;
       const player = await req.ctx.modelFactory.player.fetchByID(
         req.ctx,
-        playerID,
+        req.ctx.authedPlayer.id,
       );
       if (!player) {
         res.status(404).json({
