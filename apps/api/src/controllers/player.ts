@@ -128,26 +128,4 @@ export default {
     );
     res.status(200).json(await player.serialise());
   }),
-  GET_goldPerTurn: protectPrivateAPI(async (req: Request, res: Response) => {
-    const player = await req.ctx.modelFactory.player.fetchByID(
-      req.ctx,
-      req.params.id,
-    );
-
-    if (!player) {
-      res.status(404).json({
-        errors: [
-          {
-            code: 'player_not_found',
-            title: 'Player not found',
-          },
-        ],
-      });
-      return;
-    }
-
-    const goldPerTurn = await player.calculateGoldPerTurn();
-
-    res.status(200).json({ goldPerTurn });
-  }),
 };

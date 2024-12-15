@@ -1,7 +1,6 @@
 import { fortificationUpgrades } from '@darkthrone/game-data';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
-import { useEffect, useState } from 'react';
 import Stat from '../../../components/home/Stat';
 
 interface OverviewPageProps {
@@ -9,19 +8,6 @@ interface OverviewPageProps {
 }
 
 export default function OverviewPage(props: OverviewPageProps) {
-  const [goldPerTurn, setGoldPerTurn] = useState(0);
-
-  useEffect(() => {
-    async function getGoldPerTurn() {
-      props.client.http
-        .get<{
-          goldPerTurn: number;
-        }>('/players/' + props.client.authenticatedPlayer?.id + '/goldPerTurn')
-        .then((response) => setGoldPerTurn(response.data.goldPerTurn));
-    }
-    if (!goldPerTurn) getGoldPerTurn();
-  });
-
   if (!props.client.authenticatedPlayer) return null;
 
   const population = props.client.authenticatedPlayer.units.reduce(
@@ -72,7 +58,10 @@ export default function OverviewPage(props: OverviewPageProps) {
         props.client.authenticatedPlayer.gold,
       ),
       additional:
-        'Gold per turn: ' + new Intl.NumberFormat('en-GB').format(goldPerTurn),
+        'Gold per turn: ' +
+        new Intl.NumberFormat('en-GB').format(
+          props.client.authenticatedPlayer.goldPerTurn,
+        ),
     },
     {
       name: 'Attack Strength',

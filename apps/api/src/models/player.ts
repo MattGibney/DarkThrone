@@ -75,6 +75,7 @@ export default class PlayerModel {
 
     const attackStrength = await this.calculateAttackStrength();
     const defenceStrength = await this.calculateDefenceStrength();
+    const goldPerTurn = await this.calculateGoldPerTurn();
 
     const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const depositHistory = await this.fetchBankHistory(date24HoursAgo);
@@ -85,6 +86,7 @@ export default class PlayerModel {
       attackTurns: this.attackTurns,
       experience: this.experience,
       goldInBank: this.goldInBank,
+      goldPerTurn: goldPerTurn,
       citizensPerDay: this.citizensPerDay,
       depositHistory: depositHistory.map((history) => ({
         amount: history.amount,
