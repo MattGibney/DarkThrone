@@ -82,6 +82,7 @@ describe('Model: Player', () => {
         'attackTurns',
         'experience',
         'goldInBank',
+        'goldPerTurn',
         'citizensPerDay',
         'depositHistory',
         'units',
@@ -119,6 +120,7 @@ describe('Model: Player', () => {
         defenceStrength: 52,
         depositHistory: [],
         goldInBank: 40,
+        goldPerTurn: 10100,
         units: [
           {
             unitType: 'worker',

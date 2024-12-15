@@ -46,6 +46,7 @@ export interface AuthedPlayerObject extends PlayerObject {
     fortification: number;
     housing: number;
   };
+  goldPerTurn: number;
 }
 
 export interface DepositHistory {
