@@ -84,6 +84,11 @@ export type ValidAuthResponse = {
   token: string;
 };
 
+export enum StructureType {
+  FORTIFICATION = 'fortification',
+  HOUSING = 'housing',
+}
+
 export type StructureUpgrade = {
   name: string;
   cost: number;
@@ -91,13 +96,13 @@ export type StructureUpgrade = {
 };
 
 export type FortificationUpgrade = StructureUpgrade & {
-  type: 'fortification';
+  type: StructureType.FORTIFICATION;
   defenceBonusPercentage: number;
   goldPerTurn: number;
   levelRequirement: number;
 };
 
 export type HousingUpgrade = StructureUpgrade & {
-  type: 'housing';
+  type: StructureType.HOUSING;
   citizensPerDay: number;
 };
