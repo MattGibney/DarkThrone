@@ -3,6 +3,7 @@ import { Avatar } from '@darkthrone/react-components';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
+import { Trans } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 interface HeaderBarProps {
@@ -68,7 +69,9 @@ export default function HeaderBar(props: HeaderBarProps) {
         className="-m-2.5 p-2.5 text-zinc-300 lg:hidden"
         onClick={() => props.setSidebarOpen(true)}
       >
-        <span className="sr-only">Open sidebar</span>
+        <span className="sr-only">
+          <Trans i18nKey="openSidebar" />
+        </span>
         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
       </button>
 
@@ -79,7 +82,7 @@ export default function HeaderBar(props: HeaderBarProps) {
         <div className="flex gap-x-4 text-sm text-zinc-300">
           {currentTime ? (
             <div>
-              DarkThrone Time:{' '}
+              DarkThrone <Trans i18nKey="time" />:{' '}
               <span className="text-white font-bold">
                 {currentTime.toLocaleTimeString()}
               </span>
@@ -87,7 +90,7 @@ export default function HeaderBar(props: HeaderBarProps) {
           ) : null}
           {timeRemaining ? (
             <div>
-              Next Turn In:{' '}
+              <Trans i18nKey="nextTurnIn" />:{' '}
               <span className="text-white font-bold">{timeRemaining}</span>
             </div>
           ) : null}
@@ -127,7 +130,7 @@ export default function HeaderBar(props: HeaderBarProps) {
                   className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-[focus]:bg-zinc-800/50"
                   onClick={() => handleSwitchPlayer()}
                 >
-                  Switch Players
+                  <Trans i18nKey="switchPlayer" ns="auth" />
                 </button>
               </MenuItem>
               <MenuItem>
@@ -136,7 +139,7 @@ export default function HeaderBar(props: HeaderBarProps) {
                   className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-[focus]:bg-zinc-800/50"
                   onClick={() => props.client.auth.logout()}
                 >
-                  Logout
+                  <Trans i18nKey="logout" ns="auth" />
                 </button>
               </MenuItem>
             </MenuItems>

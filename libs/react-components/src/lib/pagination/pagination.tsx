@@ -3,6 +3,7 @@ import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
 } from '@heroicons/react/20/solid';
+import { Trans } from 'react-i18next';
 
 interface PaginationProps {
   onPageChange: (page: number) => void;
@@ -22,7 +23,7 @@ export function Pagination(props: PaginationProps) {
               className="mr-3 h-5 w-5 text-zinc-400"
               aria-hidden="true"
             />
-            Previous
+            <Trans i18nKey="previous" />
           </LinkBlock>
         ) : null}
       </div>
@@ -43,7 +44,7 @@ export function Pagination(props: PaginationProps) {
       <div className="-mt-px flex w-0 flex-1 justify-end">
         {props.currentPage < totalPages ? (
           <LinkBlock onClick={() => props.onPageChange(props.currentPage + 1)}>
-            Next
+            <Trans i18nKey="next" />
             <ArrowLongRightIcon
               className="ml-3 h-5 w-5 text-zinc-400"
               aria-hidden="true"

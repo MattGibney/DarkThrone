@@ -26,6 +26,7 @@ import UpgradesScreen from './pages/main/structures/upgrades/upgrades';
 
 export type SubNavigationItem = {
   name: string;
+  plural?: boolean;
   to: string;
   shouldRender: boolean;
   component: React.ComponentType<GenericOutletProps>;
@@ -33,6 +34,7 @@ export type SubNavigationItem = {
 
 export type NavigationItem = {
   name: string;
+  plural?: boolean;
   href: string;
   shouldRender: boolean;
   component: React.ComponentType<GenericOutletProps>;
@@ -41,18 +43,18 @@ export type NavigationItem = {
 
 export const globalNavigation: NavigationItem[] = [
   {
-    name: 'Home',
+    name: 'home',
     href: '/overview',
     component: GenericOutlet,
     shouldRender: true,
     children: [
       {
-        name: 'Overview',
+        name: 'overview',
         to: '/overview',
         shouldRender: true,
         component: OverviewPage,
       },
-      { name: 'News', to: '/news', shouldRender: true, component: NewsPage },
+      { name: 'news', to: '/news', shouldRender: true, component: NewsPage },
       // { name: 'Levels', to: '/levels' },
       // { name: 'Settings', to: '/settings' },
       // { name: 'FAQ', to: '/faq' },
@@ -60,25 +62,25 @@ export const globalNavigation: NavigationItem[] = [
     ],
   },
   {
-    name: 'Battle',
+    name: 'battle',
     href: '/attack',
     shouldRender: true,
     component: GenericOutlet,
     children: [
       {
-        name: 'Attack',
+        name: 'attack',
         to: '/attack',
         shouldRender: true,
         component: AttackListPage,
       },
       {
-        name: 'Attack Player',
+        name: 'attackPlayer',
         to: '/attack/:playerID',
         shouldRender: false,
         component: AttackPlayerPage,
       },
       {
-        name: 'Training',
+        name: 'training',
         to: '/training',
         shouldRender: true,
         component: TrainingScreen,
@@ -86,19 +88,19 @@ export const globalNavigation: NavigationItem[] = [
       // { name: 'Mercenaries', to: '/mercenaries' },
       // { name: 'Upgrades', to: '/upgrades' },
       {
-        name: 'War History',
+        name: 'warHistory',
         to: '/war-history',
         shouldRender: true,
         component: ListWarHistory,
       },
       {
-        name: 'View War History',
+        name: 'viewWarHistory',
         to: '/war-history/:historyID',
         shouldRender: false,
         component: WarHistoryView,
       },
       {
-        name: 'View Player',
+        name: 'viewPlayer',
         to: '/player/:playerID',
         shouldRender: false,
         component: AttackViewPlayerPage,
@@ -106,31 +108,33 @@ export const globalNavigation: NavigationItem[] = [
     ],
   },
   {
-    name: 'Structures',
+    name: 'structure',
+    plural: true,
     href: '/bank/deposit',
     shouldRender: true,
     component: GenericOutlet,
     children: [
       {
-        name: 'Bank',
+        name: 'bank',
         to: '/bank/deposit',
         shouldRender: true,
         component: BankDepositPage,
       },
       {
-        name: 'Bank',
+        name: 'bank',
         to: '/bank/withdraw',
         shouldRender: false,
         component: BankWithdrawPage,
       },
       {
-        name: 'History',
+        name: 'history',
         to: '/bank/history',
         shouldRender: false,
         component: BankHistoryPage,
       },
       {
-        name: 'Upgrades',
+        name: 'upgrade',
+        plural: true,
         to: '/upgrades',
         shouldRender: true,
         component: UpgradesScreen,

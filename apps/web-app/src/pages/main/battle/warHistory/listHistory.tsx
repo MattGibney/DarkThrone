@@ -3,6 +3,8 @@ import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
+import { t } from 'i18next';
+import { Trans } from 'react-i18next';
 
 interface ListWarHistoryProps {
   client: DarkThroneClient;
@@ -44,7 +46,7 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
 
   function getNameForID(id: string) {
     const player = players.find((player) => player.id === id);
-    if (!player) return 'Unknown';
+    if (!player) return t('unknown');
     return player.name;
   }
 
@@ -62,19 +64,19 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                     >
-                      Description
+                      <Trans i18nKey="description" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                     >
-                      Gold Stolen
+                      <Trans i18nKey="goldStolen" ns="attack" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                     >
-                      Date
+                      <Trans i18nKey="date" />
                     </th>
                   </tr>
                 </thead>
@@ -88,13 +90,17 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
                       }}
                     >
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-400">
-                        <span className="font-bold text-white">
-                          {getNameForID(historyItem.attackerID)}
-                        </span>{' '}
-                        attacks{' '}
-                        <span className="font-bold text-white">
-                          {getNameForID(historyItem.defenderID)}
-                        </span>
+                        <Trans
+                          i18nKey="playerAttack"
+                          ns="attack"
+                          values={{
+                            attacker: getNameForID(historyItem.attackerID),
+                            defender: getNameForID(historyItem.defenderID),
+                          }}
+                        >
+                          <span className="font-bold text-white"></span>
+                          <span className="font-bold text-white"></span>
+                        </Trans>
                       </td>
                       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                         {new Intl.NumberFormat('en-GB').format(

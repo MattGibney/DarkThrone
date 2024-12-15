@@ -1,0 +1,22 @@
+{
+    "amount": "Amount",
+    "bankHelp": "You may deposit up to 80% of your gold at one time",
+    "bankHistory": "Bank History",
+    "deposit": "Deposit",
+    "depositMax": "Deposit Max",
+    "depositsRemaining": "Deposits Remaining",
+    "goldInBank": "Gold in Bank",
+    "goldOnHand": "Gold on Hand",
+    "transactionHistoryLimit": "Only transactions within the last 24 hours are currently visible.",
+    "type": "Type",
+    "withdraw": "Withdraw",
+    "withdrawal": "Withdrawal",
+    "errors": {
+        "depositLimitReached": "You have reached the maximum deposits allowed.",
+        "insufficientGoldInBank": "You cannot withdraw more gold than you have in the bank.",
+        "maxDeposit": "You may only deposit up to 80% of your gold.",
+        "maxDepositAmount": "You may only deposit up to {{max}} gold.",
+        "minDeposit": "You must deposit at least 1 gold.",
+        "noGoldInBank": "You do not have any gold in the bank to withdraw."
+    }
+}

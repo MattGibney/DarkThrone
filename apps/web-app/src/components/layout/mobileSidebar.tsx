@@ -3,6 +3,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid';
 import { Fragment } from 'react';
 import Navigation from './navigation';
 import { Logo } from '@darkthrone/react-components';
+import { Trans } from 'react-i18next';
 
 interface MobileSidebarProps {
   sidebarOpen: boolean;
@@ -54,7 +55,9 @@ export default function MobileSidebar(props: MobileSidebarProps) {
                     className="-m-2.5 p-2.5"
                     onClick={() => props.setSidebarOpen(false)}
                   >
-                    <span className="sr-only">Close sidebar</span>
+                    <span className="sr-only">
+                      <Trans i18nKey="closeSidebar" />
+                    </span>
                     <XMarkIcon
                       className="h-6 w-6 text-white"
                       aria-hidden="true"

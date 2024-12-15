@@ -1,0 +1,10 @@
+{
+    "attribute_one": "Attribute",
+    "attribute_other": "Attributes",
+    "citizens": "Citizens",
+    "train": "Train",
+    "trainingCost": "This will cost you {{gold}} gold.",
+    "unitType": "Unit Type",
+    "untrain": "Untrain",
+    "youHave": "You have"
+}

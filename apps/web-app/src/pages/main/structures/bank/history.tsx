@@ -1,6 +1,8 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import BankNavigation from './components/bankNavigation';
+import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
 interface BankDepositPageProps {
   client: DarkThroneClient;
@@ -23,19 +25,19 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
                   scope="col"
                   className="px-8 py-5 text-left text-sm font-semibold text-white"
                 >
-                  Date
+                  <Trans i18nKey="date" />
                 </th>
                 <th
                   scope="col"
                   className="px-8 py-5 text-sm text-right font-semibold text-white"
                 >
-                  Amount
+                  <Trans i18nKey="amount" ns="amount" />
                 </th>
                 <th
                   scope="col"
                   className="px-8 py-5 text-left text-sm font-semibold text-white"
                 >
-                  Type
+                  <Trans i18nKey="type" ns="bank" />
                 </th>
               </tr>
             </thead>
@@ -54,7 +56,10 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
                       {new Intl.NumberFormat().format(history.amount)}
                     </td>
                     <td className="whitespace-nowrap px-8 py-5 text-sm text-zinc-300">
-                      {history.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                      {t(
+                        history.type === 'deposit' ? 'deposit' : 'withdrawal',
+                        { ns: 'bank' },
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -63,7 +68,7 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
         </div>
 
         <div className="bg-zinc-800 p-8 mt-8 rounded-md text-zinc-400 text-sm font-semibold">
-          Only transactions within the last 24 hours are currently visible.
+          <Trans i18nKey="transactionHistoryLimit" ns="bank" />
         </div>
       </div>
     </main>

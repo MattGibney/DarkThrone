@@ -3,6 +3,8 @@ import { Alert, Button, InputField } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useState } from 'react';
 import BankNavigation from './components/bankNavigation';
+import { t } from 'i18next';
+import { Trans } from 'react-i18next';
 
 interface BankWithdrawPageProps {
   client: DarkThroneClient;
@@ -19,14 +21,12 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
     if (!playerGoldInBank) return;
 
     if (playerGoldInBank < 1) {
-      setInvalidMessages(['You do not have any gold in the bank to withdraw.']);
+      setInvalidMessages([t('errors.noGoldInBank', { ns: 'bank' })]);
       return;
     }
 
     if (inputAmount > playerGoldInBank) {
-      setInvalidMessages([
-        'You cannot withdraw more gold than you have in the bank',
-      ]);
+      setInvalidMessages([t('errors.insufficientGoldInBank', { ns: 'bank' })]);
       return;
     }
 
@@ -56,7 +56,9 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
                 props.client.authenticatedPlayer.gold,
               )}
             </div>
-            <p>Gold on Hand</p>
+            <p>
+              <Trans i18nKey="goldOnHand" ns="bank" />
+            </p>
           </div>
           <div className="flex flex-col items-center">
             <div className="text-yellow-500 text-2xl font-bold">
@@ -64,7 +66,9 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
                 props.client.authenticatedPlayer.goldInBank,
               )}
             </div>
-            <p>Gold in Bank</p>
+            <p>
+              <Trans i18nKey="goldInBank" ns="bank" />
+            </p>
           </div>
         </div>
         <form
@@ -93,7 +97,7 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
           </div>
           <div className="flex justify-end items-end">
             <div className="flex gap-x-4">
-              <Button text={'Withdraw'} type="submit" />
+              <Button text={t('withdraw', { ns: 'bank' })} type="submit" />
             </div>
           </div>
         </form>

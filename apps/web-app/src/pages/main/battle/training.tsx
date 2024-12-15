@@ -3,6 +3,8 @@ import SubNavigation from '../../../components/layout/subNavigation';
 import { Button, InputField } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
 import { UnitTypes } from '@darkthrone/game-data';
+import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
 interface TrainingScreenProps {
   client: DarkThroneClient;
@@ -32,13 +34,13 @@ export default function TrainingScreen(props: TrainingScreenProps) {
     const typeData = UnitTypes[unitID];
     const attributes: string[] = [];
     if (typeData.attack) {
-      attributes.push(`+ ${typeData.attack} attack`);
+      attributes.push(`+ ${typeData.attack} ${t('attack')}`);
     }
     if (typeData.defence) {
-      attributes.push(`+ ${typeData.defence} defence`);
+      attributes.push(`+ ${typeData.defence} ${t('defence')}`);
     }
     if (typeData.goldPerTurn) {
-      attributes.push(`+ ${typeData.goldPerTurn} gold per turn`);
+      attributes.push(`+ ${typeData.goldPerTurn} ${t('goldPerTurn')}`);
     }
     return {
       id: unitID,
@@ -82,7 +84,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
 
       <div className="border border-zinc-700/50 bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
         <div>
-          Gold{' '}
+          <Trans i18nKey="gold" />{' '}
           <span className="text-white font-bold text-md">
             {new Intl.NumberFormat().format(
               props.client.authenticatedPlayer?.gold || 0,
@@ -90,7 +92,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
           </span>
         </div>
         <div>
-          Citizens{' '}
+          <Trans i18nKey="citizens" />{' '}
           <span className="text-white font-bold text-md">
             {new Intl.NumberFormat().format(
               props.client.authenticatedPlayer?.units.find(
@@ -112,31 +114,31 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                       >
-                        Unit Type
+                        <Trans i18nKey="unitType" ns="training" />
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                       >
-                        Attributes
+                        <Trans i18nKey="attribute" count={2} ns="training" />
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                       >
-                        You Have
+                        <Trans i18nKey="youHave" ns="training" />
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                       >
-                        Cost
+                        <Trans i18nKey="cost" />
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                       >
-                        Quantity
+                        <Trans i18nKey="quantity" />
                       </th>
                     </tr>
                   </thead>
@@ -147,7 +149,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                         className="even:bg-zinc-800 odd:bg-zinc-800/50"
                       >
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                          {unit.name}
+                          <Trans i18nKey={unit.name.toLowerCase()} ns="units" />
                         </td>
                         <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
                           {unit.attributes.join(', ')}
@@ -185,13 +187,16 @@ export default function TrainingScreen(props: TrainingScreenProps) {
         <div className="flex justify-end items-center  gap-x-4 mt-8">
           {runningTotal > 0 ? (
             <div className={isValidInput ? 'text-white/75' : 'text-red-500/75'}>
-              This will cost {new Intl.NumberFormat().format(runningTotal)}{' '}
-              gold.
+              <Trans
+                i18nKey="trainingCost"
+                ns="training"
+                values={{ gold: new Intl.NumberFormat().format(runningTotal) }}
+              />
             </div>
           ) : null}
           <div>
             <Button
-              text={'Untrain'}
+              text={t('untrain', { ns: 'training' })}
               type="button"
               onClick={handleUnTrain}
               variant="secondary"
@@ -200,7 +205,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
           </div>
           <div>
             <Button
-              text={'Train'}
+              text={t('train', { ns: 'training' })}
               type="submit"
               variant="primary"
               isDisabled={!isValidInput}

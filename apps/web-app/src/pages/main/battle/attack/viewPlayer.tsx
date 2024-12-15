@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { attackableLevels } from '@darkthrone/game-data';
+import { Trans } from 'react-i18next';
 
 interface AttackViewPlayerPageProps {
   client: DarkThroneClient;
@@ -64,19 +65,19 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
 
   const statistics = [
     {
-      name: 'Gold',
+      name: 'gold',
       value: new Intl.NumberFormat().format(player.gold),
     },
     {
-      name: 'Army Size',
+      name: 'armySize',
       value: new Intl.NumberFormat().format(player.armySize),
     },
     {
-      name: 'Level',
+      name: 'level',
       value: player.level,
     },
     {
-      name: 'Overall Rank',
+      name: 'overallRank',
       value: player.overallRank,
     },
   ];
@@ -135,7 +136,9 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
                   }}
                   disabled={item.isDisabled}
                 >
-                  <div>{item.name}</div>
+                  <div>
+                    <Trans i18nKey={item.name} />
+                  </div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="fill-zinc-600"
@@ -157,7 +160,7 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
               {statistics.map((statistic, index) => (
                 <div key={index} className="px-4 py-2">
                   <dt className="text-sm font-medium leading-6 text-white">
-                    {statistic.name}
+                    <Trans i18nKey={statistic.name} />
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-zinc-400 sm:col-span-2 sm:mt-0">
                     {statistic.value}

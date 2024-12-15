@@ -3,6 +3,8 @@ import SubNavigation from '../../../../components/layout/subNavigation';
 import { fortificationUpgrades, housingUpgrades } from '@darkthrone/game-data';
 import { Button } from '@darkthrone/react-components';
 import { structureUpgrades } from '@darkthrone/game-data';
+import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
 interface UpgradesScreenProps {
   client: DarkThroneClient;
@@ -36,7 +38,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
       <div className="max-w-3xl mx-auto flex flex-col gap-y-8">
         <div className="bg-zinc-800/50 rounded-lg p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
           <div>
-            Gold{' '}
+            <Trans i18nKey="gold" />{' '}
             <span className="text-white font-bold text-md">
               {new Intl.NumberFormat().format(
                 props.client.authenticatedPlayer.gold,
@@ -44,7 +46,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
             </span>
           </div>
           <div>
-            Current Player Level{' '}
+            <Trans i18nKey="playerLevel" ns="upgrades" />{' '}
             <span className="text-white font-bold text-md">
               {new Intl.NumberFormat().format(
                 props.client.authenticatedPlayer.level,
@@ -54,19 +56,19 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 rounded-lg overflow-hidden text-center text-zinc-200">
           <div className="bg-zinc-800 p-8 flex flex-col gap-y-4 text-sm">
-            <h3 className="font-semibold text-lg">Current Fortification</h3>
+            <h3 className="font-semibold text-lg"><Trans i18nKey="currentFortification" ns="upgrades" /></h3>
             <div>
               <p className="text-white font-bold">
-                {upgrades.fortification.current.name}
+                {t(upgrades.fortification.current.name, { ns: 'structures' })}
               </p>
               <p>
-                Gold Per Turn:{' '}
+              <Trans i18nKey="goldPerTurn" />:{' '}
                 {new Intl.NumberFormat().format(
                   upgrades.fortification.current.goldPerTurn,
                 )}
               </p>
               <p>
-                Defence Bonus:{' '}
+                <Trans i18nKey="defenceBonus" ns="upgrades"/>:{' '}
                 {upgrades.fortification.current.defenceBonusPercentage}%
               </p>
             </div>
@@ -77,16 +79,16 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
               <>
                 <div>
                   <p className="text-white font-bold">
-                    {upgrades.fortification.next.name}
+                    {t(upgrades.fortification.next.name, { ns: 'structures' })}
                   </p>
                   <p>
-                    Gold Per Turn:{' '}
+                    <Trans i18nKey="goldPerTurn" />:{' '}
                     {new Intl.NumberFormat().format(
                       upgrades.fortification.next.goldPerTurn,
                     )}
                   </p>
                   <p>
-                    Defence Bonus:{' '}
+                    <Trans i18nKey="defenceBonus" ns="upgrades"/>:{' '}
                     {upgrades.fortification.next.defenceBonusPercentage}%
                   </p>
                 </div>
@@ -95,15 +97,14 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                 upgrades.fortification.next.levelRequirement ? (
                   <>
                     <p>
-                      Cost:{' '}
+                      <Trans i18nKey="cost" />:{' '}
                       {new Intl.NumberFormat().format(
                         upgrades.fortification.next.cost,
                       )}{' '}
-                      <span className="text-gold">Gold</span>
+                      <span className="text-gold"><Trans i18nKey="gold" /></span>
                     </p>
                     <p className="bg-cyan-800/40 border border-cyan-900/80 text-sm font-medium text-cyan-40 p-2 rounded-md">
-                      You need to be level{' '}
-                      {upgrades.fortification.next.levelRequirement} to upgrade
+                      <Trans i18nKey="levelRequirement" ns="upgrades" values={{level:upgrades.fortification.next.levelRequirement}} />
                     </p>
                   </>
                 ) : (
@@ -116,17 +117,13 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                       upgrades.fortification.next.cost
                     }
                   >
-                    Upgrade for{' '}
-                    {new Intl.NumberFormat().format(
-                      upgrades.fortification.next.cost,
-                    )}{' '}
-                    Gold
+                    <Trans i18nKey="upgradeFor" ns="upgrades" values={{gold: new Intl.NumberFormat().format(upgrades.fortification.next.cost)}} />
                   </Button>
                 )}
               </>
             ) : (
               <p className="text-zinc-200">
-                There are currently no more available fortification upgrades
+                <Trans i18nKey="noMoreFortificationUpgrades" ns="upgrades" />
               </p>
             )}
           </div>
@@ -134,13 +131,13 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 rounded-lg overflow-hidden text-center text-zinc-200">
           <div className="bg-zinc-800 p-8 flex flex-col gap-y-4 text-sm">
-            <h3 className="font-semibold text-lg">Current Housing</h3>
+            <h3 className="font-semibold text-lg"><Trans i18nKey="currentHousing" ns="upgrades" /></h3>
             <div>
               <p className="text-white font-bold">
-                {upgrades.housing.current.name}
+                {t(upgrades.housing.current.name, { ns: 'structures' })}
               </p>
               <p>
-                Daily Citizens:{' '}
+                <Trans i18nKey="dailyCitizens" ns="upgrades" />:{' '}
                 {new Intl.NumberFormat().format(
                   upgrades.housing.current.citizensPerDay,
                 )}
@@ -148,15 +145,15 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
             </div>
           </div>
           <div className="bg-zinc-800/50 p-8 flex flex-col gap-y-4 text-sm">
-            <h3 className="font-semibold text-lg">Next Housing</h3>
+            <h3 className="font-semibold text-lg"><Trans i18nKey="nextHousing" ns="upgrades" /></h3>
             {upgrades.housing.next ? (
               <>
                 <div>
                   <p className="text-white font-bold">
-                    {upgrades.housing.next.name}
+                    {t(upgrades.housing.next.name, { ns: 'structures' })}
                   </p>
                   <p>
-                    Daily Citizens:{' '}
+                    <Trans i18nKey="dailyCitizens" ns="upgrades" />:{' '}
                     {new Intl.NumberFormat().format(
                       upgrades.housing.next.citizensPerDay,
                     )}
@@ -168,20 +165,14 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                 upgrades.housing.next.requiredFortificationLevel ? (
                   <>
                     <p>
-                      Cost:{' '}
+                      <Trans i18nKey="cost" />:{' '}
                       {new Intl.NumberFormat().format(
                         upgrades.housing.next.cost,
                       )}{' '}
-                      <span className="text-gold">Gold</span>
+                      <span className="text-gold"><Trans i18nKey="gold" /></span>
                     </p>
                     <p className="bg-cyan-800/40 border border-cyan-900/80 text-sm font-medium text-cyan-40 p-2 rounded-md">
-                      Your fortification must be at least{' '}
-                      {
-                        structureUpgrades.fortification[
-                          upgrades.housing.next.requiredFortificationLevel
-                        ].name
-                      }{' '}
-                      to upgrade
+                      <Trans i18nKey="fortificationRequirement" ns="upgrades" values={{name: structureUpgrades.fortification[upgrades.housing.next.requiredFortificationLevel].name}} />
                     </p>
                   </>
                 ) : (
@@ -194,15 +185,13 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                       upgrades.housing.next.cost
                     }
                   >
-                    Upgrade for{' '}
-                    {new Intl.NumberFormat().format(upgrades.housing.next.cost)}{' '}
-                    Gold
+                    <Trans i18nKey="upgradeFor" ns="upgrades" values={{gold: new Intl.NumberFormat().format(upgrades.housing.next.cost)}} />
                   </Button>
                 )}
               </>
             ) : (
               <p className="text-zinc-200">
-                There are currently no more available fortification upgrades
+                <Trans i18nKey="noMoreHousingUpgrades" ns="upgrades" />
               </p>
             )}
           </div>

@@ -1,0 +1,13 @@
+{
+    "currentFortification": "Current Fortification",
+    "currentHousing": "Current Housing",
+    "dailyCitizens": "Daily Citizens",
+    "defenceBonus": "Defence Bonus",
+    "fortificationRequirement": "Your fortification must be at least {{name}} to upgrade",
+    "levelRequirement": "You need to be {{level}} to upgrade",
+    "nextHousing": "Next Housing",
+    "noMoreFortificationUpgrades": "There are currently no more available fortification upgrades",
+    "noMoreHousingUpgrades": "There are currently no more available housing upgrades",
+    "playerLevel": "Current Player Level",
+    "upgradeFor": "Upgrade for {{gold}} gold"
+}

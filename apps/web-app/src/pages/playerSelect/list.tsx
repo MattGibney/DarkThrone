@@ -2,6 +2,7 @@ import DarkThroneClient from '@darkthrone/client-library';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Avatar, Button, Logo } from '@darkthrone/react-components';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
+import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -119,7 +120,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
           <div>
             <Button
-              text={'Logout'}
+              text={t('Logout', { ns: 'auth' })}
               variant="secondary"
               type="button"
               onClick={() => props.client.auth.logout()}

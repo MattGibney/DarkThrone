@@ -2,6 +2,8 @@ import { fortificationUpgrades } from '@darkthrone/game-data';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
 import Stat from '../../../components/home/Stat';
+import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
 interface OverviewPageProps {
   client: DarkThroneClient;
@@ -17,60 +19,69 @@ export default function OverviewPage(props: OverviewPageProps) {
 
   const stats = [
     {
-      name: 'Population',
+      stat: 'population',
       value: new Intl.NumberFormat('en-GB').format(population),
     },
     {
-      name: 'Army Size',
+      stat: 'armySize',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.armySize,
       ),
     },
-    { name: 'Level', value: props.client.authenticatedPlayer.level },
     {
-      name: 'Experience',
+      stat: 'level',
+      value: props.client.authenticatedPlayer.level,
+    },
+    {
+      stat: 'experience',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.experience,
       ),
     },
     {
-      name: 'Fortification',
+      stat: 'fortification',
       value:
         fortificationUpgrades[
           props.client.authenticatedPlayer.structureUpgrades.fortification
         ].name,
     },
     {
-      name: 'Citizens Per Day',
+      stat: 'citizensPerDay',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.citizensPerDay,
       ),
     },
     {
-      name: 'Attack Turns',
+      stat: 'attackTurns',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.attackTurns,
       ),
     },
     {
-      name: 'Gold',
+      stat: 'gold',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.gold,
       ),
-      additional:
-        'Gold per turn: ' +
-        new Intl.NumberFormat('en-GB').format(
-          props.client.authenticatedPlayer.goldPerTurn,
-        ),
+      additional: {
+        translation: {
+          values: {
+            gold: new Intl.NumberFormat('en-GB').format(
+              props.client.authenticatedPlayer.goldPerTurn,
+            ),
+          },
+          key: 'goldPerTurn',
+          context: 'amount',
+        },
+      },
     },
     {
-      name: 'Attack Strength',
+      stat: 'attackStrength',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.attackStrength,
       ),
     },
     {
-      name: 'Defence Strength',
+      stat: 'defenceStrength',
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.defenceStrength,
       ),
@@ -83,19 +94,24 @@ export default function OverviewPage(props: OverviewPageProps) {
 
       <div className="my-12 flex flex-col gap-12">
         <h2 className="text-2xl font-semibold text-zinc-200 text-center">
-          {props.client.authenticatedPlayer.name}{' '}
-          <span className="text-yellow-600">is an</span>{' '}
-          <span className="capitalize">
-            {props.client.authenticatedPlayer.race}
-          </span>{' '}
-          <span className="capitalize">
-            {props.client.authenticatedPlayer.class}
-          </span>
+          <Trans
+            i18nKey="whoAmI"
+            values={{
+              playerName: props.client.authenticatedPlayer.name,
+              race: t(props.client.authenticatedPlayer.race),
+              class: t(props.client.authenticatedPlayer.class),
+            }}
+          >
+            <span></span>
+            <span className="text-yellow-600"></span>
+            <span className="capitalize"></span>
+            <span className="capitalize"></span>
+          </Trans>
         </h2>
 
         <div className="flex justify-around text-lg text-zinc-300">
           <div>
-            Level:{' '}
+            <Trans i18nKey="level" />:{' '}
             <span className="text-white font-bold">
               {new Intl.NumberFormat().format(
                 props.client.authenticatedPlayer.level,
@@ -103,7 +119,7 @@ export default function OverviewPage(props: OverviewPageProps) {
             </span>
           </div>
           <div>
-            Overall Rank:{' '}
+            <Trans i18nKey="overallRank" />:{' '}
             <span className="text-white font-bold">
               {new Intl.NumberFormat().format(
                 props.client.authenticatedPlayer.overallRank,
@@ -116,7 +132,7 @@ export default function OverviewPage(props: OverviewPageProps) {
       {/* lg:grid-cols-4 */}
       <dl className="mx-auto grid grid-cols-1 gap-px bg-zinc-900/5 sm:grid-cols-2 md:grid-cols-5 rounded-xl overflow-hidden">
         {stats.map((stat) => (
-          <Stat key={stat.name} {...stat} />
+          <Stat key={stat.stat} {...stat} />
         ))}
       </dl>
     </div>

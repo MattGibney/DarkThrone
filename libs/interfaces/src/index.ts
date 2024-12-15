@@ -101,3 +101,9 @@ export type HousingUpgrade = StructureUpgrade & {
   type: 'housing';
   citizensPerDay: number;
 };
+
+export interface Translation {
+  key: string;
+  values?: object;
+  context?: string;
+}
