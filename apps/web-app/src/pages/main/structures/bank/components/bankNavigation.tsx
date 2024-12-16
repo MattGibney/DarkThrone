@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import { classNames } from '../../../../../utils';
+import { Trans } from 'react-i18next';
 
 const tabs = [
-  { name: 'Deposit', href: '/bank/deposit' },
-  { name: 'Withdraw', href: '/bank/withdraw' },
-  { name: 'Bank History', href: '/bank/history' },
+  { name: 'deposit', href: '/bank/deposit' },
+  { name: 'withdraw', href: '/bank/withdraw' },
+  { name: 'bankHistory', href: '/bank/history' },
   // { name: 'Economy', href: '/bank/economy' },
 ];
 
@@ -27,7 +28,9 @@ export default function BankNavigation() {
         >
           {({ isActive }) => (
             <>
-              <span>{tab.name}</span>
+              <span>
+                <Trans i18nKey={tab.name} ns="bank" />
+              </span>
               <span
                 aria-hidden="true"
                 className={classNames(

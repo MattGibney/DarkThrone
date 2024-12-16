@@ -4,7 +4,7 @@ import { UnitTypes } from '@darkthrone/game-data';
 export enum UnitType {
   SUPPORT = 'support',
   OFFENSE = 'offense',
-  DEFENSE = 'defense',
+  DEFENCE = 'defence',
 }
 
 export type Unit = {
@@ -101,3 +101,9 @@ export type HousingUpgrade = StructureUpgrade & {
   type: 'housing';
   citizensPerDay: number;
 };
+
+export interface Translation {
+  key: string;
+  values?: object;
+  context?: string;
+}

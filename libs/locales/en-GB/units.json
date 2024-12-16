@@ -1,0 +1,6 @@
+{
+    "citizen": "Citizen",
+    "guard": "Guard",
+    "soldier": "Soldier",
+    "worker": "Worker"
+}

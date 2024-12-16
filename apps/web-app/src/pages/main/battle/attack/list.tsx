@@ -7,6 +7,7 @@ import { PlayerObject } from '@darkthrone/interfaces';
 import { Paginator } from '../../../../libs/pagination';
 import { Pagination } from '@darkthrone/react-components';
 import { attackableMinLevel, attackableMaxLevel } from '@darkthrone/game-data';
+import { Trans } from 'react-i18next';
 
 interface AttackListPageProps {
   client: DarkThroneClient;
@@ -67,8 +68,14 @@ export default function AttackListPage(props: AttackListPageProps) {
     <main>
       <SubNavigation />
       <h2 className="text-base font-semibold text-zinc-300 text-center">
-        You may attack a player from levels {attackableMinLevel(playerLevel)} to{' '}
-        {attackableMaxLevel(playerLevel)}.
+        <Trans
+          i18nKey="attackPlayerBetween"
+          ns="attack"
+          values={{
+            minLevel: attackableMinLevel(playerLevel),
+            maxLevel: attackableMaxLevel(playerLevel),
+          }}
+        />
       </h2>
       <div className="sm:px-6 lg:px-8">
         <div className="mt-8 flow-root">
@@ -81,37 +88,37 @@ export default function AttackListPage(props: AttackListPageProps) {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-16"
                     >
-                      Rank
+                      <Trans i18nKey="rank" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                     >
-                      Username
+                      <Trans i18nKey="username" ns="auth" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-6 sm:w-32"
                     >
-                      Gold
+                      <Trans i18nKey="gold" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                     >
-                      Army Size
+                      <Trans i18nKey="armySize" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-20"
                     >
-                      Level
+                      <Trans i18nKey="level" />
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-20"
                     >
-                      Race
+                      <Trans i18nKey="race" />
                     </th>
                   </tr>
                 </thead>

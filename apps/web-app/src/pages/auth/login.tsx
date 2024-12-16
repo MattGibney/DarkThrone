@@ -9,6 +9,8 @@ import {
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
+import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
 interface LoginPageProps {
   client: DarkThroneClient;
@@ -42,7 +44,7 @@ export default function LoginPage(props: LoginPageProps) {
           <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Login to your account
+          <Trans i18nKey="accountLogin" ns="auth" />
         </h2>
       </div>
 
@@ -62,7 +64,7 @@ export default function LoginPage(props: LoginPageProps) {
               type="email"
               autoComplete="email"
               required
-              displayName="Email address"
+              displayName={t('emailAddress', { ns: 'auth' })}
               value={email}
               setValue={(newVal) => setEmail(newVal)}
             />
@@ -74,7 +76,7 @@ export default function LoginPage(props: LoginPageProps) {
                 type="password"
                 autoComplete="current-password"
                 required
-                displayName="Password"
+                displayName={t('password', { ns: 'auth' })}
                 value={password}
                 setValue={(newVal) => setPassword(newVal)}
               />
@@ -84,31 +86,31 @@ export default function LoginPage(props: LoginPageProps) {
               <InputCheckbox
                 id="remember-me"
                 name="remember-me"
-                displayName="Remember me"
+                displayName={t('rememberMe', { ns: 'auth' })}
                 value={rememberMe}
                 setValue={(newVal) => setRememberMe(newVal)}
               />
 
               <div className="text-sm leading-6">
                 {/* <Link to="/forgot-password" className="font-semibold text-yellow-600 hover:text-yellow-500">
-                  Forgot password?
+                  {t('forgotPassword', { ns: 'auth' })}?
                 </Link> */}
               </div>
             </div>
 
             <div>
-              <Button type="submit" text="Login" />
+              <Button type="submit" text={t('login', { ns: 'auth' })} />
             </div>
           </form>
         </div>
 
         <p className="my-10 text-center text-sm text-zinc-500">
-          Not a member?{' '}
+          <Trans ns="auth" i18nKey="notAMember" />?{' '}
           <Link
             to="/register"
             className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
           >
-            Create an account now
+            <Trans ns="auth" i18nKey="createAccountNow" />
           </Link>
         </p>
 

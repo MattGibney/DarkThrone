@@ -71,3 +71,8 @@ This is the main frontend for the game and the interface that players use. It co
 ### Placeholder Site
 
 This is a temporary website that welcomes users into the game. It will be replaced with a proper marketing site in the future.
+
+
+## Language Translation (i18n)
+
+This project uses react-18next. It is expected that new translations follow the [IETF language tag](https://en.wikipedia.org/wiki/IETF_language_tag) with [ISO 3166-1](https://en.wikipedia.org/wiki/IETF_language_tag#ISO_3166-1_and_UN_M.49) being followed for subtagging of regional differences.

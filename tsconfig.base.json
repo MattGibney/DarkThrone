@@ -19,8 +19,10 @@
       "@darkthrone/game-data": ["libs/game-data/src/index.ts"],
       "@darkthrone/interfaces": ["libs/interfaces/src/index.ts"],
       "@darkthrone/react-components": ["libs/react-components/src/index.ts"],
-      "@darkthrone/shared-data": ["libs/shared-data/src/index.ts"]
-    }
+      "@darkthrone/shared-data": ["libs/shared-data/src/index.ts"],
+      "@darkthrone/locales/*": ["libs/locales/*"]
+    },
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "tmp"]
 }

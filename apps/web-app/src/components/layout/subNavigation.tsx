@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { globalNavigation } from '../../app';
+import { Trans } from 'react-i18next';
+import { t } from 'i18next';
 
-type Tab = { name: string; to: string; shouldRender: boolean };
+type Tab = {
+  name: string;
+  plural?: boolean;
+  to: string;
+  shouldRender: boolean;
+};
 export default function SubNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,7 +42,7 @@ export default function SubNavigation() {
       <div className="mx-auto">
         <div className="sm:hidden mt-4 sm:mt-0">
           <label htmlFor="tabs" className="sr-only">
-            Select a tab
+            <Trans i18nKey="selectTab" />
           </label>
           <select
             id="tabs"
@@ -46,7 +53,7 @@ export default function SubNavigation() {
           >
             {tabs.map((tab) => (
               <option key={tab.name} value={tab.to}>
-                {tab.name}
+                {t(tab.name, { count: tab.plural ? 2 : 1 })}
               </option>
             ))}
           </select>
@@ -62,7 +69,7 @@ export default function SubNavigation() {
                       isActive ? 'text-yellow-600' : ''
                     }
                   >
-                    {tab.name}
+                    {t(tab.name, { count: tab.plural ? 2 : 1 })}
                   </NavLink>
                 </li>
               ))}

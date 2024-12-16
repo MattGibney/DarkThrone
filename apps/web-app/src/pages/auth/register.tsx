@@ -3,6 +3,8 @@ import { Alert, Button, InputField, Logo } from '@darkthrone/react-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
+import { t } from 'i18next';
+import { Trans } from 'react-i18next';
 
 interface RegisterPageProps {
   client: DarkThroneClient;
@@ -24,13 +26,15 @@ export default function RegisterPage(props: RegisterPageProps) {
     setPasswordsError('');
     const matchingPasswords = password === confirmPassword;
     if (!matchingPasswords) {
-      setPasswordsError('Passwords do not match');
+      setPasswordsError(t('errors.passwordsDoNotMatch', { ns: 'auth' }));
       return;
     }
 
     const result = await props.client.auth.register(email, password);
     if (result.status === 'fail') {
-      setErrorMessages(result.data.map((err) => err.title));
+      setErrorMessages(
+        result.data.map((err) => t(err.title, { ns: 'errors' })),
+      );
       return;
     }
 
@@ -44,7 +48,7 @@ export default function RegisterPage(props: RegisterPageProps) {
           <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Create your account
+          <Trans i18nKey="createYourAccount" ns="auth" />
         </h2>
       </div>
 
@@ -53,8 +57,8 @@ export default function RegisterPage(props: RegisterPageProps) {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {errorMessages.length > 0 ? (
               <Alert
-                title="There was a problem"
-                messages={errorMessages}
+                title={t('genericProblem', { ns: 'errors' })}
+                messages={errorMessages.map((err) => t(err, { ns: 'errors' }))}
                 type="error"
               />
             ) : null}
@@ -64,7 +68,7 @@ export default function RegisterPage(props: RegisterPageProps) {
               type="email"
               autoComplete="email"
               required
-              displayName="Email address"
+              displayName={t('emailAddress', { ns: 'auth' })}
               value={email}
               setValue={(newVal) => setEmail(newVal)}
             />
@@ -75,7 +79,7 @@ export default function RegisterPage(props: RegisterPageProps) {
               type="password"
               autoComplete="new-password"
               required
-              displayName="Password"
+              displayName={t('password', { ns: 'auth' })}
               validationMessage={passwordsError}
               validationState={passwordsError ? 'invalid' : 'neutral'}
               value={password}
@@ -88,7 +92,7 @@ export default function RegisterPage(props: RegisterPageProps) {
               type="password"
               autoComplete="new-password"
               required
-              displayName="Confirm Password"
+              displayName={t('confirmPassword', { ns: 'auth' })}
               validationMessage={passwordsError}
               validationState={passwordsError ? 'invalid' : 'neutral'}
               value={confirmPassword}
@@ -99,19 +103,19 @@ export default function RegisterPage(props: RegisterPageProps) {
               <Button
                 onClick={() => handleSubmit}
                 type="submit"
-                text="Create Account"
+                text={t('createAccount', { ns: 'auth' })}
               />
             </div>
           </form>
         </div>
 
         <p className="my-10 text-center text-sm text-zinc-500">
-          Already a member?{' '}
+          <Trans i18nKey="alreadyMember" ns="auth" />?{' '}
           <Link
             to="/login"
             className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
           >
-            Login now
+            <Trans i18nKey="loginNow" ns="auth" />
           </Link>
         </p>
 

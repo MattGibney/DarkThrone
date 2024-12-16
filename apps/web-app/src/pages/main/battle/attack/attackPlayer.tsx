@@ -8,6 +8,8 @@ import {
   attackableMaxLevel,
   attackableMinLevel,
 } from '@darkthrone/game-data';
+import { t } from 'i18next';
+import { Trans } from 'react-i18next';
 
 interface AttackPlayerPageProps {
   client: DarkThroneClient;
@@ -45,7 +47,9 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
     e.preventDefault();
 
     if (!attackTurns || attackTurns < 1 || attackTurns > 10) {
-      setInvalidMessages(['Attack Turns must be between 1 and 10']);
+      setInvalidMessages([
+        t('errors.invalidAttackTurnsMinMax', { ns: 'attack' }),
+      ]);
       return;
     }
 
@@ -56,7 +60,9 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
       attackTurns,
     );
     if (attackResponse.status === 'fail') {
-      setInvalidMessages(attackResponse.data.map((error) => error.title));
+      setInvalidMessages(
+        attackResponse.data.map((error) => t(error.title, { ns: 'errors' })),
+      );
       return;
     }
 
@@ -69,12 +75,22 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
   if (player === undefined) return;
 
-  if (player === null) return <div>Player not found</div>;
+  if (player === null) {
+    return (
+      <div>
+        <Trans i18nKey="errors.playerNotFound" ns="attack" />
+      </div>
+    );
+  }
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
 
   if (isViewingSelf) {
-    return <div>You cannot attack yourself</div>;
+    return (
+      <div>
+        <Trans i18nKey="errors.noSelfAttack" ns="attack" />
+      </div>
+    );
   }
 
   const currentPlayerLevel = props.client.authenticatedPlayer?.level || 0;
@@ -83,9 +99,14 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
   if (!isAttackable) {
     return (
       <div>
-        You can only attack players with levels between{' '}
-        {attackableMinLevel(currentPlayerLevel)} and{' '}
-        {attackableMaxLevel(currentPlayerLevel)}
+        <Trans
+          i18nKey="errors.invalidAttackPlayerLevel"
+          ns="attack"
+          values={{
+            minLevel: attackableMinLevel(currentPlayerLevel),
+            maxLevel: attackableMaxLevel(currentPlayerLevel),
+          }}
+        />
       </div>
     );
   }
@@ -97,14 +118,18 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
           <div className="grow flex items-center gap-x-4">
             <Avatar race={player.race} url={player.avatarURL} />
             <div>
-              <div className="text-sm font-bold text-zinc-400">Attack</div>
+              <div className="text-sm font-bold text-zinc-400">
+                <Trans i18nKey="attack" />
+              </div>
               <div className="grow text-2xl font-semibold text-zinc-200">
                 {player.name}
               </div>
             </div>
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-sm font-bold text-zinc-400">Current Turns</div>
+            <div className="text-sm font-bold text-zinc-400">
+              <Trans i18nKey="currentTurns" />
+            </div>
             <div className="text-2xl font-light">
               {Intl.NumberFormat('en-GB').format(
                 props.client.authenticatedPlayer?.attackTurns || 0,
@@ -118,11 +143,15 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         onSubmit={handleAttack}
       >
         {invalidMessages.length > 0 ? (
-          <Alert messages={invalidMessages} type={'error'} />
+          <Alert
+            messages={invalidMessages.map((err) => t(err, { ns: 'errors' }))}
+            type={'error'}
+          />
         ) : null}
         <div className="flex justify-between items-center">
           <div>
-            Attack Turns <span className="text-sm text-zinc-400">(1 / 10)</span>
+            <Trans i18nKey="attackturns" />{' '}
+            <span className="text-sm text-zinc-400">(1 / 10)</span>
           </div>
           <input
             type="number"
@@ -137,14 +166,14 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         <div className="flex justify-end gap-x-4">
           <div>
             <Button
-              text={'Cancel'}
+              text={t('cancel')}
               variant="secondary"
               type="button"
               onClick={() => navigate(-1)}
             />
           </div>
           <div>
-            <Button text={'Attack'} type="submit" />
+            <Button text={t('attack')} type="submit" />
           </div>
         </div>
       </form>

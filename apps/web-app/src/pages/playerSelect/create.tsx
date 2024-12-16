@@ -96,7 +96,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     },
     {
       name: 'Elves',
-      bonusText: '+5% Defense bonus',
+      bonusText: '+5% Defence bonus',
       icon: () => (
         <svg
           className="fill-emerald-400"
@@ -111,7 +111,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     },
     {
       name: 'Goblins',
-      bonusText: '+5% Defense bonus',
+      bonusText: '+5% Defence bonus',
       icon: () => (
         <svg
           className="fill-red-400"
@@ -150,7 +150,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     {
       name: 'Cleric',
       class: 'cleric',
-      bonusText: '+5% Defense bonus',
+      bonusText: '+5% Defence bonus',
     },
     {
       name: 'Thief',

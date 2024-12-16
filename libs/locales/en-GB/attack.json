@@ -1,0 +1,16 @@
+{
+    "attackPlayerBetween": "You may attack a player from levels {{minLevel}} to {{maxLevel}}.",
+    "attackTurnsUsed_one": "{{turns}} attack turn was used",
+    "attackTurnsUsed_other": "{{turns}} attack turns were used",
+    "goldStolen": "Gold Stolen",
+    "playerAttack": "<0>{{attacker}}</0> attacks <1>{{defender}}</1>",
+    "playerStrength": "<0>{{player}}</0> has a strength of {{strength}}",
+    "victorious": "<0>{{player}}</0> is victorious",
+    "vs": "VS",
+    "errors": {
+        "invalidAttackPlayerLevel": "You can only attack players with levels between {{minLevel}} and {{maxLevel}}",
+        "invalidAttackTurnsMinMax": "Attack Turns must be between 1 and 10",
+        "noSelfAttack": "You cannot attack yourself",
+        "playerNotFound": "Player not found"
+    }
+}

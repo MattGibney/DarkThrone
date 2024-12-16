@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@darkthrone/react-components';
 import { PlayerObject } from '@darkthrone/interfaces';
+import { Trans } from 'react-i18next';
 
 interface WarHistoryViewProps {
   client: DarkThroneClient;
@@ -71,7 +72,7 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
           </div>
 
           <div className="font-bold text-xs text-zinc-400 p-6 flex flex-col justify-center">
-            VS
+            <Trans i18nKey="vs" ns="attack" />
           </div>
 
           <div className="w-1/4">
@@ -90,36 +91,64 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
         </div>
         <div className="flex flex-col items-center gap-y-3 bg-zinc-800 text-zinc-300 p-8">
           <p>
-            <span className="text-white font-semibold">
-              {attackingPlayer?.name}
-            </span>{' '}
-            attacked{' '}
-            <span className="text-white font-semibold">
-              {defendingPlayer?.name}
-            </span>
+            <Trans
+              i18nKey="playerAttack"
+              ns="attack"
+              values={{
+                attacker: attackingPlayer?.name,
+                defender: defendingPlayer?.name,
+              }}
+            >
+              <span className="text-white font-semibold"></span>
+              <span className="text-white font-semibold"></span>
+            </Trans>
           </p>
-          <p>{history?.attackTurnsUsed} attack turn(s) were used</p>
           <p>
-            <span className="text-white font-semibold">
-              {attackingPlayer?.name}
-            </span>{' '}
-            had a strength of {history?.attackerStrength}
+            <Trans
+              i18nKey="attackTurnsUsed"
+              ns="attack"
+              count={history?.attackTurnsUsed}
+              values={{ turns: history?.attackTurnsUsed }}
+            />
+          </p>
+          <p>
+            <Trans
+              i18nKey="playerStrength"
+              ns="attack"
+              values={{
+                player: attackingPlayer?.name,
+                strength: history?.attackerStrength,
+              }}
+            >
+              <span className="text-white font-semibold"></span>
+            </Trans>
           </p>
           {history?.defenderStrength !== undefined ? (
             <p>
-              <span className="text-white font-semibold">
-                {defendingPlayer?.name}
-              </span>{' '}
-              had a strength of {history?.defenderStrength}
+              <Trans
+                i18nKey="playerStrength"
+                ns="attack"
+                values={{
+                  player: defendingPlayer?.name,
+                  strength: history?.defenderStrength,
+                }}
+              >
+                <span className="text-white font-semibold"></span>
+              </Trans>
             </p>
           ) : null}
           <p>
-            <span className="text-white font-semibold">
-              {history?.isAttackerVictor
-                ? attackingPlayer?.name
-                : defendingPlayer?.name}
-            </span>{' '}
-            was victorous
+            <Trans
+              i18nKey="victorious"
+              ns="attack"
+              values={{
+                player: history?.isAttackerVictor
+                  ? attackingPlayer?.name
+                  : defendingPlayer?.name,
+              }}
+            >
+              <span className="text-white font-semibold"></span>
+            </Trans>
           </p>
         </div>
       </div>
