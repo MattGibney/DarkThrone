@@ -32,8 +32,8 @@ export default class PlayerUnitsModel {
     return UnitTypes[this.unitType].attack * this.quantity;
   }
 
-  calculateDefenceStrength(): number {
-    return UnitTypes[this.unitType].defence * this.quantity;
+  calculateDefenseStrength(): number {
+    return UnitTypes[this.unitType].defense * this.quantity;
   }
 
   calculateGoldPerTurn(): number {

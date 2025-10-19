@@ -160,7 +160,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     {
       name: 'Assassin',
       class: 'assassin',
-      bonusText: '+5% Intelligence bonus (spy defence and offence)',
+      bonusText: '+5% Intelligence bonus (spy defense and offence)',
     },
   ];
 

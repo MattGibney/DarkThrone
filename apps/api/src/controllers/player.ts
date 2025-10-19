@@ -128,4 +128,30 @@ export default {
     );
     res.status(200).json(await player.serialise());
   }),
+
+  POST_proficiencyPoints: protectPrivateAPI(
+    async (req: Request, res: Response) => {
+      const { points } = req.body;
+      const player = await req.ctx.modelFactory.player.fetchByID(
+        req.ctx,
+        req.ctx.authedPlayer.id,
+      );
+
+      await player
+        .upgradeProficiencyPoints(points)
+        .then(async () => {
+          res.status(200).json(await player.serialise());
+        })
+        .catch((err) => {
+          res.status(400).json({
+            errors: [
+              {
+                code: 'invalid_points',
+                title: err.message,
+              },
+            ],
+          });
+        });
+    },
+  ),
 };

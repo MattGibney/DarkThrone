@@ -3,6 +3,7 @@ import { Context } from '../../../src/app';
 import PlayerModel from '../../../src/models/player';
 import PlayerUnitsModel from '../../../src/models/playerUnits';
 import UserModel from '../../../src/models/user';
+import { levelXPArray } from '@darkthrone/game-data';
 
 const mockPlayerRow: PlayerRow = {
   id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
@@ -20,6 +21,13 @@ const mockPlayerRow: PlayerRow = {
     fortification: 0,
     housing: 0,
   },
+  proficiencyPoints: {
+    strength: 0,
+    constitution: 0,
+    wealth: 0,
+    dexterity: 0,
+    charisma: 0,
+  },
 };
 
 const mockPlayerUnits = [
@@ -27,7 +35,7 @@ const mockPlayerUnits = [
     unitType: 'worker',
     quantity: 10,
     calculateAttackStrength: jest.fn().mockReturnValue(40),
-    calculateDefenceStrength: jest.fn().mockReturnValue(50),
+    calculateDefenseStrength: jest.fn().mockReturnValue(50),
     calculateGoldPerTurn: jest.fn().mockReturnValue(100),
   } as unknown as PlayerUnitsModel,
 ];
@@ -78,7 +86,7 @@ describe('Model: Player', () => {
         'overallRank',
         'armySize',
         'attackStrength',
-        'defenceStrength',
+        'defenseStrength',
         'attackTurns',
         'experience',
         'goldInBank',
@@ -87,6 +95,8 @@ describe('Model: Player', () => {
         'depositHistory',
         'units',
         'structureUpgrades',
+        'proficiencyPoints',
+        'remainingProficiencyPoints',
       ]);
     });
     it('correctly populates all fields', async () => {
@@ -117,8 +127,9 @@ describe('Model: Player', () => {
         armySize: 0,
         attackTurns: 10,
         attackStrength: 44, // 40 from the mockPlayerUnits + 5% bonus for human
-        defenceStrength: 52,
+        defenseStrength: 52,
         depositHistory: [],
+        remainingProficiencyPoints: 0,
         goldInBank: 40,
         goldPerTurn: 10100,
         units: [
@@ -132,6 +143,27 @@ describe('Model: Player', () => {
           fortification: 0,
           housing: 0,
         },
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
+      });
+    });
+  });
+
+  describe('GET level', () => {
+    levelXPArray.map((testCase, index) => {
+      it(`should return level ${index + 1} based on experience ${testCase}`, async () => {
+        const mockCTX = {} as unknown as Context;
+        const mockXPPlayerRow = {
+          ...mockPlayerRow,
+          experience: testCase,
+        } as unknown as PlayerRow;
+        const player = new PlayerModel(mockCTX, mockXPPlayerRow, []);
+        expect(player.level).toEqual(index + 1);
       });
     });
   });
@@ -159,6 +191,36 @@ describe('Model: Player', () => {
     });
   });
 
+  describe('calculateCitizensPerDay', () => {
+    [
+      { housing: 0, expected: 26 },
+      { housing: 1, expected: 35 },
+      { housing: 2, expected: 45 },
+      { housing: 3, expected: 55 },
+      { housing: 4, expected: 65 },
+      { housing: 5, expected: 75 },
+      { housing: 6, expected: 85 },
+    ].map((testCase) => {
+      it(`should return the correct number of citizens per day for a housing level of ${testCase.housing}`, async () => {
+        const mockCTX = {} as unknown as Context;
+
+        const player = new PlayerModel(
+          mockCTX,
+          {
+            ...mockPlayerRow,
+            structureUpgrades: {
+              housing: testCase.housing,
+            },
+          } as unknown as PlayerRow,
+          [],
+        );
+        const citizensPerDay = player.citizensPerDay;
+
+        expect(citizensPerDay).toEqual(testCase.expected);
+      });
+    });
+  });
+
   describe('calculateAttackStrength', () => {
     [
       { race: 'human', class: 'fighter', expected: 110 },
@@ -180,6 +242,31 @@ describe('Model: Player', () => {
       { race: 'undead', class: 'cleric', expected: 105 },
       { race: 'undead', class: 'thief', expected: 105 },
       { race: 'undead', class: 'assassin', expected: 105 },
+
+      {
+        race: 'human',
+        class: 'fighter',
+        expected: 115,
+        proficiencyPoints: {
+          strength: 5,
+          constitution: 5,
+          wealth: 5,
+          dexterity: 5,
+          charisma: 5,
+        },
+      },
+      {
+        race: 'elf',
+        class: 'cleric',
+        expected: 105,
+        proficiencyPoints: {
+          strength: 5,
+          constitution: 5,
+          wealth: 5,
+          dexterity: 5,
+          charisma: 5,
+        },
+      },
     ].map((testCase) => {
       it(`calculate attack strength for a ${testCase.race} ${testCase.class}`, async () => {
         const mockCTX = {} as unknown as Context;
@@ -189,6 +276,13 @@ describe('Model: Player', () => {
           {
             race: testCase.race,
             class: testCase.class,
+            proficiencyPoints: testCase.proficiencyPoints ?? {
+              strength: 0,
+              constitution: 0,
+              wealth: 0,
+              dexterity: 0,
+              charisma: 0,
+            },
           } as unknown as PlayerRow,
           [],
         );
@@ -204,7 +298,7 @@ describe('Model: Player', () => {
     });
   });
 
-  describe('calculateDefenceStrength', () => {
+  describe('calculateDefenseStrength', () => {
     [
       { race: 'human', class: 'fighter', expected: 105 },
       { race: 'human', class: 'cleric', expected: 110 },
@@ -225,6 +319,31 @@ describe('Model: Player', () => {
       { race: 'undead', class: 'cleric', expected: 110 },
       { race: 'undead', class: 'thief', expected: 105 },
       { race: 'undead', class: 'assassin', expected: 105 },
+
+      {
+        race: 'human',
+        class: 'fighter',
+        expected: 110,
+        proficiencyPoints: {
+          strength: 5,
+          constitution: 5,
+          wealth: 5,
+          dexterity: 5,
+          charisma: 5,
+        },
+      },
+      {
+        race: 'elf',
+        class: 'cleric',
+        expected: 120,
+        proficiencyPoints: {
+          strength: 5,
+          constitution: 5,
+          wealth: 5,
+          dexterity: 5,
+          charisma: 5,
+        },
+      },
     ].map((testCase) => {
       it(`calculate attack strength for a ${testCase.race} ${testCase.class}`, async () => {
         const mockCTX = {} as unknown as Context;
@@ -234,17 +353,24 @@ describe('Model: Player', () => {
           {
             race: testCase.race,
             class: testCase.class,
+            proficiencyPoints: testCase.proficiencyPoints ?? {
+              strength: 0,
+              constitution: 0,
+              wealth: 0,
+              dexterity: 0,
+              charisma: 0,
+            },
           } as unknown as PlayerRow,
           [],
         );
         player.units = [
           {
-            calculateDefenceStrength: jest.fn().mockReturnValue(100),
+            calculateDefenseStrength: jest.fn().mockReturnValue(100),
           } as unknown as PlayerUnitsModel,
         ];
-        const defenceStrength = await player.calculateDefenceStrength();
+        const defenseStrength = await player.calculateDefenseStrength();
 
-        expect(defenceStrength).toEqual(testCase.expected);
+        expect(defenseStrength).toEqual(testCase.expected);
       });
     });
   });
@@ -281,12 +407,198 @@ describe('Model: Player', () => {
     });
   });
 
+  describe('calculateProficiencyPoints', () => {
+    [
+      {
+        experience: 0,
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
+        expected: {
+          total: 0,
+          remaining: 0,
+        },
+      },
+      {
+        experience: 404000, // level 26
+        proficiencyPoints: {
+          strength: 5,
+          constitution: 5,
+          wealth: 5,
+          dexterity: 4,
+          charisma: 5,
+        },
+        expected: {
+          total: 24,
+          remaining: 1,
+        },
+      },
+      {
+        experience: 818000, // level 38
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 5,
+          dexterity: 0,
+          charisma: 0,
+        },
+        expected: {
+          total: 5,
+          remaining: 32,
+        },
+      },
+    ].map((testCase) => {
+      it('should return proficiency points', async () => {
+        const mockCTX = {} as unknown as Context;
+        mockPlayerRow.proficiencyPoints = testCase.proficiencyPoints;
+        mockPlayerRow.experience = testCase.experience;
+        const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+        const proficiencyPoints = player.proficiencyPointsTotal;
+        const proficiencyPointsRemaining = player.proficiencyPointsRemaining;
+        expect(proficiencyPoints).toEqual(testCase.expected.total);
+        expect(proficiencyPointsRemaining).toEqual(testCase.expected.remaining);
+      });
+    });
+  });
+
+  describe('upgradePorficiencyPoints', () => {
+    [
+      {
+        experience: 0, // level 1 with 0 proficiency points spent
+        proficiencyPoints: {
+          strength: 0,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
+      },
+      {
+        experience: 64001, // level 10 with 9 proficiency points spent
+        proficiencyPoints: {
+          strength: 9,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        },
+      },
+    ].map((testCase) => {
+      it('should not upgrade the proficiency points if there are no points to upgrade', async () => {
+        const mockCTX = {
+          daoFactory: {
+            player: {
+              update: jest.fn().mockResolvedValue(mockPlayerRow),
+            },
+          },
+          logger: {
+            debug: jest.fn(),
+          },
+        } as unknown as Context;
+        mockPlayerRow.proficiencyPoints = testCase.proficiencyPoints;
+        mockPlayerRow.experience = testCase.experience;
+
+        const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+
+        const saveMock = jest.fn().mockResolvedValue({});
+        player.save = saveMock;
+        const newProficiencyPoints = {
+          strength: 2,
+          constitution: 0,
+          wealth: 0,
+          dexterity: 0,
+          charisma: 0,
+        };
+        expect(async () => {
+          await player.upgradeProficiencyPoints(newProficiencyPoints);
+        }).rejects.toThrow('Not enough proficiency points');
+
+        expect(mockCTX.logger.debug).toHaveBeenCalledWith(
+          {
+            pointsToAdd: newProficiencyPoints,
+          },
+          'Upgrading proficiency points',
+        );
+        expect(saveMock).not.toHaveBeenCalled();
+      });
+      [
+        {
+          experience: 13001, // level 3 with 0 proficiency points spent
+          proficiencyPoints: {
+            strength: 0,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          },
+        },
+        {
+          experience: 76001, // level 11 with 8 proficiency point spent
+          proficiencyPoints: {
+            strength: 8,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          },
+        },
+      ].map((testCase) => {
+        it('should upgrade the proficiency points', async () => {
+          const mockCTX = {
+            daoFactory: {
+              player: {
+                update: jest.fn().mockResolvedValue(mockPlayerRow),
+              },
+            },
+            logger: {
+              debug: jest.fn(),
+            },
+          } as unknown as Context;
+          mockPlayerRow.proficiencyPoints = testCase.proficiencyPoints;
+          mockPlayerRow.experience = testCase.experience;
+
+          const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+
+          const saveMock = jest.fn().mockResolvedValue({});
+          player.save = saveMock;
+          const newProficiencyPoints = {
+            strength: 2,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          };
+          await player.upgradeProficiencyPoints(newProficiencyPoints);
+
+          expect(mockCTX.logger.debug).toHaveBeenCalledWith(
+            {
+              pointsToAdd: newProficiencyPoints,
+            },
+            'Upgrading proficiency points',
+          );
+          expect(player.proficiencyPoints).toEqual({
+            strength: testCase.proficiencyPoints.strength + 2,
+            constitution: 0,
+            wealth: 0,
+            dexterity: 0,
+            charisma: 0,
+          });
+          expect(saveMock).toHaveBeenCalled();
+        });
+      });
+    });
+  });
+
   describe('attackPlayer', () => {
     it('should correctly record war history for a successful attack', async () => {
       const attackerPlayerRow = {
         id: 'PLR-01HQP5D6HM1XS3MNAQXZAWP61K',
         race: 'elf',
-        class: 'theif',
+        class: 'thief',
         gold: 100,
       } as unknown as PlayerRow;
       const attackerUnits = [
@@ -305,9 +617,9 @@ describe('Model: Player', () => {
       } as unknown as PlayerRow;
       const defenderUnits = [
         {
-          unitType: 'defence',
+          unitType: 'defense',
           quantity: 1,
-          calculateDefenceStrength: jest.fn().mockReturnValue(3),
+          calculateDefenseStrength: jest.fn().mockReturnValue(3),
         } as unknown as PlayerUnitsModel,
       ] as unknown as PlayerUnitsModel[];
 

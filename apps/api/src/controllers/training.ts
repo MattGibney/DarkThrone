@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import PlayerUnitsModel from '../models/playerUnits';
 import { APIError } from '@darkthrone/client-library';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
+import { applyBonuses, getCostModifier } from '../lib/bonusHelper';
 
 const validateTrainingInputs = (desiredUnits: PlayerUnits[]): APIError[] => {
   // Used for both training and untraining units.
@@ -58,10 +59,12 @@ export default {
       return;
     }
 
-    const totalCost = desiredUnits.reduce(
+    let totalCost = desiredUnits.reduce(
       (acc, unit) => acc + unit.quantity * UnitTypes[unit.unitType].cost,
       0,
     );
+    const bonus = getCostModifier(req.ctx.authedPlayer);
+    totalCost = applyBonuses(false, totalCost, bonus);
     if (totalCost > req.ctx.authedPlayer.gold) {
       res.status(400).send({
         errors: [
@@ -146,10 +149,12 @@ export default {
       return;
     }
 
-    const totalCost = desiredUnits.reduce(
+    let totalCost = desiredUnits.reduce(
       (acc, unit) => acc + unit.quantity * UnitTypes[unit.unitType].cost,
       0,
     );
+    const bonus = getCostModifier(req.ctx.authedPlayer);
+    totalCost = applyBonuses(false, totalCost, bonus);
     if (totalCost > req.ctx.authedPlayer.gold) {
       res.status(400).send({
         errors: [

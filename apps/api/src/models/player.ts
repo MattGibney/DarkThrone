@@ -23,6 +23,13 @@ import {
 } from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
 import { Paginator } from '../lib/paginator';
+import {
+  getAttackModifier,
+  getDefenseModifier,
+  getIncomeModifier,
+  getCostModifier,
+  applyBonuses,
+} from '../lib/bonusHelper';
 
 export default class PlayerModel {
   private ctx: Context;
@@ -44,14 +51,20 @@ export default class PlayerModel {
     fortification: number;
     housing: number;
   };
+  public proficiencyPoints: {
+    strength: number;
+    constitution: number;
+    wealth: number;
+    dexterity: number;
+    charisma: number;
+  };
 
   public units: PlayerUnitsModel[];
 
   constructor(ctx: Context, data: PlayerRow, units: PlayerUnitsModel[]) {
     this.ctx = ctx;
-
-    this.populateFromRow(data);
     this.units = units;
+    this.populateFromRow(data);
   }
 
   async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
@@ -74,7 +87,7 @@ export default class PlayerModel {
     if (!isAuthed) return playerObject;
 
     const attackStrength = await this.calculateAttackStrength();
-    const defenceStrength = await this.calculateDefenceStrength();
+    const defenseStrength = await this.calculateDefenseStrength();
     const goldPerTurn = await this.calculateGoldPerTurn();
 
     const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -82,7 +95,7 @@ export default class PlayerModel {
 
     const authedPlayerObject: AuthedPlayerObject = Object.assign(playerObject, {
       attackStrength: attackStrength,
-      defenceStrength: defenceStrength,
+      defenseStrength: defenseStrength,
       attackTurns: this.attackTurns,
       experience: this.experience,
       goldInBank: this.goldInBank,
@@ -98,6 +111,8 @@ export default class PlayerModel {
         quantity: unit.quantity,
       })),
       structureUpgrades: this.structureUpgrades,
+      proficiencyPoints: this.proficiencyPoints,
+      remainingProficiencyPoints: this.proficiencyPointsRemaining,
     });
 
     return authedPlayerObject;
@@ -153,13 +168,59 @@ export default class PlayerModel {
     return fortificationUpgrades[this.structureUpgrades.fortification];
   }
 
+  get proficiencyPointsTotal(): number {
+    return Object.values(this.proficiencyPoints).reduce(
+      (acc, points) => acc + points,
+      0,
+    );
+  }
+
+  get proficiencyPointsRemaining(): number {
+    // The player gets 1 proficiency point per level
+    // Since the player starts at level 1, we subtract 1 from the level
+    return this.level - 1 - this.proficiencyPointsTotal;
+  }
+
+  async upgradeProficiencyPoints(pointsToAdd: {
+    strength: number;
+    constitution: number;
+    wealth: number;
+    dexterity: number;
+    charisma: number;
+  }) {
+    this.ctx.logger.debug(
+      { pointsToAdd: pointsToAdd },
+      'Upgrading proficiency points',
+    );
+
+    for (const [key, value] of Object.entries(pointsToAdd)) {
+      if (value < 0) {
+        throw new Error(`${key} cannot be less than 0`);
+      }
+    }
+
+    const totalPointsToAdd = Object.values(pointsToAdd).reduce(
+      (acc, point) => acc + point,
+      0,
+    );
+
+    if (totalPointsToAdd > this.proficiencyPointsRemaining) {
+      throw new Error('Not enough proficiency points');
+    }
+    for (const [key, value] of Object.entries(pointsToAdd)) {
+      this.proficiencyPoints[key] += value;
+    }
+    await this.save();
+  }
+
   async upgradeStructure(
     type: keyof typeof structureUpgrades,
     desiredUpgrade: StructureUpgrade,
   ) {
     this.ctx.logger.debug({ type }, 'Upgrading structure');
-
-    this.gold -= desiredUpgrade.cost;
+    const bonus = getCostModifier(this);
+    const cost = applyBonuses(false, desiredUpgrade.cost, bonus);
+    this.gold -= Math.floor(cost);
     this.structureUpgrades[type] += 1;
 
     this.save();
@@ -170,35 +231,19 @@ export default class PlayerModel {
       (acc, unit) => acc + unit.calculateAttackStrength(),
       0,
     );
-    if (this.race === 'human' || this.race === 'undead') {
-      // Humans and Undead get a 5% bonus to attack strength
-      offense *= 1.05;
-    }
-    if (this.class === 'fighter') {
-      // Fighters get a 5% bonus to attack strength
-      offense *= 1.05;
-    }
+    const bonus = getAttackModifier(this);
+    offense = applyBonuses(true, offense, bonus);
     return Math.floor(offense);
   }
 
-  async calculateDefenceStrength(): Promise<number> {
-    let defence = this.units.reduce(
-      (acc, unit) => acc + unit.calculateDefenceStrength(),
+  async calculateDefenseStrength(): Promise<number> {
+    let defense = this.units.reduce(
+      (acc, unit) => acc + unit.calculateDefenseStrength(),
       0,
     );
-    if (this.race === 'elf' || this.race === 'goblin') {
-      // Elves and Goblins get a 5% bonus to defence strength
-      defence *= 1.05;
-    }
-    if (this.class === 'cleric') {
-      // Clerics get a 5% bonus to defence strength
-      defence *= 1.05;
-    }
-
-    const fortificationBonus = this.fortification.defenceBonusPercentage;
-    defence *= 1 + fortificationBonus / 100;
-
-    return Math.floor(defence);
+    const bonus = getDefenseModifier(this);
+    defense = applyBonuses(true, defense, bonus);
+    return Math.floor(defense);
   }
 
   async calculateGoldPerTurn(): Promise<number> {
@@ -206,11 +251,9 @@ export default class PlayerModel {
       (acc, unit) => acc + unit.calculateGoldPerTurn(),
       0,
     );
-    if (this.class === 'thief') {
-      // Thieves get a 5% bonus to gold per turn
-      goldPerTurn *= 1.05;
-    }
 
+    const bonus = getIncomeModifier(this);
+    goldPerTurn = applyBonuses(true, goldPerTurn, bonus);
     const fortificationGoldPerTurn = this.fortification.goldPerTurn;
     goldPerTurn += fortificationGoldPerTurn;
 
@@ -235,12 +278,12 @@ export default class PlayerModel {
     const warHistoryID = `WRH-${ulid()}`;
 
     const playerAttackStrength = await this.calculateAttackStrength();
-    const targetPlayerDefenceStrength =
-      await targetPlayer.calculateDefenceStrength();
+    const targetPlayerDefenseStrength =
+      await targetPlayer.calculateDefenseStrength();
 
     const isVictor = this.determineIsVictor(
       playerAttackStrength,
-      targetPlayerDefenceStrength,
+      targetPlayerDefenseStrength,
     );
 
     // Calculate XP
@@ -261,7 +304,7 @@ export default class PlayerModel {
         attack_turns_used: attackTurns,
         is_attacker_victor: false,
         attacker_strength: playerAttackStrength,
-        defender_strength: targetPlayerDefenceStrength,
+        defender_strength: targetPlayerDefenseStrength,
         gold_stolen: 0,
         created_at: new Date(),
         attacker_experience: 0,
@@ -293,7 +336,7 @@ export default class PlayerModel {
       attack_turns_used: attackTurns,
       is_attacker_victor: true,
       attacker_strength: playerAttackStrength,
-      defender_strength: targetPlayerDefenceStrength,
+      defender_strength: targetPlayerDefenseStrength,
       gold_stolen: winnings,
       created_at: new Date(),
       attacker_experience: victorExperience,
@@ -313,6 +356,7 @@ export default class PlayerModel {
         experience: this.experience,
         overall_rank: this.overallRank,
         structureUpgrades: this.structureUpgrades,
+        proficiencyPoints: this.proficiencyPoints,
       },
     );
 
@@ -336,6 +380,13 @@ export default class PlayerModel {
     this.structureUpgrades = {
       fortification: row.structureUpgrades?.fortification || 0,
       housing: row.structureUpgrades?.housing || 0,
+    };
+    this.proficiencyPoints = {
+      strength: row.proficiencyPoints?.strength || 0,
+      constitution: row.proficiencyPoints?.constitution || 0,
+      wealth: row.proficiencyPoints?.wealth || 0,
+      dexterity: row.proficiencyPoints?.dexterity || 0,
+      charisma: row.proficiencyPoints?.charisma || 0,
     };
   }
 

@@ -112,6 +112,10 @@ export default function HeaderBar(props: HeaderBarProps) {
                     aria-hidden="true"
                   >
                     {props.client.authenticatedPlayer?.name}
+                    {(props.client.authenticatedPlayer
+                      ?.remainingProficiencyPoints || 0) > 0 && (
+                      <span className="ml-2 h-2 w-2 rounded-full bg-red-500 inline-block" />
+                    )}
                   </span>
                   <ChevronDownIcon
                     className="ml-2 h-5 w-5 text-zinc-300"
@@ -128,6 +132,19 @@ export default function HeaderBar(props: HeaderBarProps) {
                   onClick={() => handleSwitchPlayer()}
                 >
                   Switch Players
+                </button>
+              </MenuItem>
+              <MenuItem>
+                <button
+                  type="button"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-[focus]:bg-zinc-800/50"
+                  onClick={() => navigate('/proficiency-points')}
+                >
+                  Proficiency Points
+                  {(props.client.authenticatedPlayer
+                    ?.remainingProficiencyPoints || 0) > 0 && (
+                    <span className="ml-2 h-2 w-2 rounded-full bg-red-500 inline-block" />
+                  )}
                 </button>
               </MenuItem>
               <MenuItem>

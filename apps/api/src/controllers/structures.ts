@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 import { structureUpgrades } from '@darkthrone/game-data';
+import { applyBonuses, getCostModifier } from '../lib/bonusHelper';
 
 export default {
   POST_upgradeStructure: protectPrivateAPI(
@@ -49,7 +50,9 @@ export default {
         }
       }
 
-      if (req.ctx.authedPlayer.gold < nextStructureUpgrade.cost) {
+      const bonus = getCostModifier(req.ctx.authedPlayer);
+      const cost = applyBonuses(false, nextStructureUpgrade.cost, bonus);
+      if (req.ctx.authedPlayer.gold < Math.floor(cost)) {
         res.status(400).send({
           errors: [
             {
