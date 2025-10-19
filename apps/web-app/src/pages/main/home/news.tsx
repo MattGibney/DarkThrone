@@ -1,5 +1,5 @@
 import SubNavigation from '../../../components/layout/subNavigation';
-import DarkThroneClient from '@darkthrone/client-library';
+// import DarkThroneClient from '@darkthrone/client-library';
 import { Pagination } from '@darkthrone/react-components';
 
 import Markdown from 'react-markdown';
@@ -8,10 +8,10 @@ import { useSearchParams } from 'react-router-dom';
 import { NewsPost } from '@darkthrone/interfaces';
 import { newsPosts } from '@darkthrone/shared-data';
 
-interface NewsPageProps {
-  client: DarkThroneClient;
-}
-export default function NewsPage(props: NewsPageProps) {
+// interface NewsPageProps {
+//   client: DarkThroneClient;
+// }
+export default function NewsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const itemsPerPage = 5;
@@ -59,9 +59,9 @@ export default function NewsPage(props: NewsPageProps) {
                 }).format(n.date)}
               </div>
             </div>
-            <Markdown className="p-4 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert">
-              {n.content}
-            </Markdown>
+            <div className="p-4 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert">
+              <Markdown>{n.content}</Markdown>
+            </div>
           </div>
         ))}
       </div>
