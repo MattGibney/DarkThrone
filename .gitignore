@@ -46,3 +46,5 @@ apps/api/data
 .nx/cache
 .nx/workspace-data
 vite.config.*.timestamp*
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
