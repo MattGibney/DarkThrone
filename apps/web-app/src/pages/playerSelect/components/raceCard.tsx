@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { PlayerRace } from '@darkthrone/interfaces';
 import { tv } from 'tailwind-variants';
 
