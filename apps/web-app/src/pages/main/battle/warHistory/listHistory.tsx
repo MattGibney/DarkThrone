@@ -1,6 +1,7 @@
 import DarkThroneClient, { WarHistoryObject } from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
 
@@ -8,6 +9,7 @@ interface ListWarHistoryProps {
   client: DarkThroneClient;
 }
 export default function ListWarHistory(props: ListWarHistoryProps) {
+  const { t } = useTranslation('battle');
   const navigate = useNavigate();
 
   const [historyItems, setHistoryItems] = useState<WarHistoryObject[]>([]);
@@ -44,7 +46,7 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
 
   function getNameForID(id: string) {
     const player = players.find((player) => player.id === id);
-    if (!player) return 'Unknown';
+    if (!player) return t('warHistory.unknownPlayer');
     return player.name;
   }
 
@@ -62,19 +64,19 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                     >
-                      Description
+                      {t('warHistory.list.description')}
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                     >
-                      Gold Stolen
+                      {t('warHistory.list.goldStolen')}
                     </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                     >
-                      Date
+                      {t('warHistory.list.date')}
                     </th>
                   </tr>
                 </thead>
@@ -91,7 +93,7 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
                         <span className="font-bold text-white">
                           {getNameForID(historyItem.attackerID)}
                         </span>{' '}
-                        attacks{' '}
+                        {t('warHistory.list.attacks')}{' '}
                         <span className="font-bold text-white">
                           {getNameForID(historyItem.defenderID)}
                         </span>

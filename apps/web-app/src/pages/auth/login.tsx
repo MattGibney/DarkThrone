@@ -7,6 +7,7 @@ import {
   Logo,
 } from '@darkthrone/react-components';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
 
@@ -14,6 +15,7 @@ interface LoginPageProps {
   client: DarkThroneClient;
 }
 export default function LoginPage(props: LoginPageProps) {
+  const { t } = useTranslation('auth');
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -42,7 +44,7 @@ export default function LoginPage(props: LoginPageProps) {
           <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Login to your account
+          {t('login.title')}
         </h2>
       </div>
 
@@ -51,7 +53,7 @@ export default function LoginPage(props: LoginPageProps) {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {errorMessages.length > 0 ? (
               <Alert
-                title="There was a problem"
+                title={t('shared.errorTitle')}
                 messages={errorMessages}
                 type="error"
               />
@@ -62,7 +64,7 @@ export default function LoginPage(props: LoginPageProps) {
               type="email"
               autoComplete="email"
               required
-              displayName="Email address"
+              displayName={t('shared.emailLabel')}
               value={email}
               setValue={(newVal) => setEmail(newVal)}
             />
@@ -74,7 +76,7 @@ export default function LoginPage(props: LoginPageProps) {
                 type="password"
                 autoComplete="current-password"
                 required
-                displayName="Password"
+                displayName={t('shared.passwordLabel')}
                 value={password}
                 setValue={(newVal) => setPassword(newVal)}
               />
@@ -84,7 +86,7 @@ export default function LoginPage(props: LoginPageProps) {
               <InputCheckbox
                 id="remember-me"
                 name="remember-me"
-                displayName="Remember me"
+                displayName={t('login.rememberMe')}
                 value={rememberMe}
                 setValue={(newVal) => setRememberMe(newVal)}
               />
@@ -97,18 +99,18 @@ export default function LoginPage(props: LoginPageProps) {
             </div>
 
             <div>
-              <Button type="submit" text="Login" />
+              <Button type="submit" text={t('login.submit')} />
             </div>
           </form>
         </div>
 
         <p className="my-10 text-center text-sm text-zinc-500">
-          Not a member?{' '}
+          {t('login.cta.notMember')}{' '}
           <Link
             to="/register"
             className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
           >
-            Create an account now
+            {t('login.cta.createAccount')}
           </Link>
         </p>
 

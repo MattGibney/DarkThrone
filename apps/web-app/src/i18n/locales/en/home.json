@@ -1,0 +1,23 @@
+{
+  "news": {
+    "emptyState": "No news posts available."
+  },
+  "overview": {
+    "population": "Population",
+    "armySize": "Army Size",
+    "level": "Level",
+    "experience": "Experience",
+    "fortification": "Fortification",
+    "citizensPerDay": "Citizens Per Day",
+    "attackTurns": "Attack Turns",
+    "gold": "Gold",
+    "goldPerTurn": "Gold per turn",
+    "attackStrength": "Attack Strength",
+    "defenceStrength": "Defence Strength",
+    "isAn": "is an",
+    "labels": {
+      "level": "Level:",
+      "overallRank": "Overall Rank:"
+    }
+  }
+}

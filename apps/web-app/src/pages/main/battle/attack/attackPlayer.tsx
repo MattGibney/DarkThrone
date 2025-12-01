@@ -2,6 +2,7 @@ import DarkThroneClient from '@darkthrone/client-library';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Alert, Avatar, Button } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   attackableLevels,
@@ -13,6 +14,7 @@ interface AttackPlayerPageProps {
   client: DarkThroneClient;
 }
 export default function AttackPlayerPage(props: AttackPlayerPageProps) {
+  const { t } = useTranslation(['battle', 'common']);
   const navigate = useNavigate();
   const { playerID } = useParams<{ playerID: string }>();
 
@@ -45,7 +47,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
     e.preventDefault();
 
     if (!attackTurns || attackTurns < 1 || attackTurns > 10) {
-      setInvalidMessages(['Attack Turns must be between 1 and 10']);
+      setInvalidMessages([t('battle:attack.engage.validation.attackTurnsRange')]);
       return;
     }
 
@@ -69,12 +71,13 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
   if (player === undefined) return;
 
-  if (player === null) return <div>Player not found</div>;
+  if (player === null)
+    return <div>{t('battle:attack.engage.playerNotFound')}</div>;
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
 
   if (isViewingSelf) {
-    return <div>You cannot attack yourself</div>;
+    return <div>{t('battle:attack.engage.cannotAttackSelf')}</div>;
   }
 
   const currentPlayerLevel = props.client.authenticatedPlayer?.level || 0;
@@ -83,9 +86,10 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
   if (!isAttackable) {
     return (
       <div>
-        You can only attack players with levels between{' '}
-        {attackableMinLevel(currentPlayerLevel)} and{' '}
-        {attackableMaxLevel(currentPlayerLevel)}
+        {t('battle:attack.engage.levelRestriction', {
+          min: attackableMinLevel(currentPlayerLevel),
+          max: attackableMaxLevel(currentPlayerLevel),
+        })}
       </div>
     );
   }
@@ -97,14 +101,18 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
           <div className="grow flex items-center gap-x-4">
             <Avatar race={player.race} url={player.avatarURL} />
             <div>
-              <div className="text-sm font-bold text-zinc-400">Attack</div>
+              <div className="text-sm font-bold text-zinc-400">
+                {t('battle:attack.engage.heading')}
+              </div>
               <div className="grow text-2xl font-semibold text-zinc-200">
                 {player.name}
               </div>
             </div>
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-sm font-bold text-zinc-400">Current Turns</div>
+            <div className="text-sm font-bold text-zinc-400">
+              {t('battle:attack.engage.currentTurns')}
+            </div>
             <div className="text-2xl font-light">
               {Intl.NumberFormat('en-GB').format(
                 props.client.authenticatedPlayer?.attackTurns || 0,
@@ -122,7 +130,8 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         ) : null}
         <div className="flex justify-between items-center">
           <div>
-            Attack Turns <span className="text-sm text-zinc-400">(1 / 10)</span>
+            {t('battle:attack.engage.attackTurnsLabel')}{' '}
+            <span className="text-sm text-zinc-400">(1 / 10)</span>
           </div>
           <input
             type="number"
@@ -137,14 +146,17 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         <div className="flex justify-end gap-x-4">
           <div>
             <Button
-              text={'Cancel'}
+              text={t('common:actions.cancel')}
               variant="secondary"
               type="button"
               onClick={() => navigate(-1)}
             />
           </div>
           <div>
-            <Button text={'Attack'} type="submit" />
+            <Button
+              text={t('battle:attack.engage.actions.submit')}
+              type="submit"
+            />
           </div>
         </div>
       </form>

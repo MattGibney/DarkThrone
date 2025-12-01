@@ -3,6 +3,7 @@ import { Alert, Button, InputField } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import BankNavigation from './components/bankNavigation';
+import { useTranslation } from 'react-i18next';
 
 // TODO: Make dynamic based on structure upgrades
 const MAX_DEPOSITS = 3;
@@ -11,6 +12,7 @@ interface BankDepositPageProps {
   client: DarkThroneClient;
 }
 export default function BankDepositPage(props: BankDepositPageProps) {
+  const { t } = useTranslation('structures');
   const [inputAmount, setInputAmount] = useState<number>(0);
   // const [maxDepositAmount, setMaxDepositAmount] = useState<number>(0);
   const [depositsRemaining, setDepositsRemaining] =
@@ -47,19 +49,19 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     if (!playerGold) return;
 
     if (depositsRemaining < 1) {
-      setInvalidMessages(['You have reached the maximum deposits allowed.']);
+      setInvalidMessages([t('bank.deposit.maxReached')]);
       return;
     }
 
     const maxDeposit = Math.floor(playerGold * 0.8);
     if (amount < 1) {
-      setInvalidMessages(['You must deposit at least 1 gold.']);
+      setInvalidMessages([t('bank.deposit.minimum')]);
       return;
     }
     if (amount > maxDeposit) {
       setInvalidMessages([
-        'You may only deposit up to 80% of your gold at one time.',
-        `The maximum deposit amount is ${maxDeposit} gold.`,
+        t('bank.deposit.maxPercent'),
+        t('bank.deposit.maxAmount', { maxDeposit }),
       ]);
       return;
     }
@@ -90,7 +92,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
                 props.client.authenticatedPlayer.gold,
               )}
             </div>
-            <p>Gold on Hand</p>
+            <p>{t('bank.labels.goldOnHand')}</p>
           </div>
           <div className="flex flex-col items-center">
             <div className="text-yellow-500 text-2xl font-bold">
@@ -98,7 +100,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
                 props.client.authenticatedPlayer.goldInBank,
               )}
             </div>
-            <p>Gold in Bank</p>
+            <p>{t('bank.labels.goldInBank')}</p>
           </div>
         </div>
         <form
@@ -110,7 +112,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           ) : null}
           <div className="flex flex-col sm:flex-row gap-y-2 justify-between items-center text-zinc-400">
             <div>
-              Deposits Remaining:{' '}
+              {t('bank.deposit.remaining')}{' '}
               <span className="text-lg font-semibold text-white">
                 {depositsRemaining}
               </span>
@@ -125,15 +127,15 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           <div className="flex flex-col gap-y-4">
             <div className="flex gap-x-4">
               <Button
-                text={'Deposit Max'}
+                text={t('bank.deposit.depositMax')}
                 variant="primary-outline"
                 type="button"
                 onClick={handleDepositMax}
               />
-              <Button text={'Deposit'} type="submit" />
+              <Button text={t('bank.deposit.submit')} type="submit" />
             </div>
             <p className="text-sm text-zinc-300/50">
-              You may deposit up to 80% of your gold at one time.
+              {t('bank.deposit.maxPercent')}
             </p>
           </div>
         </form>

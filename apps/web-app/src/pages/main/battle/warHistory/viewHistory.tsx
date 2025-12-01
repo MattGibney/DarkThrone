@@ -2,6 +2,7 @@ import DarkThroneClient, { WarHistoryObject } from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Avatar } from '@darkthrone/react-components';
 import { PlayerObject } from '@darkthrone/interfaces';
 
@@ -9,6 +10,7 @@ interface WarHistoryViewProps {
   client: DarkThroneClient;
 }
 export default function WarHistoryView(props: WarHistoryViewProps) {
+  const { t } = useTranslation('battle');
   const { historyID } = useParams<{ historyID: string }>();
 
   const [history, setHistory] = useState<WarHistoryObject | null>(null);
@@ -71,7 +73,7 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
           </div>
 
           <div className="font-bold text-xs text-zinc-400 p-6 flex flex-col justify-center">
-            VS
+            {t('warHistory.view.vs')}
           </div>
 
           <div className="w-1/4">
@@ -89,38 +91,40 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
           </div>
         </div>
         <div className="flex flex-col items-center gap-y-3 bg-zinc-800 text-zinc-300 p-8">
-          <p>
-            <span className="text-white font-semibold">
-              {attackingPlayer?.name}
-            </span>{' '}
-            attacked{' '}
-            <span className="text-white font-semibold">
-              {defendingPlayer?.name}
-            </span>
-          </p>
-          <p>{history?.attackTurnsUsed} attack turn(s) were used</p>
-          <p>
-            <span className="text-white font-semibold">
-              {attackingPlayer?.name}
-            </span>{' '}
-            had a strength of {history?.attackerStrength}
-          </p>
-          {history?.defenderStrength !== undefined ? (
             <p>
               <span className="text-white font-semibold">
-                {defendingPlayer?.name}
+                {attackingPlayer?.name}
               </span>{' '}
-              had a strength of {history?.defenderStrength}
+              {t('warHistory.view.attacked')}{' '}
+              <span className="text-white font-semibold">
+                {defendingPlayer?.name}
+              </span>
             </p>
-          ) : null}
-          <p>
-            <span className="text-white font-semibold">
-              {history?.isAttackerVictor
-                ? attackingPlayer?.name
-                : defendingPlayer?.name}
-            </span>{' '}
-            was victorous
-          </p>
+            <p>
+              {history?.attackTurnsUsed} {t('warHistory.view.attackTurnsUsed')}
+            </p>
+            <p>
+              <span className="text-white font-semibold">
+                {attackingPlayer?.name}
+              </span>{' '}
+              {t('warHistory.view.strengthOf')} {history?.attackerStrength}
+            </p>
+            {history?.defenderStrength !== undefined ? (
+              <p>
+                <span className="text-white font-semibold">
+                  {defendingPlayer?.name}
+                </span>{' '}
+                {t('warHistory.view.strengthOf')} {history?.defenderStrength}
+              </p>
+            ) : null}
+            <p>
+              <span className="text-white font-semibold">
+                {history?.isAttackerVictor
+                  ? attackingPlayer?.name
+                  : defendingPlayer?.name}
+              </span>{' '}
+              {t('warHistory.view.victorious')}
+            </p>
         </div>
       </div>
     </main>

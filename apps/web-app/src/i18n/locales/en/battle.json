@@ -1,0 +1,76 @@
+{
+  "attack": {
+    "list": {
+      "range": "You may attack a player from levels {{min}} to {{max}}.",
+      "headers": {
+        "rank": "Rank",
+        "username": "Username",
+        "armySize": "Army Size",
+        "race": "Race"
+      }
+    },
+    "profile": {
+      "actions": {
+        "attack": "Attack",
+        "message": "Message Player",
+        "report": "Report"
+      },
+      "stats": {
+        "title": "Statistics",
+        "gold": "Gold",
+        "armySize": "Army Size",
+        "level": "Level",
+        "overallRank": "Overall Rank"
+      }
+    },
+    "engage": {
+      "playerNotFound": "Player not found",
+      "cannotAttackSelf": "You cannot attack yourself",
+      "levelRestriction": "You can only attack players with levels between {{min}} and {{max}}",
+      "heading": "Attack",
+      "currentTurns": "Current Turns",
+      "attackTurnsLabel": "Attack Turns",
+      "validation": {
+        "attackTurnsRange": "Attack Turns must be between 1 and 10"
+      },
+      "actions": {
+        "submit": "Attack"
+      }
+    }
+  },
+  "training": {
+    "stats": {
+      "citizens": "Citizens"
+    },
+    "table": {
+      "unitType": "Unit Type",
+      "attributes": "Attributes",
+      "youHave": "You Have",
+      "cost": "Cost",
+      "quantity": "Quantity"
+    },
+    "summary": {
+      "willCost": "This will cost {{cost}} gold."
+    },
+    "actions": {
+      "untrain": "Untrain",
+      "train": "Train"
+    }
+  },
+  "warHistory": {
+    "unknownPlayer": "Unknown",
+    "list": {
+      "description": "Description",
+      "goldStolen": "Gold Stolen",
+      "date": "Date",
+      "attacks": "attacks"
+    },
+    "view": {
+      "vs": "VS",
+      "attacked": "attacked",
+      "attackTurnsUsed": "attack turn(s) were used",
+      "strengthOf": "had a strength of",
+      "victorious": "was victorious"
+    }
+  }
+}

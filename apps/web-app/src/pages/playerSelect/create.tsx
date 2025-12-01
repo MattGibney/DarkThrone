@@ -1,26 +1,26 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Button, InputField, Logo } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
 import { useNavigate } from 'react-router-dom';
 import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
 
-//TODO: This should be handled by i18n
 const validationMessages = {
-  empty: 'Player name cannot be empty',
-  name_taken: 'This name is already taken',
-  invalid_characters:
-    'Player name must only contain letters, numbers and underscores',
-  too_short: 'Player name must be longer than 3 characters',
-  too_long: 'Player name cannot be lonmger than 20 characters',
-  available: 'This name is available',
+  empty: 'playerSelect.create.validation.playerName.empty',
+  name_taken: 'playerSelect.create.validation.playerName.nameTaken',
+  invalid_characters: 'playerSelect.create.validation.playerName.invalidCharacters',
+  too_short: 'playerSelect.create.validation.playerName.tooShort',
+  too_long: 'playerSelect.create.validation.playerName.tooLong',
+  available: 'playerSelect.create.validation.playerName.available',
 };
 
 interface CreatePlayerPageProps {
   client: DarkThroneClient;
 }
 export default function CreatePlayerPage(props: CreatePlayerPageProps) {
+  const { t } = useTranslation('account');
   const navigate = useNavigate();
 
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -50,7 +50,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     if (playerName.length === 0) {
       setPlayerNameStatus({
         isValid: false,
-        message: validationMessages['empty'],
+        message: t(validationMessages['empty']),
       });
       return;
     }
@@ -58,8 +58,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     const response = await props.client.players.validatePlayerName(playerName);
     if (response.status === 'fail') {
       const errorMessages = response.data.map(
-        (error) =>
-          validationMessages[error.code as keyof typeof validationMessages],
+        (error) => t(validationMessages[error.code as keyof typeof validationMessages]),
       );
       setPlayerNameStatus({
         isValid: false,
@@ -70,14 +69,14 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
     setPlayerNameStatus({
       isValid: true,
-      message: validationMessages['available'],
+      message: t(validationMessages['available']),
     });
   }
 
   const raceOptions: RaceCardProps[] = [
     {
-      name: 'Human',
-      bonusText: '+5% Offense bonus',
+      name: t('playerSelect.create.race.human.name'),
+      bonusText: t('playerSelect.create.race.human.bonus'),
       icon: () => (
         <svg
           className="fill-sky-400"
@@ -95,8 +94,8 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       race: 'human',
     },
     {
-      name: 'Elves',
-      bonusText: '+5% Defense bonus',
+      name: t('playerSelect.create.race.elf.name'),
+      bonusText: t('playerSelect.create.race.elf.bonus'),
       icon: () => (
         <svg
           className="fill-emerald-400"
@@ -110,8 +109,8 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       race: 'elf',
     },
     {
-      name: 'Goblins',
-      bonusText: '+5% Defense bonus',
+      name: t('playerSelect.create.race.goblin.name'),
+      bonusText: t('playerSelect.create.race.goblin.bonus'),
       icon: () => (
         <svg
           className="fill-red-400"
@@ -125,8 +124,8 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       race: 'goblin',
     },
     {
-      name: 'Undead',
-      bonusText: '+5% Offense bonus',
+      name: t('playerSelect.create.race.undead.name'),
+      bonusText: t('playerSelect.create.race.undead.bonus'),
       icon: () => (
         <svg
           className="fill-zinc-400"
@@ -143,24 +142,24 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
   const classOptions: ClassCardProps[] = [
     {
-      name: 'Fighter',
+      name: t('playerSelect.create.class.fighter.name'),
       class: 'fighter',
-      bonusText: '+5% Offence bonus',
+      bonusText: t('playerSelect.create.class.fighter.bonus'),
     },
     {
-      name: 'Cleric',
+      name: t('playerSelect.create.class.cleric.name'),
       class: 'cleric',
-      bonusText: '+5% Defense bonus',
+      bonusText: t('playerSelect.create.class.cleric.bonus'),
     },
     {
-      name: 'Thief',
+      name: t('playerSelect.create.class.thief.name'),
       class: 'thief',
-      bonusText: '+5% Income bonus',
+      bonusText: t('playerSelect.create.class.thief.bonus'),
     },
     {
-      name: 'Assassin',
+      name: t('playerSelect.create.class.assassin.name'),
       class: 'assassin',
-      bonusText: '+5% Intelligence bonus (spy defence and offence)',
+      bonusText: t('playerSelect.create.class.assassin.bonus'),
     },
   ];
 
@@ -181,7 +180,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
           <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Create new player
+          {t('playerSelect.create.title')}
         </h2>
       </div>
 
@@ -189,7 +188,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
         <div className="bg-zinc-800 sm:rounded-lg px-6 py-12 sm:px-12">
           <form className="space-y-12" onSubmit={handleCreatePlayer}>
             <InputField
-              displayName="Player Name"
+              displayName={t('playerSelect.create.form.playerName')}
               value={playerName}
               setValue={(newValue) => setPlayerName(newValue)}
               onBlur={() => validatePlayerName()}
@@ -206,7 +205,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
             <section>
               <h2 className="text-sm font-medium leading-6 text-zinc-200 mb-2">
-                Race
+                {t('playerSelect.create.form.raceLabel')}
               </h2>
               <div className="grid grid-cols-2 gap-6">
                 {raceOptions.map((option, optionIdx) => (
@@ -228,7 +227,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
             <section>
               <h2 className="text-sm font-medium leading-6 text-zinc-200 mb-2">
-                Class
+                {t('playerSelect.create.form.classLabel')}
               </h2>
               <div className="flex flex-col gap-6">
                 {classOptions.map((option, optionIdx) => (
@@ -247,7 +246,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
             </section>
 
             <Button
-              text="Create Player"
+              text={t('playerSelect.create.form.submit')}
               variant="primary"
               type="submit"
               isDisabled={!isFormValid}

@@ -1,0 +1,17 @@
+{
+  "resources": {
+    "gold": "Gold",
+    "level": "Level"
+  },
+  "labels": {
+    "date": "Date",
+    "amount": "Amount",
+    "type": "Type"
+  },
+  "actions": {
+    "cancel": "Cancel"
+  },
+  "status": {
+    "unknown": "Unknown"
+  }
+}

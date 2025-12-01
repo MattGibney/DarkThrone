@@ -1,0 +1,66 @@
+{
+  "playerSelect": {
+    "list": {
+      "title": "Player Select",
+      "or": "Or",
+      "createNew": "Create a new player",
+      "signedInAs": "Signed in as",
+      "logout": "Logout"
+    },
+    "create": {
+      "title": "Create new player",
+      "form": {
+        "playerName": "Player Name",
+        "raceLabel": "Race",
+        "classLabel": "Class",
+        "submit": "Create Player"
+      },
+      "validation": {
+        "playerName": {
+          "empty": "Player name cannot be empty",
+          "nameTaken": "This name is already taken",
+          "invalidCharacters": "Player name must only contain letters, numbers and underscores",
+          "tooShort": "Player name must be longer than 3 characters",
+          "tooLong": "Player name cannot be longer than 20 characters",
+          "available": "This name is available"
+        }
+      },
+      "race": {
+        "human": {
+          "name": "Human",
+          "bonus": "+5% Offense bonus"
+        },
+        "elf": {
+          "name": "Elves",
+          "bonus": "+5% Defense bonus"
+        },
+        "goblin": {
+          "name": "Goblins",
+          "bonus": "+5% Defense bonus"
+        },
+        "undead": {
+          "name": "Undead",
+          "bonus": "+5% Offense bonus"
+        }
+      },
+      "class": {
+        "fighter": {
+          "name": "Fighter",
+          "bonus": "+5% Offence bonus"
+        },
+        "cleric": {
+          "name": "Cleric",
+          "bonus": "+5% Defense bonus"
+        },
+        "thief": {
+          "name": "Thief",
+          "bonus": "+5% Income bonus"
+        },
+        "assassin": {
+          "name": "Assassin",
+          "bonus": "+5% Intelligence bonus (spy defence and offence)"
+        }
+      }
+    }
+  }
+}

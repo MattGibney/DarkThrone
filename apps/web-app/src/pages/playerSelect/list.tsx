@@ -3,12 +3,14 @@ import { PlayerObject } from '@darkthrone/interfaces';
 import { Avatar, Button, Logo } from '@darkthrone/react-components';
 import { ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 interface PlayerSelectListPageProps {
   client: DarkThroneClient;
 }
 export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
+  const { t } = useTranslation('account');
   const navigate = useNavigate();
 
   const [didLoad, setDidLoad] = useState(false);
@@ -46,7 +48,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
           <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Player Select
+          {t('playerSelect.list.title')}
         </h2>
       </div>
 
@@ -92,7 +94,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
                 </div>
                 <div className="relative flex justify-center">
                   <span className="bg-zinc-800 px-2 text-sm text-zinc-500">
-                    Or
+                    {t('playerSelect.list.or')}
                   </span>
                 </div>
               </div>
@@ -101,7 +103,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
           <Button
             type="button"
-            text={'Create a new player'}
+            text={t('playerSelect.list.createNew')}
             onClick={() => navigate('/player-select/create')}
             variant={players.length > 0 ? 'secondary' : 'primary'}
           />
@@ -111,7 +113,9 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
         </div>
         <div className="bg-black/25 sm:rounded-b-lg p-6 sm:px-12 flex justify-between items-center">
           <div>
-            <p className="text-sm text-zinc-400">Signed in as</p>
+            <p className="text-sm text-zinc-400">
+              {t('playerSelect.list.signedInAs')}
+            </p>
             <p className="truncate text-sm font-bold text-zinc-200">
               {props.client.authenticatedUser?.email}
             </p>
@@ -119,7 +123,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
           <div>
             <Button
-              text={'Logout'}
+              text={t('playerSelect.list.logout')}
               variant="secondary"
               type="button"
               onClick={() => props.client.auth.logout()}

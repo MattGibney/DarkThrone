@@ -1,6 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Avatar } from '@darkthrone/react-components';
 import { classNames } from '../../../../utils';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
@@ -10,6 +11,7 @@ interface AttackViewPlayerPageProps {
   client: DarkThroneClient;
 }
 export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
+  const { t } = useTranslation(['battle', 'common']);
   const navigate = useNavigate();
 
   const { playerID } = useParams<{ playerID: string }>();
@@ -39,7 +41,8 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
 
   if (player === undefined) return;
 
-  if (player === null) return <div>Player not found</div>;
+  if (player === null)
+    return <div>{t('battle:attack.engage.playerNotFound')}</div>;
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
   const isAttackable = attackableLevels(
@@ -48,35 +51,35 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
   );
   const items = [
     {
-      name: 'Attack',
+      name: t('battle:attack.profile.actions.attack'),
       navigate: `/attack/${player.id}`,
       isDisabled: isViewingSelf || !isAttackable,
     },
     // {
-    //   name: 'Message Player',
+    //   name: t('battle:attack.profile.actions.message'),
     //   isDisabled: isViewingSelf,
     // },
     // {
-    //   name: 'Report',
+    //   name: t('battle:attack.profile.actions.report'),
     //   isDisabled: isViewingSelf,
     // },
   ];
 
   const statistics = [
     {
-      name: 'Gold',
+      name: t('common:resources.gold'),
       value: new Intl.NumberFormat().format(player.gold),
     },
     {
-      name: 'Army Size',
+      name: t('battle:attack.profile.stats.armySize'),
       value: new Intl.NumberFormat().format(player.armySize),
     },
     {
-      name: 'Level',
+      name: t('common:resources.level'),
       value: player.level,
     },
     {
-      name: 'Overall Rank',
+      name: t('battle:attack.profile.stats.overallRank'),
       value: player.overallRank,
     },
   ];
@@ -151,7 +154,9 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
         </nav>
 
         <div>
-          <h3 className="font-bold mb-2 mx-2">Statistics</h3>
+          <h3 className="font-bold mb-2 mx-2">
+            {t('battle:attack.profile.stats.title')}
+          </h3>
           <div className="bg-zinc-800 text-zinc-200 rounded-lg text-sm">
             <dl className="divide-y divide-white/10">
               {statistics.map((statistic, index) => (

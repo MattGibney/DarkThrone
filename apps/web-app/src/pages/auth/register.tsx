@@ -1,6 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Alert, Button, InputField, Logo } from '@darkthrone/react-components';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
 
@@ -8,6 +9,7 @@ interface RegisterPageProps {
   client: DarkThroneClient;
 }
 export default function RegisterPage(props: RegisterPageProps) {
+  const { t } = useTranslation('auth');
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -24,7 +26,7 @@ export default function RegisterPage(props: RegisterPageProps) {
     setPasswordsError('');
     const matchingPasswords = password === confirmPassword;
     if (!matchingPasswords) {
-      setPasswordsError('Passwords do not match');
+      setPasswordsError(t('register.validation.passwordsNoMatch'));
       return;
     }
 
@@ -44,7 +46,7 @@ export default function RegisterPage(props: RegisterPageProps) {
           <Logo variant="large" />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Create your account
+          {t('register.title')}
         </h2>
       </div>
 
@@ -53,7 +55,7 @@ export default function RegisterPage(props: RegisterPageProps) {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {errorMessages.length > 0 ? (
               <Alert
-                title="There was a problem"
+                title={t('shared.errorTitle')}
                 messages={errorMessages}
                 type="error"
               />
@@ -64,7 +66,7 @@ export default function RegisterPage(props: RegisterPageProps) {
               type="email"
               autoComplete="email"
               required
-              displayName="Email address"
+              displayName={t('shared.emailLabel')}
               value={email}
               setValue={(newVal) => setEmail(newVal)}
             />
@@ -75,8 +77,10 @@ export default function RegisterPage(props: RegisterPageProps) {
               type="password"
               autoComplete="new-password"
               required
-              displayName="Password"
-              validationMessage={passwordsError}
+              displayName={t('shared.passwordLabel')}
+              validationMessage={
+                passwordsError ? t('register.validation.passwordsNoMatch') : undefined
+              }
               validationState={passwordsError ? 'invalid' : 'neutral'}
               value={password}
               setValue={(newVal) => setPassword(newVal)}
@@ -88,8 +92,10 @@ export default function RegisterPage(props: RegisterPageProps) {
               type="password"
               autoComplete="new-password"
               required
-              displayName="Confirm Password"
-              validationMessage={passwordsError}
+              displayName={t('register.confirmPasswordLabel')}
+              validationMessage={
+                passwordsError ? t('register.validation.passwordsNoMatch') : undefined
+              }
               validationState={passwordsError ? 'invalid' : 'neutral'}
               value={confirmPassword}
               setValue={(newVal) => setConfirmPassword(newVal)}
@@ -99,19 +105,19 @@ export default function RegisterPage(props: RegisterPageProps) {
               <Button
                 onClick={() => handleSubmit}
                 type="submit"
-                text="Create Account"
+                text={t('register.submit')}
               />
             </div>
           </form>
         </div>
 
         <p className="my-10 text-center text-sm text-zinc-500">
-          Already a member?{' '}
+          {t('register.cta.alreadyMember')}{' '}
           <Link
             to="/login"
             className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
           >
-            Login now
+            {t('register.cta.loginNow')}
           </Link>
         </p>
 

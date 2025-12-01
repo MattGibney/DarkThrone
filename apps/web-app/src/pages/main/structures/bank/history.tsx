@@ -1,11 +1,13 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import BankNavigation from './components/bankNavigation';
+import { useTranslation } from 'react-i18next';
 
 interface BankDepositPageProps {
   client: DarkThroneClient;
 }
 export default function BankHistoryPage(props: BankDepositPageProps) {
+  const { t } = useTranslation('structures');
   if (!props.client.authenticatedPlayer) return null;
 
   return (
@@ -23,19 +25,19 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
                   scope="col"
                   className="px-8 py-5 text-left text-sm font-semibold text-white"
                 >
-                  Date
+                  {t('bank.history.date')}
                 </th>
                 <th
                   scope="col"
                   className="px-8 py-5 text-sm text-right font-semibold text-white"
                 >
-                  Amount
+                  {t('bank.history.amount')}
                 </th>
                 <th
                   scope="col"
                   className="px-8 py-5 text-left text-sm font-semibold text-white"
                 >
-                  Type
+                  {t('bank.history.type')}
                 </th>
               </tr>
             </thead>
@@ -54,7 +56,9 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
                       {new Intl.NumberFormat().format(history.amount)}
                     </td>
                     <td className="whitespace-nowrap px-8 py-5 text-sm text-zinc-300">
-                      {history.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                      {history.type === 'deposit'
+                        ? t('bank.history.deposit')
+                        : t('bank.history.withdrawal')}
                     </td>
                   </tr>
                 ))}
@@ -63,7 +67,7 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
         </div>
 
         <div className="bg-zinc-800 p-8 mt-8 rounded-md text-zinc-400 text-sm font-semibold">
-          Only transactions within the last 24 hours are currently visible.
+          {t('bank.history.last24Hours')}
         </div>
       </div>
     </main>

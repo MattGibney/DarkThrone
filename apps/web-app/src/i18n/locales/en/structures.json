@@ -1,0 +1,62 @@
+{
+  "bank": {
+    "navigation": {
+      "deposit": "Deposit",
+      "withdraw": "Withdraw",
+      "history": "Bank History",
+      "economy": "Economy"
+    },
+    "labels": {
+      "goldOnHand": "Gold on Hand",
+      "goldInBank": "Gold in Bank"
+    },
+    "deposit": {
+      "maxReached": "You have reached the maximum deposits allowed.",
+      "minimum": "You must deposit at least 1 gold.",
+      "maxPercent": "You may only deposit up to 80% of your gold at one time.",
+      "maxAmount": "The maximum deposit amount is {{maxDeposit}} gold.",
+      "remaining": "Deposits Remaining:",
+      "depositMax": "Deposit Max",
+      "submit": "Deposit"
+    },
+    "history": {
+      "date": "Date",
+      "amount": "Amount",
+      "type": "Type",
+      "deposit": "Deposit",
+      "withdrawal": "Withdrawal",
+      "last24Hours": "Only transactions within the last 24 hours are currently visible."
+    },
+    "withdraw": {
+      "noGold": "You do not have any gold in the bank to withdraw.",
+      "tooMuch": "You cannot withdraw more gold than you have in the bank.",
+      "submit": "Withdraw"
+    }
+  },
+  "upgrades": {
+    "summary": {
+      "gold": "Gold",
+      "currentPlayerLevel": "Current Player Level"
+    },
+    "fortification": {
+      "current": "Current Fortification",
+      "next": "Next Upgrade",
+      "goldPerTurn": "Gold Per Turn:",
+      "defenceBonus": "Defence Bonus:",
+      "noMore": "There are currently no more available fortification upgrades"
+    },
+    "housing": {
+      "current": "Current Housing",
+      "next": "Next Housing",
+      "dailyCitizens": "Daily Citizens:"
+    },
+    "actions": {
+      "cost": "Cost:",
+      "goldLabel": "Gold",
+      "needLevel": "You need to be level",
+      "toUpgrade": "to upgrade",
+      "upgradeFor": "Upgrade for",
+      "needFortification": "Your fortification must be at least"
+    }
+  }
+}

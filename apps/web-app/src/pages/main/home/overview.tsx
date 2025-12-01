@@ -1,4 +1,5 @@
 import { fortificationUpgrades } from '@darkthrone/game-data';
+import { useTranslation } from 'react-i18next';
 import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
 import Stat from '../../../components/home/Stat';
@@ -8,6 +9,7 @@ interface OverviewPageProps {
 }
 
 export default function OverviewPage(props: OverviewPageProps) {
+  const { t } = useTranslation('home');
   if (!props.client.authenticatedPlayer) return null;
 
   const population = props.client.authenticatedPlayer.units.reduce(
@@ -17,60 +19,62 @@ export default function OverviewPage(props: OverviewPageProps) {
 
   const stats = [
     {
-      name: 'Population',
+      name: t('overview.population'),
       value: new Intl.NumberFormat('en-GB').format(population),
     },
     {
-      name: 'Army Size',
+      name: t('overview.armySize'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.armySize,
       ),
     },
-    { name: 'Level', value: props.client.authenticatedPlayer.level },
     {
-      name: 'Experience',
+      name: t('overview.level'),
+      value: props.client.authenticatedPlayer.level,
+    },
+    {
+      name: t('overview.experience'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.experience,
       ),
     },
     {
-      name: 'Fortification',
+      name: t('overview.fortification'),
       value:
         fortificationUpgrades[
           props.client.authenticatedPlayer.structureUpgrades.fortification
         ].name,
     },
     {
-      name: 'Citizens Per Day',
+      name: t('overview.citizensPerDay'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.citizensPerDay,
       ),
     },
     {
-      name: 'Attack Turns',
+      name: t('overview.attackTurns'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.attackTurns,
       ),
     },
     {
-      name: 'Gold',
+      name: t('overview.gold'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.gold,
       ),
       additional:
-        'Gold per turn: ' +
-        new Intl.NumberFormat('en-GB').format(
+        `${t('overview.goldPerTurn')}: ${new Intl.NumberFormat('en-GB').format(
           props.client.authenticatedPlayer.goldPerTurn,
-        ),
+        )}`,
     },
     {
-      name: 'Attack Strength',
+      name: t('overview.attackStrength'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.attackStrength,
       ),
     },
     {
-      name: 'Defence Strength',
+      name: t('overview.defenceStrength'),
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.defenceStrength,
       ),
@@ -79,12 +83,12 @@ export default function OverviewPage(props: OverviewPageProps) {
 
   return (
     <div>
-      <SubNavigation />
+          <SubNavigation />
 
       <div className="my-12 flex flex-col gap-12">
         <h2 className="text-2xl font-semibold text-zinc-200 text-center">
           {props.client.authenticatedPlayer.name}{' '}
-          <span className="text-yellow-600">is an</span>{' '}
+          <span className="text-yellow-600">{t('overview.isAn')}</span>{' '}
           <span className="capitalize">
             {props.client.authenticatedPlayer.race}
           </span>{' '}
@@ -95,7 +99,7 @@ export default function OverviewPage(props: OverviewPageProps) {
 
         <div className="flex justify-around text-lg text-zinc-300">
           <div>
-            Level:{' '}
+            {t('overview.labels.level')}{' '}
             <span className="text-white font-bold">
               {new Intl.NumberFormat().format(
                 props.client.authenticatedPlayer.level,
@@ -103,7 +107,7 @@ export default function OverviewPage(props: OverviewPageProps) {
             </span>
           </div>
           <div>
-            Overall Rank:{' '}
+            {t('overview.labels.overallRank')}{' '}
             <span className="text-white font-bold">
               {new Intl.NumberFormat().format(
                 props.client.authenticatedPlayer.overallRank,

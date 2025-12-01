@@ -2,12 +2,14 @@ import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../components/layout/subNavigation';
 import { Button, InputField } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UnitTypes } from '@darkthrone/game-data';
 
 interface TrainingScreenProps {
   client: DarkThroneClient;
 }
 export default function TrainingScreen(props: TrainingScreenProps) {
+  const { t } = useTranslation(['battle', 'common']);
   const [inpuValues, setInputValuess] = useState<{ [k: string]: number }>({});
   const [runningTotal, setRunningTotal] = useState(0);
   const [isValidInput, setIsValidInput] = useState(false);
@@ -82,7 +84,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
 
       <div className="border border-zinc-700/50 bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
         <div>
-          Gold{' '}
+          {t('common:resources.gold')}{' '}
           <span className="text-white font-bold text-md">
             {new Intl.NumberFormat().format(
               props.client.authenticatedPlayer?.gold || 0,
@@ -90,7 +92,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
           </span>
         </div>
         <div>
-          Citizens{' '}
+          {t('battle:training.stats.citizens')}{' '}
           <span className="text-white font-bold text-md">
             {new Intl.NumberFormat().format(
               props.client.authenticatedPlayer?.units.find(
@@ -112,31 +114,31 @@ export default function TrainingScreen(props: TrainingScreenProps) {
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                       >
-                        Unit Type
+                        {t('battle:training.table.unitType')}
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
                       >
-                        Attributes
+                        {t('battle:training.table.attributes')}
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                       >
-                        You Have
+                        {t('battle:training.table.youHave')}
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                       >
-                        Cost
+                        {t('battle:training.table.cost')}
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
                       >
-                        Quantity
+                        {t('battle:training.table.quantity')}
                       </th>
                     </tr>
                   </thead>
@@ -185,13 +187,14 @@ export default function TrainingScreen(props: TrainingScreenProps) {
         <div className="flex justify-end items-center  gap-x-4 mt-8">
           {runningTotal > 0 ? (
             <div className={isValidInput ? 'text-white/75' : 'text-red-500/75'}>
-              This will cost {new Intl.NumberFormat().format(runningTotal)}{' '}
-              gold.
+              {t('battle:training.summary.willCost', {
+                cost: new Intl.NumberFormat().format(runningTotal),
+              })}
             </div>
           ) : null}
           <div>
             <Button
-              text={'Untrain'}
+              text={t('battle:training.actions.untrain')}
               type="button"
               onClick={handleUnTrain}
               variant="secondary"
@@ -200,7 +203,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
           </div>
           <div>
             <Button
-              text={'Train'}
+              text={t('battle:training.actions.train')}
               type="submit"
               variant="primary"
               isDisabled={!isValidInput}
