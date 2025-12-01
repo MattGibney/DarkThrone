@@ -48,7 +48,8 @@
     "housing": {
       "current": "Current Housing",
       "next": "Next Housing",
-      "dailyCitizens": "Daily Citizens:"
+      "dailyCitizens": "Daily Citizens:",
+      "noMore": "There are currently no more available housing upgrades"
     },
     "actions": {
       "cost": "Cost:",

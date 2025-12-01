@@ -135,7 +135,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
               </>
             ) : (
               <p className="text-zinc-200">
-                {t('structures:upgrades.fortification.noMore')}
+                {t('structures:upgrades.housing.noMore')}
               </p>
             )}
           </div>
