@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@theme {
+  --font-display: "Marcellus SC", serif;
+}
+
 input[type=number]:hover::-webkit-inner-spin-button {
   opacity: 0;
 }
