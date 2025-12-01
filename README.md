@@ -10,9 +10,9 @@ You need to have the following installed on your machine:
 
 | Requirement | Version    |
 | ----------- | ---------- |
-| Node        | >= 20.11.0 |
-| NPM         | >= 10.2.0  |
-| PostgreSQL  | >= 14.0.0  |
+| Node        | >= 22.20.0 |
+| NPM         | >= 10.9.3  |
+| PostgreSQL  | >= 17.0.0  |
 
 <details>
   <summary>A note on development environment</summary>
