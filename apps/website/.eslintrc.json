@@ -4,7 +4,9 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
+      "rules": {
+        "i18next/no-literal-string": "off"
+      }
     },
     {
       "files": ["*.ts", "*.tsx"],

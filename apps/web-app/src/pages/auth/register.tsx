@@ -79,7 +79,9 @@ export default function RegisterPage(props: RegisterPageProps) {
               required
               displayName={t('shared.passwordLabel')}
               validationMessage={
-                passwordsError ? t('register.validation.passwordsNoMatch') : undefined
+                passwordsError
+                  ? t('register.validation.passwordsNoMatch')
+                  : undefined
               }
               validationState={passwordsError ? 'invalid' : 'neutral'}
               value={password}
@@ -94,7 +96,9 @@ export default function RegisterPage(props: RegisterPageProps) {
               required
               displayName={t('register.confirmPasswordLabel')}
               validationMessage={
-                passwordsError ? t('register.validation.passwordsNoMatch') : undefined
+                passwordsError
+                  ? t('register.validation.passwordsNoMatch')
+                  : undefined
               }
               validationState={passwordsError ? 'invalid' : 'neutral'}
               value={confirmPassword}

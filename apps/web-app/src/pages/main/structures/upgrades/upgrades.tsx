@@ -210,9 +210,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     }
                   >
                     {t('structures:upgrades.actions.upgradeFor')}{' '}
-                    {new Intl.NumberFormat().format(
-                      upgrades.housing.next.cost,
-                    )}{' '}
+                    {new Intl.NumberFormat().format(upgrades.housing.next.cost)}{' '}
                     {t('common:resources.gold')}
                   </Button>
                 )}

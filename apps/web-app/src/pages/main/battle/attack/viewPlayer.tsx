@@ -41,8 +41,9 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
 
   if (player === undefined) return;
 
-  if (player === null)
+  if (player === null) {
     return <div>{t('battle:attack.engage.playerNotFound')}</div>;
+  }
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
   const isAttackable = attackableLevels(

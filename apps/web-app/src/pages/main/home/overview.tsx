@@ -62,10 +62,9 @@ export default function OverviewPage(props: OverviewPageProps) {
       value: new Intl.NumberFormat('en-GB').format(
         props.client.authenticatedPlayer.gold,
       ),
-      additional:
-        `${t('overview.goldPerTurn')}: ${new Intl.NumberFormat('en-GB').format(
-          props.client.authenticatedPlayer.goldPerTurn,
-        )}`,
+      additional: `${t('overview.goldPerTurn')}: ${new Intl.NumberFormat(
+        'en-GB',
+      ).format(props.client.authenticatedPlayer.goldPerTurn)}`,
     },
     {
       name: t('overview.attackStrength'),
@@ -83,7 +82,7 @@ export default function OverviewPage(props: OverviewPageProps) {
 
   return (
     <div>
-          <SubNavigation />
+      <SubNavigation />
 
       <div className="my-12 flex flex-col gap-12">
         <h2 className="text-2xl font-semibold text-zinc-200 text-center">

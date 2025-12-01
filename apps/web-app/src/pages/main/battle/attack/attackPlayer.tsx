@@ -47,7 +47,9 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
     e.preventDefault();
 
     if (!attackTurns || attackTurns < 1 || attackTurns > 10) {
-      setInvalidMessages([t('battle:attack.engage.validation.attackTurnsRange')]);
+      setInvalidMessages([
+        t('battle:attack.engage.validation.attackTurnsRange'),
+      ]);
       return;
     }
 
@@ -71,8 +73,9 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
   if (player === undefined) return;
 
-  if (player === null)
+  if (player === null) {
     return <div>{t('battle:attack.engage.playerNotFound')}</div>;
+  }
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
 

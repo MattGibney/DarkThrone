@@ -9,7 +9,6 @@ interface BankWithdrawPageProps {
   client: DarkThroneClient;
 }
 export default function BankWithdrawPage(props: BankWithdrawPageProps) {
-
   const { t } = useTranslation('structures');
   const [inputAmount, setInputAmount] = useState<number>(0);
   const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
@@ -26,9 +25,7 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
     }
 
     if (inputAmount > playerGoldInBank) {
-      setInvalidMessages([
-        t('bank.withdraw.tooMuch'),
-      ]);
+      setInvalidMessages([t('bank.withdraw.tooMuch')]);
       return;
     }
 

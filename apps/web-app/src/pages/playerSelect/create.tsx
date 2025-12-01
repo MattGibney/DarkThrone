@@ -10,7 +10,8 @@ import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
 const validationMessages = {
   empty: 'playerSelect.create.validation.playerName.empty',
   name_taken: 'playerSelect.create.validation.playerName.nameTaken',
-  invalid_characters: 'playerSelect.create.validation.playerName.invalidCharacters',
+  invalid_characters:
+    'playerSelect.create.validation.playerName.invalidCharacters',
   too_short: 'playerSelect.create.validation.playerName.tooShort',
   too_long: 'playerSelect.create.validation.playerName.tooLong',
   available: 'playerSelect.create.validation.playerName.available',
@@ -57,8 +58,8 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
     const response = await props.client.players.validatePlayerName(playerName);
     if (response.status === 'fail') {
-      const errorMessages = response.data.map(
-        (error) => t(validationMessages[error.code as keyof typeof validationMessages]),
+      const errorMessages = response.data.map((error) =>
+        t(validationMessages[error.code as keyof typeof validationMessages]),
       );
       setPlayerNameStatus({
         isValid: false,

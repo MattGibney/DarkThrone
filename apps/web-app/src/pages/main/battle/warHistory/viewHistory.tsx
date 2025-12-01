@@ -91,40 +91,40 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
           </div>
         </div>
         <div className="flex flex-col items-center gap-y-3 bg-zinc-800 text-zinc-300 p-8">
+          <p>
+            <span className="text-white font-semibold">
+              {attackingPlayer?.name}
+            </span>{' '}
+            {t('warHistory.view.attacked')}{' '}
+            <span className="text-white font-semibold">
+              {defendingPlayer?.name}
+            </span>
+          </p>
+          <p>
+            {history?.attackTurnsUsed} {t('warHistory.view.attackTurnsUsed')}
+          </p>
+          <p>
+            <span className="text-white font-semibold">
+              {attackingPlayer?.name}
+            </span>{' '}
+            {t('warHistory.view.strengthOf')} {history?.attackerStrength}
+          </p>
+          {history?.defenderStrength !== undefined ? (
             <p>
-              <span className="text-white font-semibold">
-                {attackingPlayer?.name}
-              </span>{' '}
-              {t('warHistory.view.attacked')}{' '}
               <span className="text-white font-semibold">
                 {defendingPlayer?.name}
-              </span>
-            </p>
-            <p>
-              {history?.attackTurnsUsed} {t('warHistory.view.attackTurnsUsed')}
-            </p>
-            <p>
-              <span className="text-white font-semibold">
-                {attackingPlayer?.name}
               </span>{' '}
-              {t('warHistory.view.strengthOf')} {history?.attackerStrength}
+              {t('warHistory.view.strengthOf')} {history?.defenderStrength}
             </p>
-            {history?.defenderStrength !== undefined ? (
-              <p>
-                <span className="text-white font-semibold">
-                  {defendingPlayer?.name}
-                </span>{' '}
-                {t('warHistory.view.strengthOf')} {history?.defenderStrength}
-              </p>
-            ) : null}
-            <p>
-              <span className="text-white font-semibold">
-                {history?.isAttackerVictor
-                  ? attackingPlayer?.name
-                  : defendingPlayer?.name}
-              </span>{' '}
-              {t('warHistory.view.victorious')}
-            </p>
+          ) : null}
+          <p>
+            <span className="text-white font-semibold">
+              {history?.isAttackerVictor
+                ? attackingPlayer?.name
+                : defendingPlayer?.name}
+            </span>{' '}
+            {t('warHistory.view.victorious')}
+          </p>
         </div>
       </div>
     </main>
