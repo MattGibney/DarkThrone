@@ -28,6 +28,8 @@ export default [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
+      // TODO: enable rule and translate applications
+      'i18next/no-literal-string': 'off',
       '@nx/enforce-module-boundaries': [
         'error',
         {

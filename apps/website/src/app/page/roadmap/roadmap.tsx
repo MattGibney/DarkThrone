@@ -82,9 +82,9 @@ The original DarkThrone had a very active community, especially in the forums. W
                   </div>
                 </div>
 
-                <Markdown className="max-w-none prose prose-p:leading-6 prose-p:mb-2 prose-zinc prose-invert">
-                  {phase.description}
-                </Markdown>
+                <div className="max-w-none prose prose-p:leading-6 prose-p:mb-2 prose-zinc prose-invert">
+                  <Markdown>{phase.description}</Markdown>
+                </div>
               </div>
             </section>
           ))}

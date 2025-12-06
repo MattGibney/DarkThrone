@@ -55,9 +55,9 @@ export default function NewsPage() {
                   }).format(n.date)}
                 </div>
               </div>
-              <Markdown className="p-4 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert">
-                {n.content}
-              </Markdown>
+              <div className="p-4 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert">
+                <Markdown>{n.content}</Markdown>
+              </div>
             </div>
           ))}
           <Pagination
