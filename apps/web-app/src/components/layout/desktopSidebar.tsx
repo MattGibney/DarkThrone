@@ -1,9 +1,7 @@
 import { Logo } from '@darkthrone/react-components';
 import Navigation from './navigation';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface DesktopSidebarProps {}
-export default function DesktopSidebar(props: DesktopSidebarProps) {
+export default function DesktopSidebar() {
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}

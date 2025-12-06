@@ -187,7 +187,7 @@ export function App() {
   if (currentUser === null) {
     return (
       <Routes>
-        <Route element={<AuthLayout client={client} />}>
+        <Route element={<AuthLayout />}>
           {/* <Route path="/" element={<RedirectTo path />} /> */}
           <Route path="/login" element={<LoginPage client={client} />} />
           <Route path="/register" element={<RegisterPage client={client} />} />
@@ -291,7 +291,7 @@ function RedirectTo(props: { path: string }) {
 interface GenericOutletProps {
   client: DarkThroneClient;
 }
-function GenericOutlet(props: GenericOutletProps) {
+function GenericOutlet() {
   return <Outlet />;
 }
 

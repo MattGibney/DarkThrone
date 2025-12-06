@@ -4,7 +4,6 @@ export * from './lib/button/button';
 export * from './lib/button/button';
 export * from './lib/input-checkbox/input-checkbox';
 export * from './lib/input-field/input-field';
-export * from './lib/react-components';
 export * from './lib/logo/logo';
 export * from './lib/badge/badge';
 export * from './lib/pagination/pagination';
