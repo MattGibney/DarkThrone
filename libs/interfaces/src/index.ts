@@ -1,5 +1,33 @@
+import { Request, Response } from 'express';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { UnitTypes } from '@darkthrone/game-data';
+
+export interface EndpointDefinition {
+  PathParams?: Record<string, string>;
+  QueryParams?: Record<string, string | string[] | number | number[]>;
+  RequestBody?: unknown;
+  Responses: {
+    [statusCode: number]: unknown;
+  };
+}
+
+export type TypedRequest<Def extends EndpointDefinition> = Request<
+  Def['PathParams'],
+  unknown,
+  Def['RequestBody'],
+  Def['QueryParams']
+>;
+
+export type TypedResponse<
+  Def extends EndpointDefinition,
+  StatusCode extends keyof Def['Responses'],
+> = Response<Def['Responses'][StatusCode]>;
+
+export type API_Error<T extends string> = {
+  errors: T[];
+};
+
+export * from './api/auth';
 
 export enum UnitType {
   SUPPORT = 'support',

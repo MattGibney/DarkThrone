@@ -1,44 +1,32 @@
 import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
-import { ValidAuthResponse } from '@darkthrone/interfaces';
+import {
+  POST_login,
+  TypedRequest,
+  TypedResponse,
+  ValidAuthResponse,
+} from '@darkthrone/interfaces';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
-  POST_login: async (req: Request, res: Response) => {
+  POST_login: async (
+    req: TypedRequest<POST_login>,
+    res: TypedResponse<POST_login, 200 | 400 | 401 | 500>,
+  ) => {
     const { password, rememberMe } = req.body;
     let { email } = req.body;
 
     if (!email) email = '';
     email = email.trim().toLowerCase();
 
-    const apiErrors: APIError[] = [];
-    if (!email) {
-      apiErrors.push({
-        code: 'login_email_required',
-        title: 'Email required',
-      });
-    }
-    if (!password) {
-      apiErrors.push({
-        code: 'login_password_required',
-        title: 'Password required',
-      });
-    }
-
-    if (apiErrors.length > 0) {
-      res.status(400).send({ errors: apiErrors });
-      return;
+    if (!email || !password) {
+      res.status(400).send({ errors: ['auth.missingParams'] });
     }
 
     const user = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
     if (!user) {
       res.status(401).send({
-        errors: [
-          {
-            code: 'login_invalid_credentials',
-            title: 'Invalid credentials',
-          },
-        ],
+        errors: ['auth.invalidParams'],
       });
       return;
     }
@@ -46,12 +34,7 @@ export default {
     const passwordMatch = await user.checkPassword(password);
     if (!passwordMatch) {
       res.status(401).send({
-        errors: [
-          {
-            code: 'login_invalid_credentials',
-            title: 'Invalid credentials',
-          },
-        ],
+        errors: ['auth.invalidParams'],
       });
       return;
     }
@@ -63,12 +46,7 @@ export default {
     );
     if (!newSession) {
       res.status(500).send({
-        errors: [
-          {
-            code: 'login_failed',
-            title: 'Login failed',
-          },
-        ],
+        errors: ['server.error'],
       });
       return;
     }
