@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { APIError } from '@darkthrone/client-library';
 import {
-  POST_login,
   TypedRequest,
   TypedResponse,
   ValidAuthResponse,
+  POST_login,
+  POST_register,
+  POST_register_ErrorCodes,
 } from '@darkthrone/interfaces';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
@@ -58,38 +60,27 @@ export default {
     res.status(200).send(authResponse);
   },
 
-  POST_register: async (req: Request, res: Response) => {
+  POST_register: async (
+    req: TypedRequest<POST_register>,
+    res: TypedResponse<POST_register, 201 | 400 | 500>,
+  ) => {
     let { email, password } = req.body;
 
     if (!email) email = '';
     email = email.trim().toLowerCase();
 
-    const apiErrors: APIError[] = [];
+    const apiErrors: POST_register_ErrorCodes[] = [];
     if (!email) {
-      apiErrors.push({
-        code: 'register_email_required',
-        title: 'Email required',
-      });
+      apiErrors.push('auth.missingParams');
     }
     if (!password) password = '';
 
-    if (password.length < 7) {
-      apiErrors.push({
-        code: 'register_password_too_short',
-        title: 'The password length must be at least 7 characters long',
-      });
-    }
-    if (password.toUpperCase() === password) {
-      apiErrors.push({
-        code: 'register_password_requires_lower_case',
-        title: 'The password lacks a lower case character',
-      });
-    }
-    if (password.toLowerCase() === password) {
-      apiErrors.push({
-        code: 'register_password_requires_upper_case',
-        title: 'The password lacks an upper case character',
-      });
+    if (
+      password.length < 7 ||
+      password.toUpperCase() === password ||
+      password.toLowerCase() === password
+    ) {
+      apiErrors.push('auth.invalidPassword');
     }
 
     if (apiErrors.length > 0) {
@@ -103,12 +94,7 @@ export default {
     );
     if (existingUser) {
       res.status(400).send({
-        errors: [
-          {
-            code: 'register_email_taken',
-            title: 'Email taken',
-          },
-        ],
+        errors: ['auth.emailInUse'],
       });
       return;
     }
@@ -119,13 +105,9 @@ export default {
       password,
     );
     if (!newUser) {
+      req.ctx.logger.error('Failed to create new user during registration');
       res.status(500).send({
-        errors: [
-          {
-            code: 'register_failed',
-            title: 'Registration failed',
-          },
-        ],
+        errors: ['server.error'],
       });
       return;
     }
@@ -136,13 +118,11 @@ export default {
       false,
     );
     if (!newSession) {
+      req.ctx.logger.error(
+        'Failed to create session for new user during registration',
+      );
       res.status(500).send({
-        errors: [
-          {
-            code: 'register_failed',
-            title: 'Registration failed',
-          },
-        ],
+        errors: ['server.error'],
       });
       return;
     }
@@ -151,7 +131,7 @@ export default {
       session: await newSession.serialise(),
       token: newSession.token,
     };
-    res.status(200).send(authResponse);
+    res.status(201).send(authResponse);
   },
 
   GET_currentUser: protectPrivateAPI(async (req: Request, res: Response) => {

@@ -21,6 +21,7 @@ export default function RegisterPage(props: RegisterPageProps) {
     e.preventDefault();
     if (!email || !password || !confirmPassword) return;
 
+    // TODO: Remove password specific errors from here
     setPasswordsError('');
     const matchingPasswords = password === confirmPassword;
     if (!matchingPasswords) {
@@ -28,13 +29,23 @@ export default function RegisterPage(props: RegisterPageProps) {
       return;
     }
 
-    const result = await props.client.auth.register(email, password);
-    if (result.status === 'fail') {
-      setErrorMessages(result.data.map((err) => err.title));
-      return;
-    }
+    try {
+      setErrorMessages([]);
+      await props.client.auth.register(email, password);
 
-    navigate('/player-select');
+      navigate('/player-select');
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown }).errors)
+      ) {
+        setErrorMessages((error as { errors?: string[] }).errors as string[]);
+      } else {
+        setErrorMessages(['error.unexpected']);
+      }
+    }
   }
 
   return (

@@ -27,6 +27,15 @@ export type API_Error<T extends string> = {
   errors: T[];
 };
 
+export type ExtractErrorCodesForStatuses<
+  T extends Record<number, unknown>,
+  Statuses extends keyof T = keyof T,
+> = Statuses extends keyof T
+  ? T[Statuses] extends API_Error<infer E>
+    ? E
+    : never
+  : never;
+
 export * from './api/auth';
 
 export enum UnitType {
