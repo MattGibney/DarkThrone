@@ -1,6 +1,8 @@
+import axios from 'axios';
 import {
   AuthedPlayerObject,
   PlayerObject,
+  POST_login,
   UserSessionObject,
   ValidAuthResponse,
 } from '@darkthrone/interfaces';
@@ -11,6 +13,43 @@ export default class AuthDAO {
 
   constructor(root: DarkThroneClient) {
     this.root = root;
+  }
+
+  async login(
+    email: string,
+    password: string,
+    rememberMe: boolean,
+  ): Promise<UserSessionObject> {
+    try {
+      const requestBody: POST_login['RequestBody'] = {
+        email,
+        password,
+        rememberMe,
+      };
+      const response = await this.root.http.post<POST_login['Responses'][200]>(
+        '/auth/login',
+        requestBody,
+      );
+
+      this.root.emit('userLogin', response.data);
+
+      /* TODO: Refactor this, the DAO shouldn't be changing root HTTP headers,
+       * or setting local storage values.
+       *
+       * The client should likely want to subscribe to the login event and
+       * handle it that way.
+       */
+      this.root.authenticatedUser = response.data.session;
+      localStorage.setItem('token', response.data.token);
+      this.root.http.defaults.headers.Authorization = `Bearer ${response.data.token}`;
+
+      return response.data.session;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('An unknown error occurred during login.');
+    }
   }
 
   async getCurrentUser(): Promise<
@@ -28,35 +67,6 @@ export default class AuthDAO {
       this.root.emit('updateCurrentUser');
 
       return { status: 'ok', data: response.data.user as UserSessionObject };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
-    }
-  }
-
-  async login(
-    email: string,
-    password: string,
-    rememberMe: boolean,
-  ): Promise<
-    APIResponse<'ok', ValidAuthResponse> | APIResponse<'fail', APIError[]>
-  > {
-    try {
-      const response = await this.root.http.post<ValidAuthResponse>(
-        '/auth/login',
-        { email, password, rememberMe },
-      );
-
-      this.root.emit('userLogin', response.data);
-      this.root.authenticatedUser = response.data.session;
-
-      localStorage.setItem('token', response.data.token);
-      this.root.http.defaults.headers.Authorization = `Bearer ${response.data.token}`;
-
-      return { status: 'ok', data: response.data as ValidAuthResponse };
     } catch (err: unknown) {
       const axiosError = err as { response: { data: { errors: APIError[] } } };
       return {

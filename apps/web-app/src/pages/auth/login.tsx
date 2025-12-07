@@ -25,14 +25,23 @@ export default function LoginPage(props: LoginPageProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const result = await props.client.auth.login(email, password, rememberMe);
+    try {
+      setErrorMessages([]);
+      await props.client.auth.login(email, password, rememberMe);
 
-    if (result.status === 'fail') {
-      setErrorMessages(result.data.map((err) => err.title));
-      return;
+      navigate('/overview');
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown }).errors)
+      ) {
+        setErrorMessages((error as { errors?: string[] }).errors as string[]);
+      } else {
+        setErrorMessages(['error.unexpected']);
+      }
     }
-
-    navigate('/overview');
   }
 
   return (
@@ -49,6 +58,7 @@ export default function LoginPage(props: LoginPageProps) {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
         <div className="bg-zinc-800 px-6 py-12 shadow sm:rounded-lg sm:px-12">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* TODO: These errors are translation keys */}
             {errorMessages.length > 0 ? (
               <Alert
                 title="There was a problem"
