@@ -11,10 +11,7 @@ describe('POST_register', () => {
       .send({ password: 'password' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_email_required',
-      title: 'Email required',
-    });
+    expect(res.body.errors).toContain('auth.missingParams');
   });
 
   it('should return 400 if password is missing', async () => {
@@ -25,10 +22,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_password_too_short',
-      title: 'The password length must be at least 7 characters long',
-    });
+    expect(res.body.errors).toContain('auth.invalidPassword');
   });
 
   it('should return 400 if password is too short', async () => {
@@ -39,10 +33,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'short' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_password_too_short',
-      title: 'The password length must be at least 7 characters long',
-    });
+    expect(res.body.errors).toContain('auth.invalidPassword');
   });
 
   it('should return 400 if password lacks a lower case character', async () => {
@@ -53,10 +44,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'PASSWORD' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_password_requires_lower_case',
-      title: 'The password lacks a lower case character',
-    });
+    expect(res.body.errors).toContain('auth.invalidPassword');
   });
 
   it('should return 400 if password lacks an upper case character', async () => {
@@ -67,10 +55,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'password' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_password_requires_upper_case',
-      title: 'The password lacks an upper case character',
-    });
+    expect(res.body.errors).toContain('auth.invalidPassword');
   });
 
   it('should return 400 if email is taken', async () => {
@@ -87,13 +72,10 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'Password1' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_email_taken',
-      title: 'Email taken',
-    });
+    expect(res.body.errors).toContain('auth.emailInUse');
   });
 
-  it('should return 400 if user creation fails', async () => {
+  it('should return 500 if user creation fails', async () => {
     const { application } = makeApplication({
       daoFactory: {
         user: {
@@ -108,10 +90,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'Password1' });
 
     expect(res.status).toBe(500);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_failed',
-      title: 'Registration failed',
-    });
+    expect(res.body.errors).toContain('server.error');
   });
 
   it('should return 500 if session creation fails', async () => {
@@ -132,13 +111,10 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'Password1' });
 
     expect(res.status).toBe(500);
-    expect(res.body.errors).toContainEqual({
-      code: 'register_failed',
-      title: 'Registration failed',
-    });
+    expect(res.body.errors).toContain('server.error');
   });
 
-  it('should return 200 if registration is successful', async () => {
+  it('should return 201 if registration is successful', async () => {
     const { application } = makeApplication({
       daoFactory: {
         user: {
@@ -146,7 +122,15 @@ describe('POST_register', () => {
           create: jest.fn().mockResolvedValue({ id: 1 }),
         },
         userSession: {
-          create: jest.fn().mockResolvedValue({ id: 1, token: 'token' }),
+          create: jest.fn().mockResolvedValue({
+            id: 1,
+            token: 'token',
+            serialise: async () => ({
+              id: 1,
+              hasConfirmedEmail: false,
+              serverTime: 'SOME_TIME',
+            }),
+          }),
         },
       } as unknown as DaoFactory,
     });
@@ -155,7 +139,7 @@ describe('POST_register', () => {
       .post('/auth/register')
       .send({ email: 'test@example.com', password: 'Password1' });
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.body).toEqual({
       session: {
         id: 1,

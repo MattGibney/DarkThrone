@@ -10,10 +10,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ password: 'password' });
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'login_email_required',
-      title: 'Email required',
-    });
+    expect(res.body.errors).toContain('auth.missingParams');
   });
 
   it('should return 400 if password is missing', async () => {
@@ -23,10 +20,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ email: 'test@example.com' });
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'login_password_required',
-      title: 'Password required',
-    });
+    expect(res.body.errors).toContain('auth.missingParams');
   });
 
   it('should return 401 if user does not exist', async () => {
@@ -42,12 +36,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'password' });
     expect(res.status).toBe(401);
-
-    expect(res.body.errors).toContainEqual({
-      code: 'login_invalid_credentials',
-      title: 'Invalid credentials',
-    });
-
+    expect(res.body.errors).toContain('auth.invalidParams');
     expect(res.header['set-cookie']).toBeUndefined();
   });
 
@@ -66,11 +55,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'password' });
     expect(res.status).toBe(401);
-
-    expect(res.body.errors).toContainEqual({
-      code: 'login_invalid_credentials',
-      title: 'Invalid credentials',
-    });
+    expect(res.body.errors).toContain('auth.invalidParams');
   });
 
   it('should return 500 if session cannot be created', async () => {
@@ -93,10 +78,7 @@ describe('POST_login', () => {
       .send({ email: 'test@example.com', password: 'password' });
 
     expect(res.status).toBe(500);
-    expect(res.body.errors).toContainEqual({
-      code: 'login_failed',
-      title: 'Login failed',
-    });
+    expect(res.body.errors).toContain('server.error');
   });
 
   it('should return 200 if login is successful', async () => {
@@ -111,6 +93,10 @@ describe('POST_login', () => {
         userSession: {
           create: async () => ({
             token: 'SESSION_TOKEN',
+            serialise: async () => ({
+              hasConfirmedEmail: false,
+              serverTime: 'SOME_TIME',
+            }),
           }),
         },
       } as unknown as DaoFactory,
