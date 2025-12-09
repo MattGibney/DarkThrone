@@ -1,12 +1,27 @@
-import { NextFunction, Request, Response } from 'express';
+import {
+  EndpointDefinition,
+  AuthenticatedEndpointDefinition,
+  TypedRequest,
+  TypedResponse,
+} from '@darkthrone/interfaces';
+import { Request, Response, NextFunction } from 'express';
 
-type Middleware = (req: Request, res: Response, next: NextFunction) => void;
+// TODO: Remove the use of Express Request and Response in favor of TypedRequest and TypedResponse
+type Middleware = (
+  req: TypedRequest<EndpointDefinition> | Request,
+  res: TypedResponse<EndpointDefinition> | Response,
+  next: NextFunction,
+) => void;
 
 export function protectPrivateAPI(handler: Middleware) {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (
+    req: TypedRequest<AuthenticatedEndpointDefinition>,
+    res: TypedResponse<AuthenticatedEndpointDefinition>,
+    next: NextFunction,
+  ) => {
     if (req.ctx.authedUser) {
       return handler(req, res, next);
     }
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ errors: ['auth.unauthorized'] });
   };
 }

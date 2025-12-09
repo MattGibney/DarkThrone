@@ -54,9 +54,42 @@ export default class PlayerModel {
     this.units = units;
   }
 
-  async serialise(): Promise<PlayerObject | AuthedPlayerObject> {
-    const isAuthed = this.ctx.authedPlayer?.id === this.id;
+  async serialiseAuthedPlayer(): Promise<AuthedPlayerObject> {
+    const attackStrength = await this.calculateAttackStrength();
+    const defenceStrength = await this.calculateDefenceStrength();
+    const goldPerTurn = await this.calculateGoldPerTurn();
 
+    const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const depositHistory = await this.fetchBankHistory(date24HoursAgo);
+
+    const basePlayerObject = await this.serialise();
+    const authedPlayerObject: AuthedPlayerObject = Object.assign(
+      basePlayerObject,
+      {
+        attackStrength: attackStrength,
+        defenceStrength: defenceStrength,
+        attackTurns: this.attackTurns,
+        experience: this.experience,
+        goldInBank: this.goldInBank,
+        goldPerTurn: goldPerTurn,
+        citizensPerDay: this.citizensPerDay,
+        depositHistory: depositHistory.map((history) => ({
+          amount: history.amount,
+          date: history.created_at,
+          type: history.transaction_type,
+        })),
+        units: this.units.map((unit) => ({
+          unitType: unit.unitType,
+          quantity: unit.quantity,
+        })),
+        structureUpgrades: this.structureUpgrades,
+      },
+    );
+
+    return authedPlayerObject;
+  }
+
+  async serialise(): Promise<PlayerObject> {
     const armySize = this.armySize;
 
     const playerObject: PlayerObject = {
@@ -71,36 +104,7 @@ export default class PlayerModel {
       armySize: armySize,
     };
 
-    if (!isAuthed) return playerObject;
-
-    const attackStrength = await this.calculateAttackStrength();
-    const defenceStrength = await this.calculateDefenceStrength();
-    const goldPerTurn = await this.calculateGoldPerTurn();
-
-    const date24HoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const depositHistory = await this.fetchBankHistory(date24HoursAgo);
-
-    const authedPlayerObject: AuthedPlayerObject = Object.assign(playerObject, {
-      attackStrength: attackStrength,
-      defenceStrength: defenceStrength,
-      attackTurns: this.attackTurns,
-      experience: this.experience,
-      goldInBank: this.goldInBank,
-      goldPerTurn: goldPerTurn,
-      citizensPerDay: this.citizensPerDay,
-      depositHistory: depositHistory.map((history) => ({
-        amount: history.amount,
-        date: history.created_at,
-        type: history.transaction_type,
-      })),
-      units: this.units.map((unit) => ({
-        unitType: unit.unitType,
-        quantity: unit.quantity,
-      })),
-      structureUpgrades: this.structureUpgrades,
-    });
-
-    return authedPlayerObject;
+    return playerObject;
   }
 
   async fetchBankHistory(dateFrom: Date) {

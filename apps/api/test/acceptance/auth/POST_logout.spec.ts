@@ -21,6 +21,6 @@ describe('POST_logout', () => {
       .post('/auth/logout')
       .set('Authorization', 'Bearer TOKEN');
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(204);
   });
 });

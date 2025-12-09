@@ -1,5 +1,3 @@
-import { Request, Response } from 'express';
-import { APIError } from '@darkthrone/client-library';
 import {
   TypedRequest,
   TypedResponse,
@@ -7,13 +5,17 @@ import {
   POST_login,
   POST_register,
   POST_register_ErrorCodes,
+  GET_currentUser,
+  POST_logout,
+  POST_assumePlayer,
+  POST_unassumePlayer,
 } from '@darkthrone/interfaces';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
 export default {
   POST_login: async (
     req: TypedRequest<POST_login>,
-    res: TypedResponse<POST_login, 200 | 400 | 401 | 500>,
+    res: TypedResponse<POST_login>,
   ) => {
     const { password, rememberMe } = req.body;
     let { email } = req.body;
@@ -27,7 +29,7 @@ export default {
 
     const user = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
     if (!user) {
-      res.status(401).send({
+      res.status(400).send({
         errors: ['auth.invalidParams'],
       });
       return;
@@ -35,7 +37,7 @@ export default {
 
     const passwordMatch = await user.checkPassword(password);
     if (!passwordMatch) {
-      res.status(401).send({
+      res.status(400).send({
         errors: ['auth.invalidParams'],
       });
       return;
@@ -62,7 +64,7 @@ export default {
 
   POST_register: async (
     req: TypedRequest<POST_register>,
-    res: TypedResponse<POST_register, 201 | 400 | 500>,
+    res: TypedResponse<POST_register>,
   ) => {
     let { email, password } = req.body;
 
@@ -134,77 +136,73 @@ export default {
     res.status(201).send(authResponse);
   },
 
-  GET_currentUser: protectPrivateAPI(async (req: Request, res: Response) => {
-    res.status(200).json({
-      user: await req.ctx.authedUser.session.serialise(),
-      player: req.ctx.authedPlayer
-        ? await req.ctx.authedPlayer.serialise()
-        : undefined,
-    });
-  }),
-
-  POST_logout: protectPrivateAPI(async (req: Request, res: Response) => {
-    const { session } = req.ctx.authedUser;
-    await session.invalidate();
-    res.status(200).json({});
-  }),
-
-  POST_assumePlayer: protectPrivateAPI(async (req: Request, res: Response) => {
-    const { playerID } = req.body;
-
-    const apiErrors: APIError[] = [];
-    if (!playerID) {
-      apiErrors.push({
-        code: 'assume_player_player_id_required',
-        title: 'Player ID required',
+  GET_currentUser: protectPrivateAPI(
+    async (
+      req: TypedRequest<GET_currentUser>,
+      res: TypedResponse<GET_currentUser>,
+    ) => {
+      res.status(200).json({
+        user: await req.ctx.authedUser.session.serialise(),
+        player: req.ctx.authedPlayer
+          ? await req.ctx.authedPlayer.serialiseAuthedPlayer()
+          : undefined,
       });
-    }
+    },
+  ),
 
-    if (apiErrors.length > 0) {
-      res.status(400).json({ errors: apiErrors });
-      return;
-    }
+  POST_logout: protectPrivateAPI(
+    async (req: TypedRequest<POST_logout>, res: TypedResponse<POST_logout>) => {
+      const { session } = req.ctx.authedUser;
+      await session.invalidate();
+      res.status(204).send(null);
+    },
+  ),
 
-    const player = await req.ctx.modelFactory.player.fetchByID(
-      req.ctx,
-      playerID,
-    );
-    if (!player) {
-      res.status(404).json({
-        errors: [
-          {
-            code: 'assume_player_player_not_found',
-            title: 'Player not found',
-          },
-        ],
+  POST_assumePlayer: protectPrivateAPI(
+    async (
+      req: TypedRequest<POST_assumePlayer>,
+      res: TypedResponse<POST_assumePlayer>,
+    ) => {
+      const { playerID } = req.body;
+
+      if (!playerID) {
+        res.status(400).json({ errors: ['auth.assumePlayer.missingParams'] });
+        return;
+      }
+
+      const player = await req.ctx.modelFactory.player.fetchByID(
+        req.ctx,
+        playerID,
+      );
+      if (!player) {
+        res.status(404).json({
+          errors: ['auth.assumePlayer.notFound'],
+        });
+        return;
+      }
+
+      if (player.userID !== req.ctx.authedUser.model.id) {
+        res.status(403).json({
+          errors: ['auth.assumePlayer.notAllowed'],
+        });
+        return;
+      }
+
+      await req.ctx.authedUser.session.assumePlayer(player);
+      req.ctx.authedPlayer = player;
+
+      res.status(200).json({
+        user: await req.ctx.authedUser.session.serialise(),
+        player: await player.serialiseAuthedPlayer(),
       });
-      return;
-    }
-
-    if (player.userID !== req.ctx.authedUser.model.id) {
-      res.status(403).json({
-        errors: [
-          {
-            code: 'assume_player_not_your_player',
-            // eslint-disable-next-line quotes
-            title: "You can't assume another player's account",
-          },
-        ],
-      });
-      return;
-    }
-
-    await req.ctx.authedUser.session.assumePlayer(player);
-    req.ctx.authedPlayer = player;
-
-    res.status(200).json({
-      user: await req.ctx.authedUser.session.serialise(),
-      player: await player.serialise(),
-    });
-  }),
+    },
+  ),
 
   POST_unassumePlayer: protectPrivateAPI(
-    async (req: Request, res: Response) => {
+    async (
+      req: TypedRequest<POST_unassumePlayer>,
+      res: TypedResponse<POST_unassumePlayer>,
+    ) => {
       req.ctx.logger.debug('POST_unassumePlayer');
       await req.ctx.authedUser.session.unassumePlayer();
 
