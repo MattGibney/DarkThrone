@@ -93,25 +93,14 @@ export type API_Error<T extends string> = {
   errors: T[];
 };
 
-type ErrorStatuses<T extends Record<number, unknown>> = Extract<
-  {
-    [K in keyof T]: K extends number
-      ? `${K}` extends `${'3' | '4' | '5'}${number}${number}`
-        ? K
-        : never
-      : never;
-  }[keyof T],
-  number
->;
-
-export type ExtractErrorCodesForStatuses<T extends Record<number, unknown>> =
-  ErrorStatuses<T> extends infer S
-    ? S extends keyof T
-      ? T[S] extends API_Error<infer E>
-        ? E
-        : never
-      : never
-    : never;
+export type ExtractErrorCodesForStatuses<
+  T extends { Responses: Record<number, unknown> },
+  Statuses extends keyof T['Responses'] = keyof T['Responses'],
+> = Statuses extends keyof T['Responses']
+  ? T['Responses'][Statuses] extends API_Error<infer E>
+    ? E
+    : never
+  : never;
 
 export * from './api/auth';
 

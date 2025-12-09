@@ -4,11 +4,11 @@ import {
   ValidAuthResponse,
   POST_login,
   POST_register,
-  POST_register_ErrorCodes,
   GET_currentUser,
   POST_logout,
   POST_assumePlayer,
   POST_unassumePlayer,
+  ExtractErrorCodesForStatuses,
 } from '@darkthrone/interfaces';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
@@ -71,7 +71,7 @@ export default {
     if (!email) email = '';
     email = email.trim().toLowerCase();
 
-    const apiErrors: POST_register_ErrorCodes[] = [];
+    const apiErrors: ExtractErrorCodesForStatuses<POST_register, 400>[] = [];
     if (!email) {
       apiErrors.push('auth.missingParams');
     }
