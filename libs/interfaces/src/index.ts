@@ -7,9 +7,44 @@ export interface EndpointDefinition {
   QueryParams?: Record<string, string | string[] | number | number[]>;
   RequestBody?: unknown;
   Responses: {
-    [statusCode: number]: unknown;
+    500: API_Error<'server.error'>;
   };
 }
+
+// Extends EndpointDefinition to include standard authentication error responses
+export interface AuthenticatedEndpointDefinition extends EndpointDefinition {
+  Responses: EndpointDefinition['Responses'] & {
+    401: API_Error<'auth.unauthorized'>;
+    403: API_Error<'auth.forbidden'>;
+  };
+}
+
+// Utility type to create a new EndpointDefinition by extending a base EndpointDefinition
+// with custom RequestBody, Query, Params, and Responses.
+type MergeResponses<
+  Base extends Record<number, unknown>,
+  Extension extends Record<number, unknown>,
+> = Omit<Base, keyof Extension> & Extension;
+
+export type ExtendEndpointDefinition<
+  Base extends EndpointDefinition,
+  Extension extends Partial<{
+    RequestBody: object;
+    Query: object;
+    Params: object;
+    Responses: { [status: number]: unknown };
+  }>,
+> = Omit<Base, keyof Extension> & {
+  [K in keyof Extension]: Extension[K] extends undefined
+    ? K extends keyof Base
+      ? Base[K]
+      : never
+    : K extends 'Responses'
+      ? Extension[K] extends Record<number, unknown>
+        ? MergeResponses<Base['Responses'], Extension[K]>
+        : Base['Responses']
+      : Extension[K];
+};
 
 export type TypedRequest<Def extends EndpointDefinition> = Request<
   Def['PathParams'],
@@ -18,10 +53,41 @@ export type TypedRequest<Def extends EndpointDefinition> = Request<
   Def['QueryParams']
 >;
 
-export type TypedResponse<
+type StatusCodesFor<Def extends EndpointDefinition> = Extract<
+  keyof Def['Responses'],
+  number
+>;
+
+type TypedStatusFn<Def extends EndpointDefinition> = <
+  S extends StatusCodesFor<Def>,
+>(
+  status: S,
+) => TypedResponseWithStatus<Def, S>;
+
+export type TypedResponse<Def extends EndpointDefinition> = Omit<
+  Response,
+  'status' | 'json' | 'send' | 'sendStatus'
+> & {
+  status: TypedStatusFn<Def>;
+  sendStatus: <S extends StatusCodesFor<Def>>(
+    status: S,
+  ) => TypedResponseWithStatus<Def, S>;
+};
+
+type TypedResponseWithStatus<
   Def extends EndpointDefinition,
-  StatusCode extends keyof Def['Responses'],
-> = Response<Def['Responses'][StatusCode]>;
+  S extends StatusCodesFor<Def>,
+> = Omit<
+  Response<Def['Responses'][S]>,
+  'status' | 'json' | 'send' | 'sendStatus'
+> & {
+  status: TypedStatusFn<Def>;
+  sendStatus: <Next extends StatusCodesFor<Def>>(
+    status: Next,
+  ) => TypedResponseWithStatus<Def, Next>;
+  json: (body: Def['Responses'][S]) => Response<Def['Responses'][S]>;
+  send: (body: Def['Responses'][S]) => Response<Def['Responses'][S]>;
+};
 
 export type API_Error<T extends string> = {
   errors: T[];
