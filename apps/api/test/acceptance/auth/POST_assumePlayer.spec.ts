@@ -17,10 +17,7 @@ describe('POST_assumePlayer', () => {
       .set('Authorization', 'Bearer TOKEN')
       .send({});
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContainEqual({
-      code: 'assume_player_player_id_required',
-      title: 'Player ID required',
-    });
+    expect(res.body.errors).toContain('auth.assumePlayer.missingParams');
   });
 
   it('should return 404 if player is not found', async () => {
@@ -42,10 +39,7 @@ describe('POST_assumePlayer', () => {
       .set('Authorization', 'Bearer TOKEN')
       .send({ playerID: 'PLR-1' });
     expect(res.status).toBe(404);
-    expect(res.body.errors).toContainEqual({
-      code: 'assume_player_player_not_found',
-      title: 'Player not found',
-    });
+    expect(res.body.errors).toContain('auth.assumePlayer.notFound');
   });
 
   it('should return 403 if player does not belong to user', async () => {
@@ -72,11 +66,7 @@ describe('POST_assumePlayer', () => {
 
     expect(res.status).toBe(403);
 
-    expect(res.body.errors).toContainEqual({
-      code: 'assume_player_not_your_player',
-      // eslint-disable-next-line quotes
-      title: "You can't assume another player's account",
-    });
+    expect(res.body.errors).toContain('auth.assumePlayer.notAllowed');
   });
 
   it('should assume the player', async () => {

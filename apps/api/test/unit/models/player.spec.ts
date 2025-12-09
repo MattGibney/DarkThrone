@@ -65,7 +65,7 @@ describe('Model: Player', () => {
       } as unknown as Context;
 
       const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
-      const serialised = await player.serialise();
+      const serialised = await player.serialiseAuthedPlayer();
 
       expect(Object.keys(serialised)).toEqual([
         'id',
@@ -102,7 +102,7 @@ describe('Model: Player', () => {
       } as unknown as Context;
 
       const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
-      const serialised = await player.serialise();
+      const serialised = await player.serialiseAuthedPlayer();
 
       expect(serialised).toEqual({
         id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
