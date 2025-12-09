@@ -26,8 +26,7 @@ export type POST_login = ExtendEndpointDefinition<
 >;
 
 export type POST_register_ErrorCodes = ExtractErrorCodesForStatuses<
-  POST_register['Responses'],
-  400
+  POST_register['Responses']
 >;
 export type POST_register = ExtendEndpointDefinition<
   EndpointDefinition,
