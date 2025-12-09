@@ -35,7 +35,7 @@ describe('POST_login', () => {
     const res = await request(application)
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'password' });
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(400);
     expect(res.body.errors).toContain('auth.invalidParams');
     expect(res.header['set-cookie']).toBeUndefined();
   });
@@ -54,7 +54,7 @@ describe('POST_login', () => {
     const res = await request(application)
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'password' });
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(400);
     expect(res.body.errors).toContain('auth.invalidParams');
   });
 
