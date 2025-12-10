@@ -104,9 +104,7 @@ export default class AuthDAO {
     }
   }
 
-  async logout(): Promise<
-    APIResponse<'ok', null> | APIResponse<'fail', APIError[]>
-  > {
+  async logout(): Promise<null> {
     try {
       await this.root.http.post('/auth/logout');
 
@@ -115,13 +113,12 @@ export default class AuthDAO {
 
       localStorage.removeItem('token');
 
-      return { status: 'ok', data: null };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return null;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
