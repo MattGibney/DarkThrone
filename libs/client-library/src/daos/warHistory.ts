@@ -1,16 +1,5 @@
+import { WarHistoryObject } from '@darkthrone/interfaces';
 import DarkThroneClient, { APIError, APIResponse } from '..';
-
-export type WarHistoryObject = {
-  id: string;
-  attackerID: string;
-  defenderID: string;
-  isAttackerVictor: boolean;
-  attackTurnsUsed: number;
-  attackerStrength: number;
-  defenderStrength?: number;
-  goldStolen: number;
-  createdAt: Date;
-};
 
 export default class AttackDAO {
   private root: DarkThroneClient;

@@ -1,5 +1,6 @@
-import DarkThroneClient, { APIError, APIResponse } from '..';
-import { WarHistoryObject } from './warHistory';
+import { POST_attackPlayer, WarHistoryObject } from '@darkthrone/interfaces';
+import DarkThroneClient from '..';
+import axios from 'axios';
 
 export default class AttackDAO {
   private root: DarkThroneClient;
@@ -11,29 +12,23 @@ export default class AttackDAO {
   async attackPlayer(
     targetID: string,
     attackTurns: number,
-  ): Promise<
-    APIResponse<'ok', WarHistoryObject> | APIResponse<'fail', APIError[]>
-  > {
-    if (!this.root.authenticatedPlayer) {
-      return {
-        status: 'fail',
-        data: [{ code: 'CL465', title: 'You are not authenticated' }],
-      };
-    }
-
+  ): Promise<WarHistoryObject> {
     try {
+      const requestBody: POST_attackPlayer['RequestBody'] = {
+        targetID,
+        attackTurns,
+      };
       const attackResponse = await this.root.http.post<WarHistoryObject>(
         '/attack',
-        { targetID, attackTurns },
+        requestBody,
       );
 
-      return { status: 'ok', data: attackResponse.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return attackResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 }

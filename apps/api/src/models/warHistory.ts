@@ -1,4 +1,4 @@
-import { WarHistoryObject } from '@darkthrone/client-library';
+import { WarHistoryObject } from '@darkthrone/interfaces';
 import { Context } from '../app';
 import { WarHistoryRow } from '../daos/warHistory';
 import PlayerModel from './player';

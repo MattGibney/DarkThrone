@@ -1,8 +1,8 @@
-import DarkThroneClient, { WarHistoryObject } from '@darkthrone/client-library';
+import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlayerObject } from '@darkthrone/interfaces';
+import { PlayerObject, WarHistoryObject } from '@darkthrone/interfaces';
 
 interface ListWarHistoryProps {
   client: DarkThroneClient;

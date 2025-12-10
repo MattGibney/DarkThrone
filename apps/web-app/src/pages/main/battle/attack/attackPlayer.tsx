@@ -1,5 +1,9 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { PlayerObject } from '@darkthrone/interfaces';
+import {
+  ExtractErrorCodesForStatuses,
+  PlayerObject,
+  POST_attackPlayer,
+} from '@darkthrone/interfaces';
 import { Alert, Avatar, Button } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,18 +13,34 @@ import {
   attackableMinLevel,
 } from '@darkthrone/game-data';
 
+type PossibleErrorCodes = ExtractErrorCodesForStatuses<
+  POST_attackPlayer,
+  400 | 404 | 500
+>;
+
 interface AttackPlayerPageProps {
   client: DarkThroneClient;
 }
 export default function AttackPlayerPage(props: AttackPlayerPageProps) {
   const navigate = useNavigate();
+
+  const errorTranslations: Record<PossibleErrorCodes, string> = {
+    'attack.missingProps': 'A targetID and attackTurns are required.',
+    'attack.invalidAttackTurns': 'Attack turns must be between 1 and 10.',
+    'attack.notEnoughAttackTurns': 'You do not have enough attack turns.',
+    'attack.noAttackStrength': 'You have no attack strength.',
+    'attack.outsideRange': 'You cannot attack this player due to level range.',
+    'attack.targetNotFound': 'Target player not found.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
+
   const { playerID } = useParams<{ playerID: string }>();
 
   const [player, setPlayer] = useState<PlayerObject | null | undefined>(
     undefined,
   );
   const [attackTurns, setAttackTurns] = useState<number>(1);
-  const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
+  const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   useEffect(() => {
     const fetchPlayer = async () => {
@@ -45,26 +65,38 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
     e.preventDefault();
 
     if (!attackTurns || attackTurns < 1 || attackTurns > 10) {
-      setInvalidMessages(['Attack Turns must be between 1 and 10']);
+      setErrorMessages(['attack.invalidAttackTurns']);
       return;
     }
 
     if (!player) return;
 
-    const attackResponse = await props.client.attack.attackPlayer(
-      player.id,
-      attackTurns,
-    );
-    if (attackResponse.status === 'fail') {
-      setInvalidMessages(attackResponse.data.map((error) => error.title));
-      return;
-    }
+    try {
+      const attackResponse = await props.client.attack.attackPlayer(
+        player.id,
+        attackTurns,
+      );
 
-    if (attackResponse.data.isAttackerVictor) {
-      props.client.emit('playerUpdate');
-    }
+      if (attackResponse.isAttackerVictor) {
+        props.client.emit('playerUpdate');
+      }
 
-    navigate(`/war-history/${attackResponse.data.id}`);
+      navigate(`/war-history/${attackResponse.id}`);
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown }).errors)
+      ) {
+        setErrorMessages(
+          (error as { errors?: PossibleErrorCodes[] })
+            .errors as PossibleErrorCodes[],
+        );
+      } else {
+        setErrorMessages(['server.error']);
+      }
+    }
   }
 
   if (player === undefined) return;
@@ -117,8 +149,11 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         className="flex flex-col gap-y-6 bg-zinc-800 p-8"
         onSubmit={handleAttack}
       >
-        {invalidMessages.length > 0 ? (
-          <Alert messages={invalidMessages} type={'error'} />
+        {errorMessages.length > 0 ? (
+          <Alert
+            messages={errorMessages.map((err) => errorTranslations[err])}
+            type={'error'}
+          />
         ) : null}
         <div className="flex justify-between items-center">
           <div>
@@ -128,7 +163,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
             type="number"
             value={attackTurns.toString()}
             onChange={(e) => setAttackTurns(parseInt(e.target.value) || 0)}
-            onFocus={() => setInvalidMessages([])}
+            onFocus={() => setErrorMessages([])}
             className="rounded-md border-0 py-1.5 bg-zinc-700 text-zinc-200 ring-1 ring-inset ring-zinc-500 focus:ring-2 focus:ring-inset focus:ring-yellow-600 invalid:ring-red-600 sm:text-sm sm:leading-6"
             min={1}
             max={10}
