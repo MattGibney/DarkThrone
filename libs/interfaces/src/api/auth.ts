@@ -18,8 +18,7 @@ export type POST_login = ExtendEndpointDefinition<
     };
     Responses: {
       200: ValidAuthResponse;
-      400: API_Error<'auth.missingParams' | 'auth.invalidParams'>;
-      401: API_Error<'auth.unauthorized'>;
+      400: API_Error<'auth.login.missingParams' | 'auth.login.invalidParams'>;
     };
   }
 >;
@@ -34,10 +33,10 @@ export type POST_register = ExtendEndpointDefinition<
     Responses: {
       201: ValidAuthResponse;
       400: API_Error<
-        | 'auth.missingParams'
-        | 'auth.invalidParams'
-        | 'auth.emailInUse'
-        | 'auth.invalidPassword'
+        | 'auth.register.missingParams'
+        | 'auth.register.invalidParams'
+        | 'auth.register.emailInUse'
+        | 'auth.register.invalidPassword'
       >;
     };
   }

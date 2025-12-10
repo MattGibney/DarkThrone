@@ -9,6 +9,10 @@ import {
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
+import {
+  ExtractErrorCodesForStatuses,
+  POST_login,
+} from '@darkthrone/interfaces';
 
 interface LoginPageProps {
   client: DarkThroneClient;
@@ -20,7 +24,8 @@ export default function LoginPage(props: LoginPageProps) {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_login>;
+  const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,9 +42,12 @@ export default function LoginPage(props: LoginPageProps) {
         'errors' in error &&
         Array.isArray((error as { errors?: unknown }).errors)
       ) {
-        setErrorMessages((error as { errors?: string[] }).errors as string[]);
+        setErrorMessages(
+          (error as { errors?: PossibleErrorCodes[] })
+            .errors as PossibleErrorCodes[],
+        );
       } else {
-        setErrorMessages(['error.unexpected']);
+        setErrorMessages(['server.error']);
       }
     }
   }

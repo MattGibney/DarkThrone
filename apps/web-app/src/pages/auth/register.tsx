@@ -3,6 +3,10 @@ import { Alert, Button, InputField, Logo } from '@darkthrone/react-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
+import {
+  ExtractErrorCodesForStatuses,
+  POST_register,
+} from '@darkthrone/interfaces';
 
 interface RegisterPageProps {
   client: DarkThroneClient;
@@ -14,18 +18,16 @@ export default function RegisterPage(props: RegisterPageProps) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  const [passwordsError, setPasswordsError] = useState('');
+  type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_register>;
+  const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!email || !password || !confirmPassword) return;
 
-    // TODO: Remove password specific errors from here
-    setPasswordsError('');
     const matchingPasswords = password === confirmPassword;
     if (!matchingPasswords) {
-      setPasswordsError('Passwords do not match');
+      setErrorMessages(['auth.register.invalidPassword']);
       return;
     }
 
@@ -41,9 +43,12 @@ export default function RegisterPage(props: RegisterPageProps) {
         'errors' in error &&
         Array.isArray((error as { errors?: unknown }).errors)
       ) {
-        setErrorMessages((error as { errors?: string[] }).errors as string[]);
+        setErrorMessages(
+          (error as { errors?: PossibleErrorCodes[] })
+            .errors as PossibleErrorCodes[],
+        );
       } else {
-        setErrorMessages(['error.unexpected']);
+        setErrorMessages(['server.error']);
       }
     }
   }
@@ -87,8 +92,6 @@ export default function RegisterPage(props: RegisterPageProps) {
               autoComplete="new-password"
               required
               displayName="Password"
-              validationMessage={passwordsError}
-              validationState={passwordsError ? 'invalid' : 'neutral'}
               value={password}
               setValue={(newVal) => setPassword(newVal)}
             />
@@ -100,8 +103,6 @@ export default function RegisterPage(props: RegisterPageProps) {
               autoComplete="new-password"
               required
               displayName="Confirm Password"
-              validationMessage={passwordsError}
-              validationState={passwordsError ? 'invalid' : 'neutral'}
               value={confirmPassword}
               setValue={(newVal) => setConfirmPassword(newVal)}
             />
