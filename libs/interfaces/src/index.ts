@@ -102,6 +102,7 @@ export type ExtractErrorCodesForStatuses<
     : never
   : never;
 
+export * from './api/attack';
 export * from './api/auth';
 
 export enum UnitType {
@@ -203,4 +204,16 @@ export type FortificationUpgrade = StructureUpgrade & {
 export type HousingUpgrade = StructureUpgrade & {
   type: 'housing';
   citizensPerDay: number;
+};
+
+export type WarHistoryObject = {
+  id: string;
+  attackerID: string;
+  defenderID: string;
+  isAttackerVictor: boolean;
+  attackTurnsUsed: number;
+  attackerStrength: number;
+  defenderStrength?: number;
+  goldStolen: number;
+  createdAt: Date;
 };
