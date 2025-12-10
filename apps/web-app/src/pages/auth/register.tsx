@@ -8,17 +8,27 @@ import {
   POST_register,
 } from '@darkthrone/interfaces';
 
+type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_register>;
+
 interface RegisterPageProps {
   client: DarkThroneClient;
 }
 export default function RegisterPage(props: RegisterPageProps) {
   const navigate = useNavigate();
 
+  const errorTranslations: Record<PossibleErrorCodes, string> = {
+    'auth.register.missingParams': 'Please provide both email and password.',
+    'auth.register.invalidParams': 'Please provide both email and password.',
+    'auth.register.invalidPassword':
+      'Password must be at least 7 characters long and include both upper and lower case letters.',
+    'auth.register.emailInUse': 'This email is already registered.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_register>;
   const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -70,7 +80,7 @@ export default function RegisterPage(props: RegisterPageProps) {
             {errorMessages.length > 0 ? (
               <Alert
                 title="There was a problem"
-                messages={errorMessages}
+                messages={errorMessages.map((code) => errorTranslations[code])}
                 type="error"
               />
             ) : null}
