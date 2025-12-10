@@ -155,12 +155,12 @@ export function App() {
   >(undefined);
 
   async function fetchCurrentUser() {
-    const userFetch = await client.auth.getCurrentUser();
-    if (userFetch.status === 'fail') {
+    try {
+      const userFetch = await client.auth.getCurrentUser();
+      setCurrentUser(userFetch);
+    } catch {
       setCurrentUser(null);
-      return;
     }
-    setCurrentUser(userFetch.data);
   }
 
   useEffect(() => {
