@@ -10,7 +10,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ password: 'password' });
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.missingParams');
+    expect(res.body.errors).toContain('auth.login.missingParams');
   });
 
   it('should return 400 if password is missing', async () => {
@@ -20,7 +20,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ email: 'test@example.com' });
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.missingParams');
+    expect(res.body.errors).toContain('auth.login.missingParams');
   });
 
   it('should return 401 if user does not exist', async () => {
@@ -36,7 +36,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'password' });
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.invalidParams');
+    expect(res.body.errors).toContain('auth.login.invalidParams');
     expect(res.header['set-cookie']).toBeUndefined();
   });
 
@@ -55,7 +55,7 @@ describe('POST_login', () => {
       .post('/auth/login')
       .send({ email: 'test@example.com', password: 'password' });
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.invalidParams');
+    expect(res.body.errors).toContain('auth.login.invalidParams');
   });
 
   it('should return 500 if session cannot be created', async () => {

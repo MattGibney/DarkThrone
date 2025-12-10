@@ -11,7 +11,7 @@ describe('POST_register', () => {
       .send({ password: 'password' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.missingParams');
+    expect(res.body.errors).toContain('auth.register.missingParams');
   });
 
   it('should return 400 if password is missing', async () => {
@@ -22,7 +22,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.invalidPassword');
+    expect(res.body.errors).toContain('auth.register.invalidPassword');
   });
 
   it('should return 400 if password is too short', async () => {
@@ -33,7 +33,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'short' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.invalidPassword');
+    expect(res.body.errors).toContain('auth.register.invalidPassword');
   });
 
   it('should return 400 if password lacks a lower case character', async () => {
@@ -44,7 +44,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'PASSWORD' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.invalidPassword');
+    expect(res.body.errors).toContain('auth.register.invalidPassword');
   });
 
   it('should return 400 if password lacks an upper case character', async () => {
@@ -55,7 +55,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'password' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.invalidPassword');
+    expect(res.body.errors).toContain('auth.register.invalidPassword');
   });
 
   it('should return 400 if email is taken', async () => {
@@ -72,7 +72,7 @@ describe('POST_register', () => {
       .send({ email: 'test@example.com', password: 'Password1' });
 
     expect(res.status).toBe(400);
-    expect(res.body.errors).toContain('auth.emailInUse');
+    expect(res.body.errors).toContain('auth.register.emailInUse');
   });
 
   it('should return 500 if user creation fails', async () => {

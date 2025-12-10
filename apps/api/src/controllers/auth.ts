@@ -24,13 +24,13 @@ export default {
     email = email.trim().toLowerCase();
 
     if (!email || !password) {
-      res.status(400).send({ errors: ['auth.missingParams'] });
+      res.status(400).send({ errors: ['auth.login.missingParams'] });
     }
 
     const user = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
     if (!user) {
       res.status(400).send({
-        errors: ['auth.invalidParams'],
+        errors: ['auth.login.invalidParams'],
       });
       return;
     }
@@ -38,7 +38,7 @@ export default {
     const passwordMatch = await user.checkPassword(password);
     if (!passwordMatch) {
       res.status(400).send({
-        errors: ['auth.invalidParams'],
+        errors: ['auth.login.invalidParams'],
       });
       return;
     }
@@ -73,7 +73,7 @@ export default {
 
     const apiErrors: ExtractErrorCodesForStatuses<POST_register, 400>[] = [];
     if (!email) {
-      apiErrors.push('auth.missingParams');
+      apiErrors.push('auth.register.missingParams');
     }
     if (!password) password = '';
 
@@ -82,7 +82,7 @@ export default {
       password.toUpperCase() === password ||
       password.toLowerCase() === password
     ) {
-      apiErrors.push('auth.invalidPassword');
+      apiErrors.push('auth.register.invalidPassword');
     }
 
     if (apiErrors.length > 0) {
@@ -96,7 +96,7 @@ export default {
     );
     if (existingUser) {
       res.status(400).send({
-        errors: ['auth.emailInUse'],
+        errors: ['auth.register.emailInUse'],
       });
       return;
     }
