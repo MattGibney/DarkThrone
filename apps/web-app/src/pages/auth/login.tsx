@@ -14,17 +14,24 @@ import {
   POST_login,
 } from '@darkthrone/interfaces';
 
+type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_login>;
+
 interface LoginPageProps {
   client: DarkThroneClient;
 }
 export default function LoginPage(props: LoginPageProps) {
   const navigate = useNavigate();
 
+  const errorTranslations: Record<PossibleErrorCodes, string> = {
+    'auth.login.missingParams': 'Please provide both email and password.',
+    'auth.login.invalidParams': 'The email or password is incorrect.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_login>;
   const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -70,7 +77,7 @@ export default function LoginPage(props: LoginPageProps) {
             {errorMessages.length > 0 ? (
               <Alert
                 title="There was a problem"
-                messages={errorMessages}
+                messages={errorMessages.map((code) => errorTranslations[code])}
                 type="error"
               />
             ) : null}
