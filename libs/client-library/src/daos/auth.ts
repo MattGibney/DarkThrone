@@ -48,7 +48,7 @@ export default class AuthDAO {
       if (axios.isAxiosError(error) && error.response) {
         throw error.response.data;
       }
-      throw new Error('An unknown error occurred during login.');
+      throw new Error('server.error');
     }
   }
 
@@ -79,13 +79,11 @@ export default class AuthDAO {
       if (axios.isAxiosError(error) && error.response) {
         throw error.response.data;
       }
-      throw new Error('An unknown error occurred during registration.');
+      throw new Error('server.error');
     }
   }
 
-  async getCurrentUser(): Promise<
-    APIResponse<'ok', UserSessionObject> | APIResponse<'fail', APIError[]>
-  > {
+  async getCurrentUser(): Promise<UserSessionObject> {
     try {
       const response = await this.root.http.get<{
         user: UserSessionObject;
@@ -97,13 +95,12 @@ export default class AuthDAO {
       this.root.authenticatedPlayer = response.data.player;
       this.root.emit('updateCurrentUser');
 
-      return { status: 'ok', data: response.data.user as UserSessionObject };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return response.data.user;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
