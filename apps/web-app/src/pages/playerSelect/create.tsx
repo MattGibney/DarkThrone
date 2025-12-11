@@ -4,18 +4,17 @@ import { useEffect, useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
 import { useNavigate } from 'react-router-dom';
-import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
+import {
+  ExtractErrorCodesForStatuses,
+  PlayerClass,
+  PlayerRace,
+  POST_validatePlayerName,
+} from '@darkthrone/interfaces';
 
-//TODO: This should be handled by i18n
-const validationMessages = {
-  empty: 'Player name cannot be empty',
-  name_taken: 'This name is already taken',
-  invalid_characters:
-    'Player name must only contain letters, numbers and underscores',
-  too_short: 'Player name must be longer than 3 characters',
-  too_long: 'Player name cannot be lonmger than 20 characters',
-  available: 'This name is available',
-};
+type PossibleErrorCodes = ExtractErrorCodesForStatuses<
+  POST_validatePlayerName,
+  400
+>;
 
 interface CreatePlayerPageProps {
   client: DarkThroneClient;
@@ -23,17 +22,27 @@ interface CreatePlayerPageProps {
 export default function CreatePlayerPage(props: CreatePlayerPageProps) {
   const navigate = useNavigate();
 
+  const errorTranslations: Record<PossibleErrorCodes, string> = {
+    'player.name.validation.empty': 'Player name cannot be empty',
+    'player.name.validation.taken': 'This name is already taken.',
+    'player.name.validation.invalidCharacters':
+      'Player name must only contain letters, numbers and underscores',
+    'player.name.validation.tooShort':
+      'Player name must be longer than 3 characters',
+    'player.name.validation.tooLong':
+      'Player name cannot be lonmger than 20 characters',
+  };
+
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   const [playerName, setPlayerName] = useState<string>('');
   const [playerNameStatus, setPlayerNameStatus] = useState<
-    { isValid: boolean; message: string } | undefined
+    { isValid: boolean; messages: PossibleErrorCodes[] } | undefined
   >();
 
   const [selectedRace, setSelectedRace] = useState<PlayerRace | undefined>(
     undefined,
   );
-
   const [selectedClass, setSelectedClass] = useState<PlayerClass | undefined>(
     undefined,
   );
@@ -50,28 +59,34 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     if (playerName.length === 0) {
       setPlayerNameStatus({
         isValid: false,
-        message: validationMessages['empty'],
+        messages: ['player.name.validation.empty'],
       });
       return;
     }
 
-    const response = await props.client.players.validatePlayerName(playerName);
-    if (response.status === 'fail') {
-      const errorMessages = response.data.map(
-        (error) =>
-          validationMessages[error.code as keyof typeof validationMessages],
-      );
+    try {
+      const response =
+        await props.client.players.validatePlayerName(playerName);
+
       setPlayerNameStatus({
-        isValid: false,
-        message: errorMessages.join(', '),
+        isValid: response.isValid,
+        messages: response.issues,
       });
-      return;
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown }).errors)
+      ) {
+        setPlayerNameStatus({
+          isValid: false,
+          messages: (error as { errors?: PossibleErrorCodes[] })
+            .errors as PossibleErrorCodes[],
+        });
+      }
+      console.error('Error validating player name:', error);
     }
-
-    setPlayerNameStatus({
-      isValid: true,
-      message: validationMessages['available'],
-    });
   }
 
   const raceOptions: RaceCardProps[] = [
@@ -201,7 +216,13 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
                     : 'invalid'
                   : 'neutral'
               }
-              validationMessage={playerNameStatus?.message}
+              validationMessage={
+                playerNameStatus?.messages
+                  ? playerNameStatus?.messages
+                      .map((err) => errorTranslations[err])
+                      .join(', ')
+                  : undefined
+              }
             />
 
             <section>

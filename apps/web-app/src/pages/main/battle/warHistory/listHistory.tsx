@@ -31,13 +31,14 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
       const playerIDs = [...attackerIDs, ...defenderIDs];
       const playerIDsUnique = [...new Set(playerIDs)];
 
-      const playersFetch =
-        await props.client.players.fetchAllMatchingIDs(playerIDsUnique);
-      if (playersFetch.status === 'fail') {
-        console.error(playersFetch.data);
-        return;
+      try {
+        const playersFetch =
+          await props.client.players.fetchAllMatchingIDs(playerIDsUnique);
+
+        setPlayers(playersFetch);
+      } catch (error) {
+        console.error('Error fetching players for war history:', error);
       }
-      setPlayers(playersFetch.data);
     };
     fetchData();
   }, [props.client.players, props.client.warHistory]);

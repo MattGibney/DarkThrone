@@ -1,9 +1,11 @@
-import { Request, Response } from 'express';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 import {
   GET_fetchAllPlayers,
   GET_fetchPlayerByID,
   GET_fetchPlayersForUser,
+  POST_createPlayer,
+  POST_fetchAllMatchingIDs,
+  POST_validatePlayerName,
   TypedRequest,
   TypedResponse,
 } from '@darkthrone/interfaces';
@@ -73,7 +75,10 @@ export default {
   ),
 
   POST_fetchAllMatchingIDs: protectPrivateAPI(
-    async (req: Request, res: Response) => {
+    async (
+      req: TypedRequest<POST_fetchAllMatchingIDs>,
+      res: TypedResponse<POST_fetchAllMatchingIDs>,
+    ) => {
       const { playerIDs } = req.body;
 
       const players = await req.ctx.modelFactory.player.fetchAllMatchingIDs(
@@ -91,7 +96,10 @@ export default {
   ),
 
   POST_validatePlayerName: protectPrivateAPI(
-    async (req: Request, res: Response) => {
+    async (
+      req: TypedRequest<POST_validatePlayerName>,
+      res: TypedResponse<POST_validatePlayerName>,
+    ) => {
       const { displayName } = req.body;
 
       const nameValidation =
@@ -101,42 +109,41 @@ export default {
         );
       if (!nameValidation.isValid) {
         res.status(400).json({
-          errors: nameValidation.issues.map((issue) => ({
-            code: issue,
-            title: issue,
-          })),
+          errors: nameValidation.issues,
         });
         return;
       }
 
-      res.status(200).json({ valid: true });
+      res.status(200).json(nameValidation);
     },
   ),
 
-  POST_createPlayer: protectPrivateAPI(async (req: Request, res: Response) => {
-    const { displayName, selectedRace, selectedClass } = req.body;
+  POST_createPlayer: protectPrivateAPI(
+    async (
+      req: TypedRequest<POST_createPlayer>,
+      res: TypedResponse<POST_createPlayer>,
+    ) => {
+      const { displayName, selectedRace, selectedClass } = req.body;
 
-    const nameValidation =
-      await req.ctx.modelFactory.player.validateDisplayName(
+      const nameValidation =
+        await req.ctx.modelFactory.player.validateDisplayName(
+          req.ctx,
+          displayName,
+        );
+      if (!nameValidation.isValid) {
+        res.status(400).json({
+          errors: nameValidation.issues,
+        });
+        return;
+      }
+
+      const player = await req.ctx.modelFactory.player.create(
         req.ctx,
         displayName,
+        selectedRace,
+        selectedClass,
       );
-    if (!nameValidation.isValid) {
-      res.status(400).json({
-        errors: nameValidation.issues.map((issue) => ({
-          code: issue,
-          title: issue,
-        })),
-      });
-      return;
-    }
-
-    const player = await req.ctx.modelFactory.player.create(
-      req.ctx,
-      displayName,
-      selectedRace,
-      selectedClass,
-    );
-    res.status(200).json(await player.serialise());
-  }),
+      res.status(201).json(await player.serialise());
+    },
+  ),
 };
