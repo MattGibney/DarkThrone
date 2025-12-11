@@ -21,12 +21,7 @@ describe('POST_withdraw', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'non_positive_withdraw',
-          title: 'Non positive withdraw',
-        },
-      ],
+      errors: ['banking.withdraw.negativeAmount'],
     });
   });
 
@@ -52,12 +47,7 @@ describe('POST_withdraw', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'insufficient_funds',
-          title: 'Insufficient funds',
-        },
-      ],
+      errors: ['banking.withdraw.insufficientFunds'],
     });
   });
 
@@ -88,7 +78,7 @@ describe('POST_withdraw', () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ message: 'OK' });
+    expect(response.body).toEqual({ amount: 50 });
 
     expect(daoFactory.player.createBankHistory).toHaveBeenCalledWith(
       logger,

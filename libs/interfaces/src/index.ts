@@ -104,6 +104,7 @@ export type ExtractErrorCodesForStatuses<
 
 export * from './api/attack';
 export * from './api/auth';
+export * from './api/banking';
 
 export enum UnitType {
   SUPPORT = 'support',
