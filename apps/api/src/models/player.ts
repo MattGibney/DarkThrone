@@ -3,6 +3,7 @@ import {
   FortificationUpgrade,
   PlayerClass,
   PlayerNameValidation,
+  PlayerNameValidationIssue,
   PlayerObject,
   StructureUpgrade,
   UnitType,
@@ -471,7 +472,7 @@ export default class PlayerModel {
     ctx: Context,
     displayName: string,
   ): Promise<PlayerNameValidation> {
-    const errors = [];
+    const errors: PlayerNameValidationIssue[] = [];
 
     const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(
       ctx,
@@ -485,21 +486,21 @@ export default class PlayerModel {
 
       return {
         isValid: false,
-        issues: ['name_taken'],
+        issues: ['player.name.validation.taken'],
       };
     }
 
     // Validate Regex a-zA-Z0-9_
     if (!/^[a-zA-Z0-9_]*$/.test(displayName)) {
-      errors.push('invalid_characters');
+      errors.push('player.name.validation.invalidCharacters');
     }
 
     if (displayName.length < 3) {
-      errors.push('too_short');
+      errors.push('player.name.validation.tooShort');
     }
 
     if (displayName.length > 20) {
-      errors.push('too_long');
+      errors.push('player.name.validation.tooLong');
     }
 
     return {

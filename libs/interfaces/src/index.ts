@@ -184,9 +184,15 @@ export type UserSessionObject = {
   serverTime: string;
 };
 
+export type PlayerNameValidationIssue =
+  | 'player.name.validation.taken'
+  | 'player.name.validation.invalidCharacters'
+  | 'player.name.validation.tooShort'
+  | 'player.name.validation.tooLong'
+  | 'player.name.validation.empty';
 export type PlayerNameValidation = {
   isValid: boolean;
-  issues: string[];
+  issues: PlayerNameValidationIssue[];
 };
 
 export type NewsPost = {

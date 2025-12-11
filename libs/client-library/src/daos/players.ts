@@ -1,12 +1,17 @@
 import axios from 'axios';
-import DarkThroneClient, { APIError, APIResponse } from '..';
+import DarkThroneClient from '..';
 import type {
   GET_fetchAllPlayers,
   GET_fetchPlayerByID,
   GET_fetchPlayersForUser,
   PaginatedResponse,
+  PlayerClass,
   PlayerNameValidation,
   PlayerObject,
+  PlayerRace,
+  POST_createPlayer,
+  POST_fetchAllMatchingIDs,
+  POST_validatePlayerName,
 } from '@darkthrone/interfaces';
 
 export default class PlayersDAO {
@@ -67,69 +72,63 @@ export default class PlayersDAO {
     }
   }
 
-  async fetchAllMatchingIDs(
-    playerIDs: string[],
-  ): Promise<
-    APIResponse<'ok', PlayerObject[]> | APIResponse<'fail', APIError[]>
-  > {
+  async fetchAllMatchingIDs(playerIDs: string[]): Promise<PlayerObject[]> {
     try {
-      const response = await this.root.http.post<PlayerObject[]>(
-        '/players/matching-ids',
-        { playerIDs },
-      );
-
-      return { status: 'ok', data: response.data as PlayerObject[] };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
+      const requestBody: POST_fetchAllMatchingIDs['RequestBody'] = {
+        playerIDs,
       };
+      const response = await this.root.http.post<
+        POST_fetchAllMatchingIDs['Responses'][200]
+      >('/players/matching-ids', requestBody);
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
-  async validatePlayerName(
-    name: string,
-  ): Promise<
-    APIResponse<'ok', PlayerNameValidation> | APIResponse<'fail', APIError[]>
-  > {
+  async validatePlayerName(name: string): Promise<PlayerNameValidation> {
     try {
-      const response = await this.root.http.post<PlayerNameValidation>(
-        '/players/validate-name',
-        { displayName: name },
-      );
-
-      return { status: 'ok', data: response.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
+      const requestBody: POST_validatePlayerName['RequestBody'] = {
+        displayName: name,
       };
+      const response = await this.root.http.post<
+        POST_validatePlayerName['Responses'][200]
+      >('/players/validate-name', requestBody);
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
   async create(
     name: string,
-    selectedRace: string,
-    selectedClass: string,
-  ): Promise<
-    APIResponse<'ok', PlayerObject> | APIResponse<'fail', APIError[]>
-  > {
+    selectedRace: PlayerRace,
+    selectedClass: PlayerClass,
+  ): Promise<PlayerObject> {
     try {
-      const response = await this.root.http.post<PlayerObject>('/players', {
+      const requestBody: POST_createPlayer['RequestBody'] = {
         displayName: name,
         selectedRace: selectedRace,
         selectedClass: selectedClass,
-      });
-
-      return { status: 'ok', data: response.data as PlayerObject };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
       };
+      const response = await this.root.http.post<
+        POST_createPlayer['Responses'][201]
+      >('/players', requestBody);
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 }
