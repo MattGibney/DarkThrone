@@ -23,19 +23,19 @@ export default function AttackListPage(props: AttackListPageProps) {
 
   const fetchForPage = useCallback(
     async (pageNumber: number) => {
-      const fetched = await props.client.players.fetchAllPlayers(
-        pageNumber,
-        pageSize,
-      );
+      try {
+        const fetched = await props.client.players.fetchAllPlayers(
+          pageNumber,
+          pageSize,
+        );
 
-      if (fetched.status === 'fail') {
-        return;
+        return {
+          items: fetched.items,
+          meta: fetched.meta,
+        };
+      } catch (error) {
+        console.error('Error fetching players for page:', error);
       }
-
-      return {
-        items: fetched.data.items,
-        meta: fetched.data.meta,
-      };
     },
     [props.client.players],
   );

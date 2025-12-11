@@ -1,10 +1,11 @@
 import axios from 'axios';
 import {
-  AuthedPlayerObject,
-  PlayerObject,
+  GET_currentUser,
   POST_assumePlayer,
   POST_login,
+  POST_logout,
   POST_register,
+  POST_unassumePlayer,
   UserSessionObject,
 } from '@darkthrone/interfaces';
 import DarkThroneClient from '..';
@@ -86,10 +87,10 @@ export default class AuthDAO {
 
   async getCurrentUser(): Promise<UserSessionObject> {
     try {
-      const response = await this.root.http.get<{
-        user: UserSessionObject;
-        player?: AuthedPlayerObject;
-      }>('/auth/current-user');
+      const response =
+        await this.root.http.get<GET_currentUser['Responses'][200]>(
+          '/auth/current-user',
+        );
 
       this.root.serverTime = new Date(response.data.user.serverTime);
       this.root.authenticatedUser = response.data.user;
@@ -107,7 +108,7 @@ export default class AuthDAO {
 
   async logout(): Promise<null> {
     try {
-      await this.root.http.post('/auth/logout');
+      await this.root.http.post<POST_logout['Responses'][204]>('/auth/logout');
 
       this.root.authenticatedUser = undefined;
       this.root.emit('userLogout');
@@ -128,10 +129,9 @@ export default class AuthDAO {
       const assumePlayerRequestBody: POST_assumePlayer['RequestBody'] = {
         playerID,
       };
-      const response = await this.root.http.post<{
-        user: UserSessionObject;
-        player: AuthedPlayerObject;
-      }>('/auth/assume-player', assumePlayerRequestBody);
+      const response = await this.root.http.post<
+        POST_assumePlayer['Responses'][200]
+      >('/auth/assume-player', assumePlayerRequestBody);
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
@@ -148,10 +148,9 @@ export default class AuthDAO {
 
   async unassumePlayer(): Promise<UserSessionObject> {
     try {
-      const response = await this.root.http.post<{
-        user: UserSessionObject;
-        player: PlayerObject;
-      }>('/auth/unassume-player');
+      const response = await this.root.http.post<
+        POST_unassumePlayer['Responses'][200]
+      >('/auth/unassume-player');
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = undefined;

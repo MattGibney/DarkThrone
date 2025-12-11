@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 import {
   GET_fetchAllPlayers,
+  GET_fetchPlayerByID,
+  GET_fetchPlayersForUser,
   TypedRequest,
   TypedResponse,
 } from '@darkthrone/interfaces';
@@ -13,10 +15,10 @@ export default {
       res: TypedResponse<GET_fetchAllPlayers>,
     ) => {
       const { page, pageSize } = req.query;
-      const pageNumber = Math.max(parseInt(page as string) || 1, 1);
+      const pageNumber = Math.max(parseInt(page) || 1, 1);
       const pageSizeNumber = Math.max(
         1,
-        Math.min(200, parseInt(pageSize as string) || 0),
+        Math.min(200, parseInt(pageSize) || 0),
       );
 
       const paginator = await req.ctx.modelFactory.player.fetchAllPaginated(
@@ -30,7 +32,10 @@ export default {
   ),
 
   GET_fetchPlayersForUser: protectPrivateAPI(
-    async (req: Request, res: Response) => {
+    async (
+      req: TypedRequest<GET_fetchPlayersForUser>,
+      res: TypedResponse<GET_fetchPlayersForUser>,
+    ) => {
       const players = await req.ctx.modelFactory.player.fetchAllForUser(
         req.ctx,
         req.ctx.authedUser.model,
@@ -47,7 +52,10 @@ export default {
   ),
 
   GET_fetchPlayerByID: protectPrivateAPI(
-    async (req: Request, res: Response) => {
+    async (
+      req: TypedRequest<GET_fetchPlayerByID>,
+      res: TypedResponse<GET_fetchPlayerByID>,
+    ) => {
       const player = await req.ctx.modelFactory.player.fetchByID(
         req.ctx,
         req.params.id,
@@ -55,12 +63,7 @@ export default {
 
       if (!player) {
         res.status(404).json({
-          errors: [
-            {
-              code: 'player_not_found',
-              title: 'Player not found',
-            },
-          ],
+          errors: ['player.fetchByID.notFound'],
         });
         return;
       }
