@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
-import DarkThroneClient, { APIError, APIResponse, PaginatedResponse } from '..';
+import DarkThroneClient, { APIError, APIResponse } from '..';
 import type {
+  PaginatedResponse,
   PlayerNameValidation,
   PlayerObject,
 } from '@darkthrone/interfaces';

@@ -1,4 +1,4 @@
-import { PlayerClass, PlayerRace } from '@darkthrone/interfaces';
+import { PlayerClass, PlayerObject, PlayerRace } from '@darkthrone/interfaces';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
@@ -57,7 +57,7 @@ export default class PlayerDao {
 
   async fetchAllPaginated(
     logger: Logger,
-    paginator: Paginator<PlayerRow, PlayerModel>,
+    paginator: Paginator<PlayerRow, PlayerObject, PlayerModel>,
   ): Promise<undefined> {
     try {
       const rows = await this.database('players')

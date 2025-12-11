@@ -372,11 +372,9 @@ export default class PlayerModel {
     ctx: Context,
     page = 1,
     pageSize = 100,
-  ): Promise<Paginator<PlayerRow, PlayerModel>> {
-    const paginator: Paginator<PlayerRow, PlayerModel> = new Paginator<
-      PlayerRow,
-      PlayerModel
-    >(page, pageSize);
+  ): Promise<Paginator<PlayerRow, PlayerObject, PlayerModel>> {
+    const paginator: Paginator<PlayerRow, PlayerObject, PlayerModel> =
+      new Paginator<PlayerRow, PlayerObject, PlayerModel>(page, pageSize);
     await ctx.daoFactory.player.fetchAllPaginated(ctx.logger, paginator);
 
     paginator.items = await Promise.all(

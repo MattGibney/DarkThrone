@@ -93,6 +93,16 @@ export type API_Error<T extends string> = {
   errors: T[];
 };
 
+export type PaginatedResponse<T> = {
+  items: T[];
+  meta: {
+    totalItemCount: number;
+    totalPageCount: number;
+    page: number;
+    pageSize: number;
+  };
+};
+
 export type ExtractErrorCodesForStatuses<
   T extends { Responses: Record<number, unknown> },
   Statuses extends keyof T['Responses'] = keyof T['Responses'],
@@ -105,6 +115,7 @@ export type ExtractErrorCodesForStatuses<
 export * from './api/attack';
 export * from './api/auth';
 export * from './api/banking';
+export * from './api/player';
 
 export enum UnitType {
   SUPPORT = 'support',
