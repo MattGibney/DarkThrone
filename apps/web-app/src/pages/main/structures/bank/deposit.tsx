@@ -3,20 +3,35 @@ import { Alert, Button, InputField } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import BankNavigation from './components/bankNavigation';
+import {
+  ExtractErrorCodesForStatuses,
+  POST_deposit,
+} from '@darkthrone/interfaces';
 
 // TODO: Make dynamic based on structure upgrades
 const MAX_DEPOSITS = 3;
+
+type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_deposit, 400 | 500>;
 
 interface BankDepositPageProps {
   client: DarkThroneClient;
 }
 export default function BankDepositPage(props: BankDepositPageProps) {
+  const errorTranslations: Record<PossibleErrorCodes, string> = {
+    'banking.deposit.negativeAmount':
+      'You must deposit a positive amount of gold.',
+    'banking.deposit.exceedsMaxDeposit':
+      'You may only deposit up to 80% of your gold at one time.',
+    'banking.deposit.maxDepositsReached':
+      'You have reached the maximum deposits allowed.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
+
   const [inputAmount, setInputAmount] = useState<number>(0);
-  // const [maxDepositAmount, setMaxDepositAmount] = useState<number>(0);
   const [depositsRemaining, setDepositsRemaining] =
     useState<number>(MAX_DEPOSITS);
 
-  const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
+  const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   useEffect(() => {
     const player = props.client.authenticatedPlayer;
@@ -47,31 +62,40 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     if (!playerGold) return;
 
     if (depositsRemaining < 1) {
-      setInvalidMessages(['You have reached the maximum deposits allowed.']);
+      setErrorMessages(['banking.deposit.maxDepositsReached']);
       return;
     }
 
     const maxDeposit = Math.floor(playerGold * 0.8);
     if (amount < 1) {
-      setInvalidMessages(['You must deposit at least 1 gold.']);
+      setErrorMessages(['banking.deposit.negativeAmount']);
       return;
     }
     if (amount > maxDeposit) {
-      setInvalidMessages([
-        'You may only deposit up to 80% of your gold at one time.',
-        `The maximum deposit amount is ${maxDeposit} gold.`,
-      ]);
+      setErrorMessages(['banking.deposit.exceedsMaxDeposit']);
       return;
     }
 
-    const depositRequest = await props.client.banking.deposit(amount);
+    try {
+      setErrorMessages([]);
+      await props.client.banking.deposit(amount);
 
-    if (depositRequest.status === 'fail') {
-      console.error(depositRequest.data);
-      return;
+      setInputAmount(0);
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown }).errors)
+      ) {
+        setErrorMessages(
+          (error as { errors?: PossibleErrorCodes[] })
+            .errors as PossibleErrorCodes[],
+        );
+      } else {
+        setErrorMessages(['server.error']);
+      }
     }
-
-    setInputAmount(0);
   }
 
   if (!props.client.authenticatedPlayer) return null;
@@ -105,8 +129,11 @@ export default function BankDepositPage(props: BankDepositPageProps) {
           className="flex flex-col gap-y-6 bg-zinc-800 p-8"
           onSubmit={handleDeposit}
         >
-          {invalidMessages.length > 0 ? (
-            <Alert messages={invalidMessages} type={'error'} />
+          {errorMessages.length > 0 ? (
+            <Alert
+              messages={errorMessages.map((err) => errorTranslations[err])}
+              type={'error'}
+            />
           ) : null}
           <div className="flex flex-col sm:flex-row gap-y-2 justify-between items-center text-zinc-400">
             <div>
@@ -119,7 +146,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
               type="number"
               value={inputAmount.toString()}
               setValue={(value) => setInputAmount(parseInt(value) || 0)}
-              onFocus={() => setInvalidMessages([])}
+              onFocus={() => setErrorMessages([])}
             />
           </div>
           <div className="flex flex-col gap-y-4">

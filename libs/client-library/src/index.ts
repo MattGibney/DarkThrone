@@ -28,6 +28,7 @@ export type PaginatedResponse<T> = {
   };
 };
 
+/** @deprecated */
 export type APIResponse<S, T> = {
   status: S;
   data: T;

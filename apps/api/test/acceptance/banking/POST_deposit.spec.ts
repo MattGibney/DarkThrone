@@ -21,12 +21,7 @@ describe('POST_deposit', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'non_positive_deposit',
-          title: 'Non positive deposit',
-        },
-      ],
+      errors: ['banking.deposit.negativeAmount'],
     });
   });
 
@@ -61,12 +56,7 @@ describe('POST_deposit', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'max_deposits_reached',
-          title: 'Max deposits reached',
-        },
-      ],
+      errors: ['banking.deposit.maxDepositsReached'],
     });
   });
 
@@ -93,13 +83,7 @@ describe('POST_deposit', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'exceeds_max_deposit',
-          title: 'Exceeds max deposit',
-          detail: 'The maximum deposit amount is 80 gold.',
-        },
-      ],
+      errors: ['banking.deposit.exceedsMaxDeposit'],
     });
   });
 
@@ -128,7 +112,7 @@ describe('POST_deposit', () => {
       .send({ amount: 50 });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ message: 'OK' });
+    expect(response.body).toEqual({ amount: 50 });
 
     expect(daoFactory.player.createBankHistory).toHaveBeenCalledWith(
       logger,

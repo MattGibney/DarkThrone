@@ -3,14 +3,30 @@ import { Alert, Button, InputField } from '@darkthrone/react-components';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { useState } from 'react';
 import BankNavigation from './components/bankNavigation';
+import {
+  ExtractErrorCodesForStatuses,
+  POST_withdraw,
+} from '@darkthrone/interfaces';
+
+type PossibleErrorCodes = ExtractErrorCodesForStatuses<
+  POST_withdraw,
+  400 | 500
+>;
 
 interface BankWithdrawPageProps {
   client: DarkThroneClient;
 }
 export default function BankWithdrawPage(props: BankWithdrawPageProps) {
-  const [inputAmount, setInputAmount] = useState<number>(0);
+  const errorTranslations: Record<PossibleErrorCodes, string> = {
+    'banking.withdraw.negativeAmount':
+      'You must withdraw a positive amount of gold.',
+    'banking.withdraw.insufficientFunds':
+      'You do not have enough gold in the bank to complete this withdrawal.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
 
-  const [invalidMessages, setInvalidMessages] = useState<string[]>([]);
+  const [inputAmount, setInputAmount] = useState<number>(0);
+  const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
   async function handleWithdraw(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -18,26 +34,31 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
     const playerGoldInBank = props.client.authenticatedPlayer?.goldInBank;
     if (!playerGoldInBank) return;
 
-    if (playerGoldInBank < 1) {
-      setInvalidMessages(['You do not have any gold in the bank to withdraw.']);
+    if (playerGoldInBank < 1 || inputAmount > playerGoldInBank) {
+      setErrorMessages(['banking.withdraw.insufficientFunds']);
       return;
     }
 
-    if (inputAmount > playerGoldInBank) {
-      setInvalidMessages([
-        'You cannot withdraw more gold than you have in the bank',
-      ]);
-      return;
+    try {
+      setErrorMessages([]);
+      await props.client.banking.withdraw(inputAmount);
+
+      setInputAmount(0);
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown }).errors)
+      ) {
+        setErrorMessages(
+          (error as { errors?: PossibleErrorCodes[] })
+            .errors as PossibleErrorCodes[],
+        );
+      } else {
+        setErrorMessages(['server.error']);
+      }
     }
-
-    const withdrawRequest = await props.client.banking.withdraw(inputAmount);
-
-    if (withdrawRequest.status === 'fail') {
-      console.error(withdrawRequest.data);
-      return;
-    }
-
-    setInputAmount(0);
   }
 
   if (!props.client.authenticatedPlayer) return null;
@@ -71,25 +92,19 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
           className="flex flex-col gap-y-6 bg-zinc-800 p-8"
           onSubmit={handleWithdraw}
         >
-          {invalidMessages.length > 0 ? (
-            <Alert messages={invalidMessages} type={'error'} />
+          {errorMessages.length > 0 ? (
+            <Alert
+              messages={errorMessages.map((err) => errorTranslations[err])}
+              type={'error'}
+            />
           ) : null}
           <div className="flex justify-end items-center text-zinc-400">
             <InputField
               type="number"
               value={inputAmount.toString()}
               setValue={(value) => setInputAmount(parseInt(value) || 0)}
-              onFocus={() => setInvalidMessages([])}
+              onFocus={() => setErrorMessages([])}
             />
-            {/* <input
-              type="number"
-              value={inputAmount}
-              onChange={(e) => setInputAmount(parseInt(e.target.value) || 0)}
-              onFocus={() => setInvalidMessages([])}
-              className="rounded-md border-0 py-1.5 bg-zinc-700 text-zinc-200 ring-1 ring-inset ring-zinc-500 focus:ring-2 focus:ring-inset focus:ring-yellow-600 invalid:ring-red-600 sm:text-sm sm:leading-6 min-w-48"
-              min={0}
-              max={props.client.authenticatedPlayer.goldInBank}
-            /> */}
           </div>
           <div className="flex justify-end items-end">
             <div className="flex gap-x-4">
