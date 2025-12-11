@@ -1,16 +1,16 @@
-interface Serialisable {
-  serialise(): Promise<object>;
+import { PaginatedResponse } from '@darkthrone/interfaces';
+
+interface Serialisable<Serialised> {
+  serialise(): Promise<Serialised>;
   id: string;
 }
 
-export class Paginator<R, I extends Serialisable> {
+export class Paginator<R, S, I extends Serialisable<S>> {
   public dataRows: R[];
   public items: I[];
   public totalItemCount = 0;
   public page: number;
   public pageSize: number;
-  private rowObject: R;
-  private itemObject: I;
 
   constructor(page = 1, pageSize = 25) {
     this.page = page;
@@ -19,11 +19,13 @@ export class Paginator<R, I extends Serialisable> {
     this.dataRows = [];
   }
 
-  async serialise(): Promise<object> {
+  async serialise(): Promise<PaginatedResponse<S>> {
+    const serialisedItems: S[] = await Promise.all(
+      this.items.map((item): Promise<S> => item.serialise()),
+    );
+
     return {
-      items: await Promise.all(
-        this.items.map(async (item) => await item.serialise()),
-      ),
+      items: serialisedItems,
       meta: {
         totalItemCount: this.totalItemCount,
         totalPageCount: Math.ceil(this.totalItemCount / this.pageSize),

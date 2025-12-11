@@ -1,9 +1,17 @@
 import { Request, Response } from 'express';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
+import {
+  GET_fetchAllPlayers,
+  TypedRequest,
+  TypedResponse,
+} from '@darkthrone/interfaces';
 
 export default {
   GET_fetchAllPlayers: protectPrivateAPI(
-    async (req: Request, res: Response) => {
+    async (
+      req: TypedRequest<GET_fetchAllPlayers>,
+      res: TypedResponse<GET_fetchAllPlayers>,
+    ) => {
       const { page, pageSize } = req.query;
       const pageNumber = Math.max(parseInt(page as string) || 1, 1);
       const pageSizeNumber = Math.max(
