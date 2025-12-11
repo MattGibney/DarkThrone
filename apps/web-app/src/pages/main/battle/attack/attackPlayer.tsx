@@ -49,14 +49,12 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         return;
       }
 
-      const playerFetch = await props.client.players.fetchByID(playerID);
-
-      if (playerFetch.status === 'fail') {
+      try {
+        const playerFetch = await props.client.players.fetchByID(playerID);
+        setPlayer(playerFetch);
+      } catch {
         setPlayer(null);
-        return;
       }
-
-      setPlayer(playerFetch.data);
     };
     fetchPlayer();
   }, [playerID, props.client.players]);

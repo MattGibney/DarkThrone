@@ -30,8 +30,8 @@ export type ExtendEndpointDefinition<
   Base extends EndpointDefinition,
   Extension extends Partial<{
     RequestBody: object;
-    Query: object;
-    Params: object;
+    QueryParams: object;
+    PathParams: object;
     Responses: { [status: number]: unknown };
   }>,
 > = Omit<Base, keyof Extension> & {

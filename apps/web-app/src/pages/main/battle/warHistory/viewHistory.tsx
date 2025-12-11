@@ -30,23 +30,24 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
       }
       setHistory(historyFetch.data);
 
-      const attackingPlayerFetch = await props.client.players.fetchByID(
-        historyFetch.data.attackerID,
-      );
-      if (attackingPlayerFetch.status === 'fail') {
-        console.error(attackingPlayerFetch.data);
-        return;
+      try {
+        const attackingPlayerFetch = await props.client.players.fetchByID(
+          historyFetch.data.attackerID,
+        );
+        setAttackingPlayer(attackingPlayerFetch);
+      } catch {
+        setAttackingPlayer(null);
       }
-      setAttackingPlayer(attackingPlayerFetch.data);
 
-      const defendingPlayerFetch = await props.client.players.fetchByID(
-        historyFetch.data.defenderID,
-      );
-      if (defendingPlayerFetch.status === 'fail') {
-        console.error(defendingPlayerFetch.data);
-        return;
+      try {
+        const defendingPlayerFetch = await props.client.players.fetchByID(
+          historyFetch.data.defenderID,
+        );
+
+        setDefendingPlayer(defendingPlayerFetch);
+      } catch {
+        setDefendingPlayer(null);
       }
-      setDefendingPlayer(defendingPlayerFetch.data);
     };
     fetchData();
   }, [props.client.warHistory, historyID, props.client.players]);

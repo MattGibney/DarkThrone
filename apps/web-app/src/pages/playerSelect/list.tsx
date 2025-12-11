@@ -16,16 +16,15 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
 
   useEffect(() => {
     const getPlayers = async () => {
-      const playersFetch = await props.client.players.fetchAllPlayersForUser();
+      try {
+        const playersFetch =
+          await props.client.players.fetchAllPlayersForUser();
 
-      setDidLoad(true);
-
-      if (playersFetch.status === 'fail') {
-        console.error('Failed to fetch players', playersFetch.data);
-        return;
+        setDidLoad(true);
+        setPlayers(playersFetch);
+      } catch (error) {
+        console.error('Error fetching players for user:', error);
       }
-
-      setPlayers(playersFetch.data);
     };
 
     getPlayers();

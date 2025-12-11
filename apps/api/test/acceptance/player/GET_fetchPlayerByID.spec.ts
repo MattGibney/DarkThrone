@@ -77,12 +77,7 @@ describe('GET_fetchPlayerByID', () => {
 
     expect(response.status).toEqual(404);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'player_not_found',
-          title: 'Player not found',
-        },
-      ],
+      errors: ['player.fetchByID.notFound'],
     });
   });
 });

@@ -1,6 +1,9 @@
-import { AxiosError } from 'axios';
+import axios from 'axios';
 import DarkThroneClient, { APIError, APIResponse } from '..';
 import type {
+  GET_fetchAllPlayers,
+  GET_fetchPlayerByID,
+  GET_fetchPlayersForUser,
   PaginatedResponse,
   PlayerNameValidation,
   PlayerObject,
@@ -16,60 +19,51 @@ export default class PlayersDAO {
   async fetchAllPlayers(
     page: number,
     pageSize?: number,
-  ): Promise<
-    | APIResponse<'ok', PaginatedResponse<PlayerObject>>
-    | APIResponse<'fail', APIError[]>
-  > {
+  ): Promise<PaginatedResponse<PlayerObject>> {
     try {
-      if (!pageSize) {
-        pageSize = 100;
-      }
+      if (!pageSize) pageSize = 100;
 
+      // TODO: Use a URL constructor to enfore type safety?
       const response = await this.root.http.get<
-        PaginatedResponse<PlayerObject>
+        GET_fetchAllPlayers['Responses'][200]
       >(`/players?page=${page}&pageSize=${pageSize}`);
 
-      return { status: 'ok', data: response.data };
-    } catch (err: unknown) {
-      const axiosError = err as AxiosError;
-
-      return { status: 'fail', data: axiosError.response?.data as APIError[] };
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
-  async fetchAllPlayersForUser(): Promise<
-    APIResponse<'ok', PlayerObject[]> | APIResponse<'fail', APIError[]>
-  > {
+  async fetchAllPlayersForUser(): Promise<PlayerObject[]> {
     try {
-      const response = await this.root.http.get<PlayerObject[]>(
-        '/auth/current-user/players',
-      );
+      const response = await this.root.http.get<
+        GET_fetchPlayersForUser['Responses'][200]
+      >('/auth/current-user/players');
 
-      return { status: 'ok', data: response.data as PlayerObject[] };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
-  async fetchByID(
-    id: string,
-  ): Promise<
-    APIResponse<'ok', PlayerObject> | APIResponse<'fail', APIError[]>
-  > {
+  async fetchByID(id: string): Promise<PlayerObject> {
     try {
-      const response = await this.root.http.get<PlayerObject>(`/players/${id}`);
+      const response = await this.root.http.get<
+        GET_fetchPlayerByID['Responses'][200]
+      >(`/players/${id}`);
 
-      return { status: 'ok', data: response.data as PlayerObject };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 

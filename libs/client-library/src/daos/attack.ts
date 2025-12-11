@@ -18,10 +18,9 @@ export default class AttackDAO {
         targetID,
         attackTurns,
       };
-      const attackResponse = await this.root.http.post<WarHistoryObject>(
-        '/attack',
-        requestBody,
-      );
+      const attackResponse = await this.root.http.post<
+        POST_attackPlayer['Responses'][200]
+      >('/attack', requestBody);
 
       return attackResponse.data;
     } catch (error) {

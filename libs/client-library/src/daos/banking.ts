@@ -12,10 +12,9 @@ export default class BankingDAO {
   async deposit(amount: number): Promise<{ amount: number }> {
     try {
       const depositRequestBody: POST_deposit['RequestBody'] = { amount };
-      const depositResponse = await this.root.http.post<{ amount: number }>(
-        '/bank/deposit',
-        depositRequestBody,
-      );
+      const depositResponse = await this.root.http.post<
+        POST_deposit['Responses'][200]
+      >('/bank/deposit', depositRequestBody);
 
       this.root.emit('playerUpdate');
 
@@ -31,10 +30,9 @@ export default class BankingDAO {
   async withdraw(amount: number): Promise<{ amount: number }> {
     try {
       const withdrawRequestBody: POST_withdraw['RequestBody'] = { amount };
-      const withdrawResponse = await this.root.http.post<{ amount: number }>(
-        '/bank/withdraw',
-        withdrawRequestBody,
-      );
+      const withdrawResponse = await this.root.http.post<
+        POST_withdraw['Responses'][200]
+      >('/bank/withdraw', withdrawRequestBody);
 
       this.root.emit('playerUpdate');
 
