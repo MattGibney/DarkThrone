@@ -2,6 +2,7 @@
 import {
   FortificationUpgrade,
   HousingUpgrade,
+  StructureUpgradeType,
   UnitType,
   type Unit,
 } from '@darkthrone/interfaces';
@@ -341,7 +342,7 @@ export const housingUpgrades: HousingUpgrade[] = [
   },
 ];
 
-export const structureUpgrades = {
+export const structureUpgrades: Record<StructureUpgradeType, object> = {
   fortification: fortificationUpgrades,
   housing: housingUpgrades,
 };

@@ -116,6 +116,7 @@ export * from './api/attack';
 export * from './api/auth';
 export * from './api/banking';
 export * from './api/player';
+export * from './api/structures';
 
 export enum UnitType {
   SUPPORT = 'support',
@@ -235,3 +236,5 @@ export type WarHistoryObject = {
   goldStolen: number;
   createdAt: Date;
 };
+
+export type StructureUpgradeType = 'fortification' | 'housing';

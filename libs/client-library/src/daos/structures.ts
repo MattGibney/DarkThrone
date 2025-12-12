@@ -1,5 +1,9 @@
-import { structureUpgrades } from '@darkthrone/game-data';
-import DarkThroneClient, { APIError, APIResponse } from '..';
+import axios from 'axios';
+import DarkThroneClient from '..';
+import {
+  POST_upgradeStructure,
+  StructureUpgradeType,
+} from '@darkthrone/interfaces';
 
 export default class StructuresDAO {
   private root: DarkThroneClient;
@@ -9,25 +13,22 @@ export default class StructuresDAO {
   }
 
   async upgrade(
-    structureType: keyof typeof structureUpgrades,
-  ): Promise<
-    APIResponse<'ok', { amount: number }> | APIResponse<'fail', APIError[]>
-  > {
+    structureType: StructureUpgradeType,
+  ): Promise<{ status: 'success' }> {
     try {
-      const depositResponse = await this.root.http.post<{ amount: number }>(
-        '/structures/upgrade',
-        { structureType },
-      );
-
-      this.root.emit('playerUpdate');
-
-      return { status: 'ok', data: depositResponse.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
+      const requestBody: POST_upgradeStructure['RequestBody'] = {
+        structureType,
       };
+      const depositResponse = await this.root.http.post<
+        POST_upgradeStructure['Responses'][200]
+      >('/structures/upgrade', requestBody);
+
+      return depositResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 }
