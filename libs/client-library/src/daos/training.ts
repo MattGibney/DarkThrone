@@ -1,5 +1,11 @@
-import DarkThroneClient, { APIError, APIResponse } from '..';
-import type { PlayerUnits } from '@darkthrone/interfaces';
+import axios from 'axios';
+import DarkThroneClient from '..';
+import type {
+  AuthedPlayerObject,
+  PlayerUnits,
+  POST_trainUnits,
+  POST_unTrainUnits,
+} from '@darkthrone/interfaces';
 
 export default class TrainingDAO {
   private root: DarkThroneClient;
@@ -8,49 +14,44 @@ export default class TrainingDAO {
     this.root = root;
   }
 
-  async trainUnits(
-    desiredUnits: PlayerUnits[],
-  ): Promise<
-    APIResponse<'ok', PlayerUnits[]> | APIResponse<'fail', APIError[]>
-  > {
+  async trainUnits(desiredUnits: PlayerUnits[]): Promise<AuthedPlayerObject> {
     try {
-      const response = await this.root.http.post<PlayerUnits[]>(
-        '/training/train',
+      const requestBody: POST_trainUnits['RequestBody'] = {
         desiredUnits,
-      );
+      };
+      const response = await this.root.http.post<
+        POST_trainUnits['Responses'][200]
+      >('/training/train', requestBody);
 
+      // TODO: Push the data through to avoid an extra fetch.
       this.root.emit('playerUpdate');
 
-      return { status: 'ok', data: response.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
-  async unTrainUnits(
-    desiredUnits: PlayerUnits[],
-  ): Promise<
-    APIResponse<'ok', PlayerUnits[]> | APIResponse<'fail', APIError[]>
-  > {
+  async unTrainUnits(desiredUnits: PlayerUnits[]): Promise<AuthedPlayerObject> {
     try {
-      const response = await this.root.http.post<PlayerUnits[]>(
-        '/training/untrain',
-        desiredUnits,
-      );
+      const requestBody: POST_unTrainUnits['RequestBody'] = {
+        unitsToUnTrain: desiredUnits,
+      };
+      const response = await this.root.http.post<
+        POST_unTrainUnits['Responses'][200]
+      >('/training/untrain', requestBody);
 
       this.root.emit('playerUpdate');
 
-      return { status: 'ok', data: response.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 }
