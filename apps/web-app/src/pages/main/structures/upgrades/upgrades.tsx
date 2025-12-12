@@ -2,7 +2,7 @@ import DarkThroneClient from '@darkthrone/client-library';
 import SubNavigation from '../../../../components/layout/subNavigation';
 import { fortificationUpgrades, housingUpgrades } from '@darkthrone/game-data';
 import { Button } from '@darkthrone/react-components';
-import { structureUpgrades } from '@darkthrone/game-data';
+import { StructureUpgradeType } from '@darkthrone/interfaces';
 
 interface UpgradesScreenProps {
   client: DarkThroneClient;
@@ -25,7 +25,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
     },
   };
 
-  async function handleUpgrade(type: keyof typeof structureUpgrades) {
+  async function handleUpgrade(type: StructureUpgradeType) {
     await props.client.structures.upgrade(type);
   }
 
@@ -177,7 +177,7 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
                     <p className="bg-cyan-800/40 border border-cyan-900/80 text-sm font-medium text-cyan-40 p-2 rounded-md">
                       Your fortification must be at least{' '}
                       {
-                        structureUpgrades.fortification[
+                        fortificationUpgrades[
                           upgrades.housing.next.requiredFortificationLevel
                         ].name
                       }{' '}

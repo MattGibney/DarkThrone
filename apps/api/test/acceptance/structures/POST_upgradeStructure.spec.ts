@@ -25,12 +25,7 @@ describe('POST_upgradeStructure.spec', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'upgrade_structure_not_found',
-          title: 'Structure upgrade not found',
-        },
-      ],
+      errors: ['structure.upgrade.notFound'],
     });
   });
   it('should return a 400 if the specified upgrade is invalid', async () => {
@@ -56,12 +51,7 @@ describe('POST_upgradeStructure.spec', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'upgrade_structure_not_found',
-          title: 'Structure upgrade not found',
-        },
-      ],
+      errors: ['structure.upgrade.notFound'],
     });
   });
   it('should return a 400 if the player does not have enough gold', async () => {
@@ -74,6 +64,7 @@ describe('POST_upgradeStructure.spec', () => {
       },
       authenticatedPlayer: {
         gold: 0,
+        experience: 43000,
         structureUpgrades: {
           fortification: 0,
           housing: 0,
@@ -88,12 +79,7 @@ describe('POST_upgradeStructure.spec', () => {
 
     expect(response.status).toEqual(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'upgrade_structure_not_enough_gold',
-          title: 'Not enough gold',
-        },
-      ],
+      errors: ['structure.upgrade.notEnoughGold'],
     });
   });
   it('should return a 200 if the upgrade is successful', async () => {
@@ -107,6 +93,7 @@ describe('POST_upgradeStructure.spec', () => {
       authenticatedPlayer: {
         id: 'PLR-1',
         gold: 100001,
+        experience: 43000,
         structureUpgrades: {
           fortification: 0,
           housing: 0,

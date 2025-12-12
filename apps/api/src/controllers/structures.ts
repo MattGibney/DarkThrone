@@ -1,15 +1,18 @@
-import { Request, Response } from 'express';
-import { APIError } from '@darkthrone/client-library';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 import { structureUpgrades } from '@darkthrone/game-data';
+import {
+  POST_upgradeStructure,
+  TypedRequest,
+  TypedResponse,
+} from '@darkthrone/interfaces';
 
 export default {
   POST_upgradeStructure: protectPrivateAPI(
-    async (req: Request, res: Response) => {
-      const structureType = req.body
-        .structureType as keyof typeof structureUpgrades;
-
-      const apiErrors: APIError[] = [];
+    async (
+      req: TypedRequest<POST_upgradeStructure>,
+      res: TypedResponse<POST_upgradeStructure>,
+    ) => {
+      const { structureType } = req.body;
 
       const nextStructureUpgrade = structureUpgrades[structureType]
         ? structureUpgrades[structureType][
@@ -17,14 +20,7 @@ export default {
           ]
         : null;
       if (!nextStructureUpgrade) {
-        apiErrors.push({
-          code: 'upgrade_structure_not_found',
-          title: 'Structure upgrade not found',
-        });
-      }
-
-      if (apiErrors.length > 0) {
-        res.status(400).send({ errors: apiErrors });
+        res.status(400).send({ errors: ['structure.upgrade.notFound'] });
         return;
       }
 
@@ -32,31 +28,26 @@ export default {
         if (
           nextStructureUpgrade.levelRequirement > req.ctx.authedPlayer.level
         ) {
-          apiErrors.push({
-            code: 'upgrade_structure_level_requirement_not_met',
-            title: 'Level requirement not met',
-          });
+          res
+            .status(400)
+            .send({ errors: ['structure.upgrade.levelRequirementNotMet'] });
+          return;
         }
       } else {
         if (
           nextStructureUpgrade.requiredFortificationLevel >
           req.ctx.authedPlayer.structureUpgrades.fortification
         ) {
-          apiErrors.push({
-            code: 'upgrade_structure_fortification_requirement_not_met',
-            title: 'Fortification requirement not met',
+          res.status(400).send({
+            errors: ['structure.upgrade.fortificationRequirementNotMet'],
           });
+          return;
         }
       }
 
       if (req.ctx.authedPlayer.gold < nextStructureUpgrade.cost) {
         res.status(400).send({
-          errors: [
-            {
-              code: 'upgrade_structure_not_enough_gold',
-              title: 'Not enough gold',
-            },
-          ],
+          errors: ['structure.upgrade.notEnoughGold'],
         });
         return;
       }
