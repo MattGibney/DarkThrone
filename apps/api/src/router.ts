@@ -54,8 +54,8 @@ router.post(
 );
 
 // War History
-router.get('/war-history/:id', WarHistoryController.GET_fetchByID);
-router.get('/war-history', WarHistoryController.GET_fetchAll);
+router.get('/war-history/:id', WarHistoryController.GET_fetchWarHistoryByID);
+router.get('/war-history', WarHistoryController.GET_fetchAllWarHistory);
 
 // Training
 router.post('/training/train', TrainingController.POST_trainUnits);

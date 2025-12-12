@@ -118,6 +118,7 @@ export * from './api/banking';
 export * from './api/player';
 export * from './api/structures';
 export * from './api/training';
+export * from './api/warHistory';
 
 export enum UnitType {
   SUPPORT = 'support',

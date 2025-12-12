@@ -15,23 +15,20 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const historyFetch = await props.client.warHistory.fetchAll();
-      if (historyFetch.status === 'fail') {
-        console.error(historyFetch.data);
-        return;
-      }
-      setHistoryItems(historyFetch.data);
-
-      const attackerIDs = historyFetch.data.map(
-        (historyItem) => historyItem.attackerID,
-      );
-      const defenderIDs = historyFetch.data.map(
-        (historyItem) => historyItem.defenderID,
-      );
-      const playerIDs = [...attackerIDs, ...defenderIDs];
-      const playerIDsUnique = [...new Set(playerIDs)];
-
       try {
+        const historyFetch = await props.client.warHistory.fetchAll();
+        setHistoryItems(historyFetch);
+
+        const attackerIDs = historyFetch.map(
+          (historyItem) => historyItem.attackerID,
+        );
+        const defenderIDs = historyFetch.map(
+          (historyItem) => historyItem.defenderID,
+        );
+
+        const playerIDs = [...attackerIDs, ...defenderIDs];
+        const playerIDsUnique = [...new Set(playerIDs)];
+
         const playersFetch =
           await props.client.players.fetchAllMatchingIDs(playerIDsUnique);
 
