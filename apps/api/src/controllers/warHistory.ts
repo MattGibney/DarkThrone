@@ -1,52 +1,53 @@
-import { Request, Response } from 'express';
-import { APIError } from '@darkthrone/client-library';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
+import {
+  GET_fetchAllWarHistory,
+  GET_fetchWarHistoryByID,
+  TypedRequest,
+  TypedResponse,
+} from '@darkthrone/interfaces';
 
 export default {
-  GET_fetchByID: protectPrivateAPI(async (req: Request, res: Response) => {
-    const { id } = req.params;
+  GET_fetchWarHistoryByID: protectPrivateAPI(
+    async (
+      req: TypedRequest<GET_fetchWarHistoryByID>,
+      res: TypedResponse<GET_fetchWarHistoryByID>,
+    ) => {
+      const { id } = req.params;
 
-    const apiErrors: APIError[] = [];
+      if (!id) {
+        res.status(400).send({ errors: ['warHistory.fetchByID.invalidID'] });
+        return;
+      }
 
-    if (!id) {
-      apiErrors.push({
-        code: 'war_history_id_required',
-        title: 'War history ID required',
-      });
-    }
+      const warHistory = await req.ctx.modelFactory.warHistory.fetchByID(
+        req.ctx,
+        id,
+      );
+      if (!warHistory) {
+        res.status(404).send({
+          errors: ['warHistory.fetchByID.notFound'],
+        });
+        return;
+      }
 
-    if (apiErrors.length > 0) {
-      res.status(400).send({ errors: apiErrors });
-      return;
-    }
+      res.status(200).send(warHistory.serialise());
+    },
+  ),
 
-    const warHistory = await req.ctx.modelFactory.warHistory.fetchByID(
-      req.ctx,
-      id,
-    );
-    if (!warHistory) {
-      res.status(404).send({
-        errors: [
-          {
-            code: 'war_history_not_found',
-            title: 'War history not found',
-          },
-        ],
-      });
-      return;
-    }
+  GET_fetchAllWarHistory: protectPrivateAPI(
+    async (
+      req: TypedRequest<GET_fetchAllWarHistory>,
+      res: TypedResponse<GET_fetchAllWarHistory>,
+    ) => {
+      const warHistory =
+        await req.ctx.modelFactory.warHistory.fetchAllForPlayer(
+          req.ctx,
+          req.ctx.authedPlayer,
+        );
 
-    res.status(200).send(warHistory.serialise());
-  }),
-
-  GET_fetchAll: protectPrivateAPI(async (req: Request, res: Response) => {
-    const warHistory = await req.ctx.modelFactory.warHistory.fetchAllForPlayer(
-      req.ctx,
-      req.ctx.authedPlayer,
-    );
-
-    res
-      .status(200)
-      .send(warHistory.map((warHistory) => warHistory.serialise()));
-  }),
+      res
+        .status(200)
+        .send(warHistory.map((warHistory) => warHistory.serialise()));
+    },
+  ),
 };

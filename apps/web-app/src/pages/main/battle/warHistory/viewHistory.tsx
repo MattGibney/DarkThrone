@@ -23,29 +23,22 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
     const fetchData = async () => {
       if (!historyID) return;
 
-      const historyFetch = await props.client.warHistory.fetchByID(historyID);
-      if (historyFetch.status === 'fail') {
-        console.error(historyFetch.data);
-        return;
-      }
-      setHistory(historyFetch.data);
-
       try {
+        const historyFetch = await props.client.warHistory.fetchByID(historyID);
+        setHistory(historyFetch);
+
         const attackingPlayerFetch = await props.client.players.fetchByID(
-          historyFetch.data.attackerID,
+          historyFetch.attackerID,
         );
         setAttackingPlayer(attackingPlayerFetch);
-      } catch {
-        setAttackingPlayer(null);
-      }
 
-      try {
         const defendingPlayerFetch = await props.client.players.fetchByID(
-          historyFetch.data.defenderID,
+          historyFetch.defenderID,
         );
-
         setDefendingPlayer(defendingPlayerFetch);
       } catch {
+        setHistory(null);
+        setAttackingPlayer(null);
         setDefendingPlayer(null);
       }
     };

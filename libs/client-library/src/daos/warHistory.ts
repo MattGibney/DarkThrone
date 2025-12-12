@@ -1,5 +1,10 @@
-import { WarHistoryObject } from '@darkthrone/interfaces';
-import DarkThroneClient, { APIError, APIResponse } from '..';
+import {
+  GET_fetchAllWarHistory,
+  GET_fetchWarHistoryByID,
+  WarHistoryObject,
+} from '@darkthrone/interfaces';
+import DarkThroneClient from '..';
+import axios from 'axios';
 
 export default class AttackDAO {
   private root: DarkThroneClient;
@@ -8,54 +13,34 @@ export default class AttackDAO {
     this.root = root;
   }
 
-  async fetchByID(
-    id: string,
-  ): Promise<
-    APIResponse<'ok', WarHistoryObject> | APIResponse<'fail', APIError[]>
-  > {
-    if (!this.root.authenticatedPlayer) {
-      return {
-        status: 'fail',
-        data: [{ code: 'CL465', title: 'You are not authenticated' }],
-      };
-    }
-
+  async fetchByID(id: string): Promise<WarHistoryObject> {
     try {
-      const attackResponse = await this.root.http.get<WarHistoryObject>(
-        `/war-history/${id}`,
-      );
+      const attackResponse = await this.root.http.get<
+        GET_fetchWarHistoryByID['Responses'][200]
+      >(`/war-history/${id}`);
 
-      return { status: 'ok', data: attackResponse.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return attackResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 
-  async fetchAll(): Promise<
-    APIResponse<'ok', WarHistoryObject[]> | APIResponse<'fail', APIError[]>
-  > {
-    if (!this.root.authenticatedPlayer) {
-      return {
-        status: 'fail',
-        data: [{ code: 'CL465', title: 'You are not authenticated' }],
-      };
-    }
-
+  async fetchAll(): Promise<WarHistoryObject[]> {
     try {
       const attackResponse =
-        await this.root.http.get<WarHistoryObject[]>('/war-history');
+        await this.root.http.get<GET_fetchAllWarHistory['Responses'][200]>(
+          '/war-history',
+        );
 
-      return { status: 'ok', data: attackResponse.data };
-    } catch (err: unknown) {
-      const axiosError = err as { response: { data: { errors: APIError[] } } };
-      return {
-        status: 'fail',
-        data: axiosError.response.data.errors as APIError[],
-      };
+      return attackResponse.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw error.response.data;
+      }
+      throw new Error('server.error');
     }
   }
 }
