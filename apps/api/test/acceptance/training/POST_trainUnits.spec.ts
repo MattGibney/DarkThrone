@@ -11,16 +11,13 @@ describe('POST /training/units', () => {
     const response = await request(application)
       .post('/training/train')
       .set('Authorization', 'Bearer token')
-      .send([]);
+      .send({
+        desiredUnits: [],
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'no_units_requested',
-          title: 'No units requested',
-        },
-      ],
+      errors: ['training.train.noUnitsRequested'],
     });
   });
 
@@ -31,32 +28,26 @@ describe('POST /training/units', () => {
     let response = await request(application)
       .post('/training/train')
       .set('Authorization', 'Bearer token')
-      .send([{ unitType: 'citizen', quantity: 0 }]);
+      .send({
+        desiredUnits: [{ unitType: 'citizen', quantity: 0 }],
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'non_positive_units_requests',
-          title: 'Non positive units requests',
-        },
-      ],
+      errors: ['training.train.nonPositiveUnitsRequested'],
     });
 
     // fails to train when requesting a negative number of units
     response = await request(application)
       .post('/training/train')
       .set('Authorization', 'Bearer token')
-      .send([{ unitType: 'citizen', quantity: -1 }]);
+      .send({
+        desiredUnits: [{ unitType: 'citizen', quantity: -1 }],
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'non_positive_units_requests',
-          title: 'Non positive units requests',
-        },
-      ],
+      errors: ['training.train.nonPositiveUnitsRequested'],
     });
   });
 
@@ -66,16 +57,13 @@ describe('POST /training/units', () => {
     const response = await request(application)
       .post('/training/train')
       .set('Authorization', 'Bearer token')
-      .send([{ unitType: 'citizen', quantity: 1 }]);
+      .send({
+        desiredUnits: [{ unitType: 'citizen', quantity: 1 }],
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'not_enough_citizens',
-          title: 'Not enough citizens',
-        },
-      ],
+      errors: ['training.train.notEnoughCitizens'],
     });
   });
 
@@ -92,20 +80,32 @@ describe('POST /training/units', () => {
     const response = await request(application)
       .post('/training/train')
       .set('Authorization', 'Bearer token')
-      .send([{ unitType: 'worker', quantity: 1 }]);
+      .send({
+        desiredUnits: [{ unitType: 'worker', quantity: 1 }],
+      });
 
     expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      errors: [
-        {
-          code: 'not_enough_gold',
-          title: 'Not enough gold',
-        },
-      ],
+      errors: ['training.train.notEnoughGold'],
     });
   });
 
   it('should train units and subtract gold', async () => {
+    const playerRow = {
+      id: 'PLR-1',
+      user_id: 'USR-1',
+      display_name: 'Player 1',
+      race: 'human',
+      class: 'fighter',
+      avatar_url: null,
+      created_at: new Date(),
+      attack_turns: 10,
+      gold_in_bank: 0,
+      experience: 0,
+      overall_rank: 1,
+      structureUpgrades: { fortification: 0, housing: 0 },
+    };
+
     const mockDAOFactory = {
       playerUnits: {
         create: jest.fn().mockResolvedValue({}),
@@ -113,10 +113,13 @@ describe('POST /training/units', () => {
       },
       player: {
         fetchByID: jest.fn().mockResolvedValue({
-          id: 'PLR-1',
+          ...playerRow,
           gold: 10000,
         }),
-        update: jest.fn().mockResolvedValue({}),
+        update: jest.fn().mockResolvedValue({
+          ...playerRow,
+          gold: 7500,
+        }),
       },
     } as unknown as DaoFactory;
     const { application, logger } = createAppForTest({
@@ -134,16 +137,19 @@ describe('POST /training/units', () => {
           quantity: 1,
         },
       ],
+      playerGold: 10000,
       daoFactory: mockDAOFactory,
     });
 
     const response = await request(application)
       .post('/training/train')
       .set('Authorization', 'Bearer token')
-      .send([
-        { unitType: 'worker', quantity: 1 },
-        { unitType: 'soldier_1', quantity: 1 },
-      ]);
+      .send({
+        desiredUnits: [
+          { unitType: 'worker', quantity: 1 },
+          { unitType: 'soldier_1', quantity: 1 },
+        ],
+      });
 
     expect(mockDAOFactory.playerUnits.create).toHaveBeenCalledWith(
       logger,
@@ -172,8 +178,15 @@ describe('POST /training/units', () => {
       }),
     );
 
+    console.log(response.body);
+
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: 'Training Complete' });
+    expect(response.body.gold).toBe(7500);
+    expect(response.body.units).toEqual([
+      { unitType: 'citizen', quantity: 8 },
+      { unitType: 'worker', quantity: 2 },
+    ]);
+    expect(response.body.goldPerTurn).toBe(10100);
   });
 });
 
