@@ -40,6 +40,7 @@ export default defineConfig({
     reporters: ['default'],
     passWithNoTests: true,
     coverage: {
+      include: ['src/**/*.{ts,tsx,js,jsx}'],
       reportsDirectory: '../../coverage/apps/website',
       provider: 'v8',
     },
