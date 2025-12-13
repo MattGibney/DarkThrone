@@ -48,7 +48,11 @@ export default class DarkThroneClient {
     this.warHistory = new WarHistoryController(this);
 
     const reFetchCurrentUser = async () => {
-      await this.auth.getCurrentUser();
+      try {
+        await this.auth.getCurrentUser();
+      } catch {
+        // console.error('Error re-fetching current user on focus:', error);
+      }
     };
     window.addEventListener('focus', function () {
       reFetchCurrentUser();

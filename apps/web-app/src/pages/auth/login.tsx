@@ -1,11 +1,28 @@
 import DarkThroneClient from '@darkthrone/client-library';
+import { Logo } from '@darkthrone/react-components';
 import {
   Alert,
-  Button,
-  InputCheckbox,
-  InputField,
-  Logo,
-} from '@darkthrone/react-components';
+  AlertDescription,
+  AlertTitle,
+} from '@darkthrone/shadcnui/alert';
+import { Input } from '@darkthrone/shadcnui/input';
+import { Checkbox } from '@darkthrone/shadcnui/checkbox';
+import { Button } from '@darkthrone/shadcnui/button';
+import {
+  Field,
+  FieldLabel,
+  FieldGroup,
+  FieldDescription,
+} from '@darkthrone/shadcnui/field';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@darkthrone/shadcnui/card';
+import { AlertCircleIcon } from 'lucide-react';
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
@@ -13,6 +30,7 @@ import {
   ExtractErrorCodesForStatuses,
   POST_login,
 } from '@darkthrone/interfaces';
+import { Label } from '@darkthrone/shadcnui/label';
 
 type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_login>;
 
@@ -30,7 +48,9 @@ export default function LoginPage(props: LoginPageProps) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState<boolean | 'indeterminate'>(
+    false,
+  );
 
   const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
 
@@ -39,7 +59,9 @@ export default function LoginPage(props: LoginPageProps) {
 
     try {
       setErrorMessages([]);
-      await props.client.auth.login(email, password, rememberMe);
+      const normalisedRememberMe =
+        rememberMe === 'indeterminate' ? false : rememberMe;
+      await props.client.auth.login(email, password, normalisedRememberMe);
 
       navigate('/overview');
     } catch (error) {
@@ -65,77 +87,91 @@ export default function LoginPage(props: LoginPageProps) {
         <div className="flex justify-center">
           <Logo variant="large" />
         </div>
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Login to your account
-        </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div className="bg-zinc-800 px-6 py-12 shadow sm:rounded-lg sm:px-12">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* TODO: These errors are translation keys */}
-            {errorMessages.length > 0 ? (
-              <Alert
-                title="There was a problem"
-                messages={errorMessages.map((code) => errorTranslations[code])}
-                type="error"
-              />
-            ) : null}
-            <InputField
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              displayName="Email address"
-              value={email}
-              setValue={(newVal) => setEmail(newVal)}
-            />
-
-            <div>
-              <InputField
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                displayName="Password"
-                value={password}
-                setValue={(newVal) => setPassword(newVal)}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <InputCheckbox
-                id="remember-me"
-                name="remember-me"
-                displayName="Remember me"
-                value={rememberMe}
-                setValue={(newVal) => setRememberMe(newVal)}
-              />
-
-              <div className="text-sm leading-6">
-                {/* <Link to="/forgot-password" className="font-semibold text-yellow-600 hover:text-yellow-500">
-                  Forgot password?
-                </Link> */}
-              </div>
-            </div>
-
-            <div>
-              <Button type="submit" text="Login" />
-            </div>
-          </form>
-        </div>
-
-        <p className="my-10 text-center text-sm text-zinc-500">
-          Not a member?{' '}
-          <Link
-            to="/register"
-            className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
-          >
-            Create an account now
-          </Link>
-        </p>
+      <div className="mt-10 px-4 sm:mx-auto sm:w-full sm:max-w-120">
+        <Card>
+          <CardHeader>
+            <CardTitle>Login to your account</CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              {errorMessages.length > 0 ? (
+                <Alert variant="destructive" className="text-sm [&>svg]:size-4">
+                  <AlertCircleIcon />
+                  <AlertTitle>There was a problem</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-inside list-disc text-sm">
+                      {errorMessages.map((code) => (
+                        <li key={code}>{errorTranslations[code]}</li>
+                      ))}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              ) : null}
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Field>
+                <Field>
+                  <div className="flex items-center">
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    {/* <a
+                        href="#"
+                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                      >
+                        Forgot your password?
+                      </a> */}
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Field>
+                {/* Remember Me Checkbox */}
+                <Field>
+                  <div className="flex items-center gap-3">
+                    <Checkbox
+                      id="rememberMe"
+                      name="rememberMe"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(checked)}
+                    />
+                    <Label htmlFor="rememberMe">Remember Me</Label>
+                  </div>
+                </Field>
+                <Field className="space-y-4">
+                  <Button variant={'default'} type="submit">
+                    Login
+                  </Button>
+                  <FieldDescription className="text-center">
+                    Not a member?{' '}
+                    <Link
+                      to="/register"
+                      className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
+                    >
+                      Create an account now
+                    </Link>
+                  </FieldDescription>
+                </Field>
+              </FieldGroup>
+            </form>
+          </CardContent>
+        </Card>
 
         <Footer />
       </div>
