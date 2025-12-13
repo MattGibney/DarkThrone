@@ -50,7 +50,7 @@ You need to have the following installed on your machine:
 6. Start the application
 
    ```bash
-   npx nx run-many -t serve -p api,web-app,placeholder-site
+   npx nx run-many -t serve -p api,web-app
    ```
 
    This will start the:

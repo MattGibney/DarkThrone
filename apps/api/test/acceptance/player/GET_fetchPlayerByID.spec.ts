@@ -40,7 +40,7 @@ describe('GET_fetchPlayerByID', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       id: 'PLR-1',
-      level: 0,
+      level: 1,
       armySize: 0,
     });
   });
