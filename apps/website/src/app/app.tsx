@@ -12,6 +12,7 @@ export type NavigationItem = {
   name: string;
   href: string;
   element: React.FC;
+  isExternal?: boolean;
 };
 
 export const screens: { [k: string]: NavigationItem } = {
@@ -27,35 +28,41 @@ export const screens: { [k: string]: NavigationItem } = {
     name: 'Play Now',
     href: environment.webAppUrl,
     element: Outlet,
+    isExternal: true,
   },
   github: {
     name: 'Github',
     href: 'https://github.com/MattGibney/DarkThrone',
     element: Outlet,
+    isExternal: true,
   },
   discord: {
     name: 'Discord',
     href: 'https://discord.gg/ygYCytkx7Y',
     element: Outlet,
+    isExternal: true,
   },
   status: {
     name: 'Game Status',
     href: 'https://status.darkthronereborn.com/',
     element: Outlet,
+    isExternal: true,
   },
   bugReport: {
     name: 'Bug Report',
     href: 'https://github.com/MattGibney/DarkThrone/issues/new/choose',
     element: Outlet,
+    isExternal: true,
   },
   contributors: {
     name: 'Contributors',
     href: 'https://github.com/MattGibney/DarkThrone/graphs/contributors',
     element: Outlet,
+    isExternal: true,
   },
 };
 
-export const navigation = ['home', 'news', 'roadmap', 'play'].map((item) => {
+export const navigation = ['home', 'news', 'play'].map((item) => {
   return screens[item];
 });
 

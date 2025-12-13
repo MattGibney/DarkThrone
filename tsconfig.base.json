@@ -19,12 +19,37 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@darkthrone/client-library": ["libs/client-library/src/index.ts"],
-      "@darkthrone/game-data": ["libs/game-data/src/index.ts"],
-      "@darkthrone/interfaces": ["libs/interfaces/src/index.ts"],
-      "@darkthrone/react-components": ["libs/react-components/src/index.ts"],
-      "@darkthrone/shared-data": ["libs/shared-data/src/index.ts"]
+      "@darkthrone/client-library": [
+        "libs/client-library/src/index.ts"
+      ],
+      "@darkthrone/game-data": [
+        "libs/game-data/src/index.ts"
+      ],
+      "@darkthrone/interfaces": [
+        "libs/interfaces/src/index.ts"
+      ],
+      "@darkthrone/react-components": [
+        "libs/react-components/src/index.ts"
+      ],
+      "@darkthrone/shared-data": [
+        "libs/shared-data/src/index.ts"
+      ],
+      "@darkthrone/shadcnui": [
+        "libs/shadcnui/src"
+      ],
+      "@darkthrone/shadcnutils": [
+        "libs/shadcnutils/src"
+      ],
+      "@darkthrone/shadcnui/*": [
+        "libs/shadcnui/src/*"
+      ],
+      "@darkthrone/shadcnutils/*": [
+        "libs/shadcnutils/src/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

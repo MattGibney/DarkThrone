@@ -4,8 +4,8 @@ import NavigationLink from '../navigationLink';
 
 export default function Footer() {
   return (
-    <div className="bg-zinc-900 py-12 px-4 xl:px-0">
-      <div className="max-w-screen-lg mx-auto justify-around flex-wrap gap-0 text-zinc-400 grid grid-cols-1 sm:grid-cols-3">
+    <div className="bg-muted py-12 px-4 xl:px-0">
+      <div className="max-w-5xl mx-auto justify-around flex-wrap gap-0 text-foreground/60 grid grid-cols-1 sm:grid-cols-3">
         <div className="w-full mb-6 sm:mb-0">
           <Logo variant="short" />
           <div className="mt-4">
@@ -36,9 +36,6 @@ export default function Footer() {
         <div className="w-full mb-6 sm:mb-0">
           <h5 className="text-2xl font-display mb-2">Project</h5>
           <ul>
-            <li>
-              <NavigationLink linkData={screens['roadmap']} />
-            </li>
             <li>
               <NavigationLink linkData={screens['contributors']} />
             </li>

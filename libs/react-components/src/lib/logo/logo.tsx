@@ -3,8 +3,8 @@ import { tv } from 'tailwind-variants';
 const styles = tv({
   slots: {
     body: 'flex items-end gap-x-2 font-display',
-    text: 'text-3xl font-bold text-white',
-    subText: 'text-zinc-500 -mt-1',
+    text: 'text-3xl font-bold text-foreground',
+    subText: 'text-foreground/80 -mt-1',
   },
   variants: {
     style: {

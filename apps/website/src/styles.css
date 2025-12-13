@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "../../../libs/shadcnutils/src/global.css";
+@source "../../../libs/shadcnui/src/**/*.tsx";
+
+@plugin "@tailwindcss/typography";
 /* You can add global styles to this file, and also import other style files */
 
 @theme {

@@ -9,7 +9,7 @@ export default function NavigationLink(props: NavigationLinkProps) {
   return (
     <Link
       to={props.linkData.href}
-      className="hover:text-amber-500"
+      className="hover:text-primary"
       target={isExternal ? '_blank' : undefined}
       rel={isExternal ? 'noopener noreferrer' : undefined}
     >

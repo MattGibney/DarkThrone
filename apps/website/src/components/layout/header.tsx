@@ -3,10 +3,10 @@ import NavigationLink from '../navigationLink';
 
 export default function Header() {
   return (
-    <div className="bg-zinc-900">
+    <div className="bg-background/80">
       <div
         className="
-          text-white
+          text-foreground/80
           flex
           justify-between
           font-display
@@ -14,7 +14,7 @@ export default function Header() {
           py-4
           text-xs
 
-          max-w-screen-lg
+          max-w-5xl
           mx-auto
 
           px-4 lg:px-0

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tailwind": {
+    "config": "libs/shadcnutils/src/tailwind.config.ts",
+    "css": "libs/shadcnutils/src/global.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "ui": "@darkthrone/shadcnui",
+    "components": "@darkthrone/shadcnui/components",
+    "utils": "@darkthrone/shadcnutils",
+    "hooks": "@darkthrone/shadcnui/hooks"
+  }
+}

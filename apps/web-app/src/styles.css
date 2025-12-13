@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "../../../libs/shadcnutils/src/global.css";
+@source "../../../libs/shadcnui/src/**/*.tsx";
+
 @plugin "@tailwindcss/typography";
 
 @theme {

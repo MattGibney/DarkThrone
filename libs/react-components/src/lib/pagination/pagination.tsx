@@ -14,12 +14,12 @@ export function Pagination(props: PaginationProps) {
   const totalPages = Math.ceil(props.totalItems / props.itemsPerPage);
 
   return (
-    <nav className="flex items-center justify-between border-t border-zinc-700 px-4 sm:px-0">
+    <nav className="flex items-center justify-between border-t border-muted px-4 sm:px-0">
       <div className="-mt-px flex w-0 flex-1">
         {props.currentPage > 1 ? (
           <LinkBlock onClick={() => props.onPageChange(props.currentPage - 1)}>
             <ArrowLongLeftIcon
-              className="mr-3 h-5 w-5 text-zinc-400"
+              className="mr-3 h-5 w-5 text-foreground/40"
               aria-hidden="true"
             />
             Previous
@@ -45,7 +45,7 @@ export function Pagination(props: PaginationProps) {
           <LinkBlock onClick={() => props.onPageChange(props.currentPage + 1)}>
             Next
             <ArrowLongRightIcon
-              className="ml-3 h-5 w-5 text-zinc-400"
+              className="ml-3 h-5 w-5 text-foreground/40"
               aria-hidden="true"
             />
           </LinkBlock>
@@ -59,8 +59,8 @@ const styles = tv({
   base: 'inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium',
   variants: {
     color: {
-      zinc: 'text-zinc-500 hover:text-zinc-300 hover:border-zinc-300',
-      yellow: 'border-yellow-600 text-yellow-600',
+      muted: 'text-muted/80 hover:text-muted hover:border-muted/60',
+      primary: 'border-primary text-primary',
     },
   },
 });
@@ -74,7 +74,7 @@ function LinkBlock(props: LinkBlockProps) {
   return (
     <button
       onClick={props.onClick}
-      className={styles({ color: props.isCurrent ? 'yellow' : 'zinc' })}
+      className={styles({ color: props.isCurrent ? 'primary' : 'muted' })}
     >
       {props.children}
     </button>

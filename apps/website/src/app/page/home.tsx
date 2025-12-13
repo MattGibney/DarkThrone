@@ -1,9 +1,9 @@
+import { Button } from '@darkthrone/shadcnui/button';
 import {
   DevicePhoneMobileIcon,
   TrophyIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
 import { environment } from '../../environments/environment';
 
 export default function HomePage() {
@@ -24,45 +24,52 @@ export default function HomePage() {
           src="/background.mp4"
         />
         <div className="absolute w-full h-full bg-black/50" />
-        <Link
-          to={environment.webAppUrl}
+        {/* This button has styling overrides as it needs to sit outside of the theme. */}
+        <Button
+          asChild
+          variant="default"
+          size="lg"
           className="
             relative
-            bg-zinc-800
-            text-white
-            text-lg
-            font-display
-            py-2 px-4
 
-            border
-            border-white
-            outline
-            outline-zinc-800
-          "
+            bg-background/80
+            hover:bg-background
+            text-foreground
+
+            ring-1 outline-secondary ring-offset-1
+
+            font-display
+            text-lg"
         >
-          Play
-        </Link>
+          <a
+            href={environment.webAppUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Play
+          </a>
+        </Button>
       </div>
 
       <div
         className="
-        bg-zinc-700
+        bg-muted/80
         px-4 lg:px-0
       "
       >
         <div
           className="
-            max-w-screen-lg
+            max-w-5xl
             mx-auto
 
-            text-white
+            text-foreground
             text-center
 
             py-32
           "
         >
           <h1 className="font-display text-4xl mb-6">About the project</h1>
-          <p className="text-zinc-200">
+          <p className="text-foreground/80">
             DarkThrone Reborn is a re-creation of the classic MMO Dark Throne,
             originally created by Lazarus Software. That game is gone now but
             this project aims to bring back it back in spirit. Our primary goal
@@ -74,14 +81,14 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="bg-zinc-800">
+      <div className="bg-background">
         <div
           className="
-            max-w-screen-lg
+            max-w-5xl
             mx-auto
             flex justify-around
 
-            text-white
+            text-foreground
 
             py-24
           "
@@ -91,7 +98,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-display text-center mb-6">
               The game you loved
             </h2>
-            <p className="text-center text-zinc-400">
+            <p className="text-center text-foreground/60">
               We want to bring back the same experience as the classic MMORPG.
             </p>
           </div>
@@ -100,7 +107,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-display text-center mb-6">
               Built for Mobile
             </h2>
-            <p className="text-center text-zinc-400">
+            <p className="text-center text-foreground/60">
               First class mobile support for play on the go. With options in the
               future to expand into native mobile applications.
             </p>
@@ -110,7 +117,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-display text-center mb-6">
               Community focused
             </h2>
-            <p className="text-center text-zinc-400">
+            <p className="text-center text-foreground/60">
               The community will have a strong voice in shaping the future of
               the game with feature suggestions and voting.
             </p>

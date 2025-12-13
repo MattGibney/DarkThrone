@@ -43,19 +43,19 @@ export default function NewsPage() {
     <div>
       <PageHeader text="News" />
 
-      <div className="bg-zinc-800 text-zinc-200">
-        <div className="max-w-screen-lg mx-auto py-10 mb-10 flex flex-col gap-y-6">
+      <div className="bg-background text-foreground">
+        <div className="max-w-5xl mx-auto py-10 mb-10 flex flex-col gap-y-6">
           {news.map((n, i) => (
-            <div className="border border-zinc-700 rounded-lg" key={i}>
-              <div className="bg-zinc-900 font-display rounded-t-lg px-4 py-2 flex justify-between items-center">
+            <div className="border border-muted rounded-lg" key={i}>
+              <div className="bg-muted font-display rounded-t-lg px-4 py-2 flex justify-between items-center">
                 <div>{n.title}</div>
-                <div className="text-sm font-sans text-zinc-300">
+                <div className="text-sm font-sans text-foreground/60">
                   {new Intl.DateTimeFormat(undefined, {
                     dateStyle: 'medium',
                   }).format(n.date)}
                 </div>
               </div>
-              <div className="p-4 max-w-none prose prose-sm prose-p:mb-2 prose-zinc prose-invert">
+              <div className="p-4 max-w-none prose prose-sm prose-p:mb-2 prose-invert">
                 <Markdown>{n.content}</Markdown>
               </div>
             </div>
