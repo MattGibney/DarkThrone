@@ -119,6 +119,7 @@ export default function PlayerSelectListPage(props: PlayerSelectListPageProps) {
               variant="secondary"
               type="button"
               onClick={() => props.client.auth.logout()}
+              size={'lg'}
             >
               Logout
             </Button>

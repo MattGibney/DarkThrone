@@ -1,5 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Button, InputField, Logo } from '@darkthrone/react-components';
+import { Logo } from '@darkthrone/react-components';
+import { Input } from '@darkthrone/shadcnui/input';
+import { Button } from '@darkthrone/shadcnui/button';
 import { useEffect, useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
@@ -10,6 +12,9 @@ import {
   PlayerRace,
   POST_validatePlayerName,
 } from '@darkthrone/interfaces';
+import { Field, FieldError, FieldLabel } from '@darkthrone/shadcnui/field';
+import { Label } from '@darkthrone/shadcnui/label';
+import { ArrowLeft } from 'lucide-react';
 
 type PossibleErrorCodes = ExtractErrorCodesForStatuses<
   POST_validatePlayerName,
@@ -181,7 +186,6 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
   async function handleCreatePlayer(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     if (!playerName || !selectedRace || !selectedClass) return;
 
     await props.client.players.create(playerName, selectedRace, selectedClass);
@@ -189,47 +193,61 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     navigate('/player-select');
   }
 
+  function handleCancel() {
+    navigate('/player-select');
+  }
+
   return (
     <main>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8">
         <div className="flex justify-center">
           <Logo variant="large" />
         </div>
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Create new player
-        </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div className="bg-zinc-800 sm:rounded-lg px-6 py-12 sm:px-12">
-          <form className="space-y-12" onSubmit={handleCreatePlayer}>
-            <InputField
-              displayName="Player Name"
-              value={playerName}
-              setValue={(newValue) => setPlayerName(newValue)}
-              onBlur={() => validatePlayerName()}
-              type="text"
-              validationState={
-                playerNameStatus
-                  ? playerNameStatus.isValid
-                    ? 'valid'
-                    : 'invalid'
-                  : 'neutral'
-              }
-              validationMessage={
-                playerNameStatus?.messages
-                  ? playerNameStatus?.messages
-                      .map((err) => errorTranslations[err])
-                      .join(', ')
-                  : undefined
-              }
-            />
+      <div className="sm:mx-auto sm:w-full sm:max-w-120 mb-3">
+        <Button
+          type="button"
+          variant={'ghost'}
+          size={'sm'}
+          onClick={handleCancel}
+        >
+          <ArrowLeft /> Back to Player Selection
+        </Button>
+      </div>
 
-            <section>
-              <h2 className="text-sm font-medium leading-6 text-zinc-200 mb-2">
-                Race
-              </h2>
-              <div className="grid grid-cols-2 gap-6">
+      <div className="sm:mx-auto sm:w-full sm:max-w-120">
+        <div className="bg-muted sm:rounded-lg px-6 py-12 sm:px-12">
+          <form className="space-y-12" onSubmit={handleCreatePlayer}>
+            <Field
+              data-invalid={
+                playerNameStatus ? !playerNameStatus.isValid : undefined
+              }
+            >
+              <FieldLabel htmlFor="playerName">Player Name</FieldLabel>
+              <Input
+                id="playerName"
+                type="text"
+                required
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                onBlur={() => validatePlayerName()}
+                aria-invalid={
+                  playerNameStatus ? !playerNameStatus.isValid : undefined
+                }
+              />
+              {playerNameStatus && !playerNameStatus.isValid ? (
+                <FieldError>
+                  {playerNameStatus.messages
+                    .map((err) => errorTranslations[err])
+                    .join(', ')}
+                </FieldError>
+              ) : null}
+            </Field>
+
+            <section className="space-y-2">
+              <Label>Race</Label>
+              <div className="grid grid-cols-2 gap-3">
                 {raceOptions.map((option, optionIdx) => (
                   <button
                     type="button"
@@ -247,11 +265,9 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
               </div>
             </section>
 
-            <section>
-              <h2 className="text-sm font-medium leading-6 text-zinc-200 mb-2">
-                Class
-              </h2>
-              <div className="flex flex-col gap-6">
+            <section className="space-y-2">
+              <Label>Class</Label>
+              <div className="flex flex-col gap-3">
                 {classOptions.map((option, optionIdx) => (
                   <button
                     type="button"
@@ -268,11 +284,13 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
             </section>
 
             <Button
-              text="Create Player"
-              variant="primary"
+              variant="default"
               type="submit"
-              isDisabled={!isFormValid}
-            />
+              className="w-full py-6"
+              disabled={!isFormValid}
+            >
+              Create Player
+            </Button>
           </form>
         </div>
       </div>

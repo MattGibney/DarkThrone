@@ -4,11 +4,13 @@ const styles = tv({
   slots: {
     container:
       'text-center p-2 border-2 border-zinc-600 rounded-lg flex flex-col cursor-pointer',
+    bonusText: 'text-sm text-foreground/45',
   },
   variants: {
     selected: {
       true: {
-        container: 'border-yellow-600 bg-yellow-800/25',
+        container: 'border-primary bg-primary/10',
+        bonusText: 'text-primary/80',
       },
     },
   },
@@ -21,14 +23,11 @@ export interface ClassCardProps {
   isSelected?: boolean;
 }
 export default function ClassCard(props: ClassCardProps) {
-  const { container } = styles({ selected: props.isSelected });
+  const { container, bonusText } = styles({ selected: props.isSelected });
   return (
     <div className={container()}>
-      {/* <div className='grow flex flex-col justify-center items-center'>
-        {props.icon()}
-      </div> */}
-      <h3 className="font-bold">{props.name}</h3>
-      <p className="text-sm text-zinc-400">{props.bonusText}</p>
+      <h3 className="font-medium">{props.name}</h3>
+      <p className={bonusText()}>{props.bonusText}</p>
     </div>
   );
 }
