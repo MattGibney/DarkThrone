@@ -37,6 +37,7 @@ export type POST_register = ExtendEndpointDefinition<
         | 'auth.register.invalidParams'
         | 'auth.register.emailInUse'
         | 'auth.register.invalidPassword'
+        | 'auth.register.passwordsDoNotMatch'
       >;
     };
   }

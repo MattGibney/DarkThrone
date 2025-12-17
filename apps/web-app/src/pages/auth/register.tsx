@@ -1,5 +1,26 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Alert, Button, InputField, Logo } from '@darkthrone/react-components';
+import { Logo } from '@darkthrone/react-components';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@darkthrone/shadcnui/alert';
+import { Button } from '@darkthrone/shadcnui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@darkthrone/shadcnui/card';
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@darkthrone/shadcnui/field';
+import { Input } from '@darkthrone/shadcnui/input';
+import { AlertCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
@@ -21,6 +42,7 @@ export default function RegisterPage(props: RegisterPageProps) {
     'auth.register.invalidParams': 'Please provide both email and password.',
     'auth.register.invalidPassword':
       'Password must be at least 7 characters long and include both upper and lower case letters.',
+    'auth.register.passwordsDoNotMatch': 'Passwords do not match.',
     'auth.register.emailInUse': 'This email is already registered.',
     'server.error': 'An unexpected server error occurred. Please try again.',
   };
@@ -37,7 +59,7 @@ export default function RegisterPage(props: RegisterPageProps) {
 
     const matchingPasswords = password === confirmPassword;
     if (!matchingPasswords) {
-      setErrorMessages(['auth.register.invalidPassword']);
+      setErrorMessages(['auth.register.passwordsDoNotMatch']);
       return;
     }
 
@@ -69,73 +91,99 @@ export default function RegisterPage(props: RegisterPageProps) {
         <div className="flex justify-center">
           <Logo variant="large" />
         </div>
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-zinc-400">
-          Create your account
-        </h2>
       </div>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
-        <div className="bg-zinc-800 px-6 py-12 shadow sm:rounded-lg sm:px-12">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {errorMessages.length > 0 ? (
-              <Alert
-                title="There was a problem"
-                messages={errorMessages.map((code) => errorTranslations[code])}
-                type="error"
-              />
-            ) : null}
-            <InputField
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              displayName="Email address"
-              value={email}
-              setValue={(newVal) => setEmail(newVal)}
-            />
+      <div className="mt-10 px-4 sm:mx-auto sm:w-full sm:max-w-120">
+        <Card>
+          <CardHeader>
+            <CardTitle>Create an account</CardTitle>
+            <CardDescription>
+              Enter your email below to get started
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {errorMessages.length > 0 ? (
+                <Alert variant="destructive" className="text-sm [&>svg]:size-4">
+                  <AlertCircleIcon />
+                  <AlertTitle>There was a problem</AlertTitle>
+                  <AlertDescription>
+                    <ul className="list-inside list-disc text-sm">
+                      {errorMessages.map((code) => (
+                        <li key={code}>{errorTranslations[code]}</li>
+                      ))}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              ) : null}
 
-            <InputField
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              displayName="Password"
-              value={password}
-              setValue={(newVal) => setPassword(newVal)}
-            />
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="m@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
+                </Field>
 
-            <InputField
-              id="confirm-password"
-              name="confirm-password"
-              type="password"
-              autoComplete="new-password"
-              required
-              displayName="Confirm Password"
-              value={confirmPassword}
-              setValue={(newVal) => setConfirmPassword(newVal)}
-            />
+                <Field>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
+                </Field>
 
-            <div>
-              <Button
-                onClick={() => handleSubmit}
-                type="submit"
-                text="Create Account"
-              />
-            </div>
-          </form>
-        </div>
+                <Field>
+                  <FieldLabel htmlFor="confirmPassword">
+                    Confirm password
+                  </FieldLabel>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                    }}
+                  />
+                </Field>
 
-        <p className="my-10 text-center text-sm text-zinc-500">
-          Already a member?{' '}
-          <Link
-            to="/login"
-            className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
-          >
-            Login now
-          </Link>
-        </p>
+                <Field className="space-y-4">
+                  <Button variant="default" type="submit">
+                    Create Account
+                  </Button>
+                  <FieldDescription className="text-center">
+                    Already a member?{' '}
+                    <Link
+                      to="/login"
+                      className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
+                    >
+                      Login now
+                    </Link>
+                  </FieldDescription>
+                </Field>
+              </FieldGroup>
+            </form>
+          </CardContent>
+        </Card>
 
         <Footer />
       </div>
