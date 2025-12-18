@@ -1,11 +1,14 @@
 import {
   AuthedPlayerObject,
+  CombatUnitType,
   FortificationUpgrade,
   PlayerClass,
   PlayerNameValidation,
   PlayerNameValidationIssue,
   PlayerObject,
   StructureUpgrade,
+  UnitItem,
+  UnitItemType,
   UnitType,
 } from '@darkthrone/interfaces';
 import { PlayerRace } from '@darkthrone/interfaces';
@@ -15,15 +18,34 @@ import UserModel from './user';
 import { ulid } from 'ulid';
 import WarHistoryModel from './warHistory';
 import PlayerUnitsModel from './playerUnits';
+import PlayerItemModel from './playerItem';
 import {
   UnitTypes,
   fortificationUpgrades,
   housingUpgrades,
   levelXPArray,
   structureUpgrades,
+  unitItems,
 } from '@darkthrone/game-data';
 import { getRandomNumber } from '../utils';
 import { Paginator } from '../lib/paginator';
+
+const unitItemLookup: Record<string, UnitItem> = unitItems.reduce(
+  (acc, item) => {
+    acc[item.key] = item;
+    return acc;
+  },
+  {} as Record<string, UnitItem>,
+);
+
+const itemTypeOrder: UnitItemType[] = [
+  'weapon',
+  'helm',
+  'armor',
+  'boots',
+  'bracers',
+  'shield',
+];
 
 export default class PlayerModel {
   private ctx: Context;
@@ -44,15 +66,23 @@ export default class PlayerModel {
   public structureUpgrades: {
     fortification: number;
     housing: number;
+    armoury: number;
   };
 
   public units: PlayerUnitsModel[];
+  public items: PlayerItemModel[];
 
-  constructor(ctx: Context, data: PlayerRow, units: PlayerUnitsModel[]) {
+  constructor(
+    ctx: Context,
+    data: PlayerRow,
+    units: PlayerUnitsModel[],
+    items: PlayerItemModel[],
+  ) {
     this.ctx = ctx;
 
     this.populateFromRow(data);
     this.units = units;
+    this.items = items || [];
   }
 
   async serialiseAuthedPlayer(): Promise<AuthedPlayerObject> {
@@ -82,6 +112,10 @@ export default class PlayerModel {
         units: this.units.map((unit) => ({
           unitType: unit.unitType,
           quantity: unit.quantity,
+        })),
+        items: this.items.map((item) => ({
+          itemKey: item.itemKey,
+          quantity: item.quantity,
         })),
         structureUpgrades: this.structureUpgrades,
       },
@@ -171,26 +205,28 @@ export default class PlayerModel {
   }
 
   async calculateAttackStrength(): Promise<number> {
-    let offense = this.units.reduce(
-      (acc, unit) => acc + unit.calculateAttackStrength(),
-      0,
-    );
+    let offence =
+      this.units.reduce(
+        (acc, unit) => acc + unit.calculateAttackStrength(),
+        0,
+      ) + this.calculateItemStrength(CombatUnitType.OFFENCE, 'offence');
     if (this.race === 'human' || this.race === 'undead') {
       // Humans and Undead get a 5% bonus to attack strength
-      offense *= 1.05;
+      offence *= 1.05;
     }
     if (this.class === 'fighter') {
       // Fighters get a 5% bonus to attack strength
-      offense *= 1.05;
+      offence *= 1.05;
     }
-    return Math.floor(offense);
+    return Math.floor(offence);
   }
 
   async calculateDefenceStrength(): Promise<number> {
-    let defence = this.units.reduce(
-      (acc, unit) => acc + unit.calculateDefenceStrength(),
-      0,
-    );
+    let defence =
+      this.units.reduce(
+        (acc, unit) => acc + unit.calculateDefenceStrength(),
+        0,
+      ) + this.calculateItemStrength(CombatUnitType.DEFENCE, 'defence');
     if (this.race === 'elf' || this.race === 'goblin') {
       // Elves and Goblins get a 5% bonus to defence strength
       defence *= 1.05;
@@ -220,6 +256,68 @@ export default class PlayerModel {
     goldPerTurn += fortificationGoldPerTurn;
 
     return Math.floor(goldPerTurn);
+  }
+
+  private getUnitCountByCombatType(combatType: CombatUnitType): number {
+    return this.units
+      .filter((unit) => {
+        const unitCombatType = UnitTypes[unit.unitType].type;
+        if (
+          unitCombatType !== UnitType.OFFENCE &&
+          unitCombatType !== UnitType.DEFENCE
+        ) {
+          return false;
+        }
+        return combatType === CombatUnitType.OFFENCE
+          ? unitCombatType === UnitType.OFFENCE
+          : unitCombatType === UnitType.DEFENCE;
+      })
+      .reduce((acc, unit) => acc + unit.quantity, 0);
+  }
+
+  private calculateItemStrength(
+    combatType: CombatUnitType,
+    stat: 'offence' | 'defence',
+  ): number {
+    const unitCount = this.getUnitCountByCombatType(combatType);
+    if (unitCount === 0) return 0;
+
+    let total = 0;
+
+    itemTypeOrder.forEach((itemType) => {
+      const itemsForType = this.items
+        .map((item) => {
+          const definition = unitItemLookup[item.itemKey];
+          if (
+            !definition ||
+            definition.unitType !== combatType ||
+            definition.itemType !== itemType
+          ) {
+            return null;
+          }
+
+          const bonus = definition.bonuses[stat] || 0;
+          if (bonus <= 0) return null;
+
+          return { bonus, quantity: item.quantity };
+        })
+        .filter(Boolean) as { bonus: number; quantity: number }[];
+
+      if (itemsForType.length === 0) return;
+
+      itemsForType.sort((a, b) => b.bonus - a.bonus);
+
+      let remaining = unitCount;
+      for (const entry of itemsForType) {
+        if (remaining <= 0) break;
+
+        const used = Math.min(remaining, entry.quantity);
+        total += used * entry.bonus;
+        remaining -= used;
+      }
+    });
+
+    return total;
   }
 
   get citizensPerDay(): number {
@@ -341,6 +439,7 @@ export default class PlayerModel {
     this.structureUpgrades = {
       fortification: row.structureUpgrades?.fortification || 0,
       housing: row.structureUpgrades?.housing || 0,
+      armoury: row.structureUpgrades?.armoury || 0,
     };
   }
 
@@ -353,7 +452,9 @@ export default class PlayerModel {
       playerRows.map(async (row) => {
         const playerUnits =
           await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
-        return new PlayerModel(ctx, row, playerUnits);
+        const playerItems =
+          await ctx.modelFactory.playerItems.fetchItemsForPlayer(ctx, row.id);
+        return new PlayerModel(ctx, row, playerUnits, playerItems);
       }),
     );
   }
@@ -364,7 +465,9 @@ export default class PlayerModel {
       playerRows.map(async (row) => {
         const playerUnits =
           await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
-        return new PlayerModel(ctx, row, playerUnits);
+        const playerItems =
+          await ctx.modelFactory.playerItems.fetchItemsForPlayer(ctx, row.id);
+        return new PlayerModel(ctx, row, playerUnits, playerItems);
       }),
     );
   }
@@ -385,7 +488,12 @@ export default class PlayerModel {
             ctx,
             player.id,
           );
-        return new PlayerModel(ctx, player, playerUnits);
+        const playerItems =
+          await ctx.modelFactory.playerItems.fetchItemsForPlayer(
+            ctx,
+            player.id,
+          );
+        return new PlayerModel(ctx, player, playerUnits, playerItems);
       }),
     );
 
@@ -403,7 +511,11 @@ export default class PlayerModel {
       ctx,
       playerRow.id,
     );
-    return new PlayerModel(ctx, playerRow, playerUnits);
+    const playerItems = await ctx.modelFactory.playerItems.fetchItemsForPlayer(
+      ctx,
+      playerRow.id,
+    );
+    return new PlayerModel(ctx, playerRow, playerUnits, playerItems);
   }
 
   static async fetchByDisplayName(
@@ -420,7 +532,11 @@ export default class PlayerModel {
       ctx,
       playerRow.id,
     );
-    return new PlayerModel(ctx, playerRow, playerUnits);
+    const playerItems = await ctx.modelFactory.playerItems.fetchItemsForPlayer(
+      ctx,
+      playerRow.id,
+    );
+    return new PlayerModel(ctx, playerRow, playerUnits, playerItems);
   }
 
   static async fetchAllMatchingIDs(
@@ -436,7 +552,9 @@ export default class PlayerModel {
       playerRows.map(async (row) => {
         const playerUnits =
           await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(ctx, row.id);
-        return new PlayerModel(ctx, row, playerUnits);
+        const playerItems =
+          await ctx.modelFactory.playerItems.fetchItemsForPlayer(ctx, row.id);
+        return new PlayerModel(ctx, row, playerUnits, playerItems);
       }),
     );
   }
@@ -465,7 +583,11 @@ export default class PlayerModel {
       ctx,
       playerRow.id,
     );
-    return new PlayerModel(ctx, playerRow, playerUnits);
+    const playerItems = await ctx.modelFactory.playerItems.fetchItemsForPlayer(
+      ctx,
+      playerRow.id,
+    );
+    return new PlayerModel(ctx, playerRow, playerUnits, playerItems);
   }
 
   static async validateDisplayName(

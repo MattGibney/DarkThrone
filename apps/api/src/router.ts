@@ -6,6 +6,7 @@ import PlayersController from './controllers/player';
 import StructuresController from './controllers/structures';
 import TrainingController from './controllers/training';
 import WarHistoryController from './controllers/warHistory';
+import ArmouryController from './controllers/armoury';
 
 const router = Router();
 // const authedRouter = Router();
@@ -67,5 +68,9 @@ router.post('/bank/withdraw', BankingController.POST_withdraw);
 
 // Structures
 router.post('/structures/upgrade', StructuresController.POST_upgradeStructure);
+
+// Armoury
+router.post('/armoury/buy', ArmouryController.POST_buy);
+router.post('/armoury/sell', ArmouryController.POST_sell);
 
 export default router;

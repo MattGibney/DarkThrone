@@ -23,6 +23,8 @@ export default class StructuresDAO {
         POST_upgradeStructure['Responses'][200]
       >('/structures/upgrade', requestBody);
 
+      this.root.emit('playerUpdate');
+
       return depositResponse.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

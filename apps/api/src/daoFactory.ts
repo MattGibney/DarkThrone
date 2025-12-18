@@ -5,12 +5,14 @@ import UserDao from './daos/user';
 import UserSessionDao from './daos/userSession';
 import WarHistoryDao from './daos/warHistory';
 import PlayerUnitsDao from './daos/playerUnits';
+import PlayerItemsDao from './daos/playerItems';
 
 export default class DaoFactory {
   private database: Knex;
 
   public player: PlayerDao;
   public playerUnits: PlayerUnitsDao;
+  public playerItems: PlayerItemsDao;
   public user: UserDao;
   public userSession: UserSessionDao;
   public warHistory: WarHistoryDao;
@@ -20,6 +22,7 @@ export default class DaoFactory {
 
     this.player = new PlayerDao(this.database);
     this.playerUnits = new PlayerUnitsDao(this.database);
+    this.playerItems = new PlayerItemsDao(this.database);
     this.user = new UserDao(this.database);
     this.userSession = new UserSessionDao(this.database);
     this.warHistory = new WarHistoryDao(this.database);
