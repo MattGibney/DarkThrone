@@ -60,7 +60,16 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
     'shield',
   ];
   const columnWidths = ['28%', '16%', '12%', '14%', '14%', '16%'];
+  const itemLookup: Record<string, UnitItem> = unitItems.reduce(
+    (acc, item) => ({ ...acc, [item.key]: item }),
+    {},
+  );
+  const ownedQuantity = (itemKey: string) =>
+    props.client.authenticatedPlayer?.items.find(
+      (owned) => owned.itemKey === itemKey,
+    )?.quantity ?? 0;
 
+  // TODO: Replace this approach with i18n.
   const formatItemName = (key: string) => {
     const [, rawName] = key.split(':');
     if (!rawName) return key;
@@ -90,12 +99,60 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
     setQuantities({ ...quantities, [itemKey]: parsed.toString() });
   };
 
-  function handleBuy() {
-    console.log('Buy', quantities);
+  const summarizeSelection = (action: 'buy' | 'sell') => {
+    let totalGold = 0;
+    let totalItems = 0;
+
+    Object.entries(quantities).forEach(([key, value]) => {
+      const qty = Number(value);
+      if (!value || Number.isNaN(qty) || qty <= 0) return;
+      const item = itemLookup[key];
+      if (!item) return;
+      const unitCost = action === 'buy' ? item.buyCost : item.sellCost;
+      totalGold += unitCost * qty;
+      totalItems += qty;
+    });
+
+    return { totalGold, totalItems };
+  };
+
+  const confirmAction = (action: 'buy' | 'sell') => {
+    const { totalGold, totalItems } = summarizeSelection(action);
+    if (totalItems === 0) {
+      window.alert(
+        `Enter a quantity to ${action === 'buy' ? 'buy' : 'sell'} before proceeding.`,
+      );
+      return false;
+    }
+
+    const verb = action === 'buy' ? 'buying' : 'selling';
+    const confirmText = `You are ${verb} ${totalItems} item${
+      totalItems === 1 ? '' : 's'
+    } for a total of ${new Intl.NumberFormat().format(
+      totalGold,
+    )} gold.\n\nThis action cannot be undone. Proceed?`;
+
+    return window.confirm(confirmText);
+  };
+
+  async function handleBuy() {
+    if (!confirmAction('buy')) return;
+    const items = Object.entries(quantities)
+      .map(([itemKey, value]) => ({ itemKey, quantity: Number(value) }))
+      .filter(({ quantity }) => quantity > 0);
+
+    await props.client.armoury.buy(items);
+    setQuantities({});
   }
 
-  function handleSell() {
-    console.log('Sell', quantities);
+  async function handleSell() {
+    if (!confirmAction('sell')) return;
+    const items = Object.entries(quantities)
+      .map(([itemKey, value]) => ({ itemKey, quantity: Number(value) }))
+      .filter(({ quantity }) => quantity > 0);
+
+    await props.client.armoury.sell(items);
+    setQuantities({});
   }
 
   if (props.client.authenticatedPlayer.structureUpgrades.armoury === 0) {
@@ -223,9 +280,9 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                                         <td className="py-3 px-3 text-zinc-100">
                                           {formatBonuses(item.bonuses)}
                                         </td>
-                                        <td className="py-3 px-3 text-zinc-100">
-                                          0
-                                        </td>
+                                      <td className="py-3 px-3 text-zinc-100">
+                                        {ownedQuantity(item.key)}
+                                      </td>
                                         <td className="py-3 px-3 text-zinc-100">
                                           {new Intl.NumberFormat().format(
                                             item.buyCost,

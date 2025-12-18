@@ -10,6 +10,7 @@ import type {
   UserSessionObject,
 } from '@darkthrone/interfaces';
 import StructuresDAO from './daos/structures';
+import ArmouryDAO from './daos/armoury';
 
 type EventListener = (...args: unknown[]) => void;
 
@@ -27,6 +28,7 @@ export default class DarkThroneClient {
   public structures: StructuresDAO;
   public training: TrainingDAO;
   public warHistory: WarHistoryController;
+  public armoury: ArmouryDAO;
 
   public serverTime: Date | undefined;
 
@@ -46,6 +48,7 @@ export default class DarkThroneClient {
     this.structures = new StructuresDAO(this);
     this.training = new TrainingDAO(this);
     this.warHistory = new WarHistoryController(this);
+    this.armoury = new ArmouryDAO(this);
 
     const reFetchCurrentUser = async () => {
       await this.auth.getCurrentUser();

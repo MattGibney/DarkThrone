@@ -113,6 +113,7 @@ export type ExtractErrorCodesForStatuses<
   : never;
 
 export * from './api/attack';
+export * from './api/armoury';
 export * from './api/auth';
 export * from './api/banking';
 export * from './api/player';
@@ -166,6 +167,7 @@ export interface AuthedPlayerObject extends PlayerObject {
   citizensPerDay: number;
   depositHistory: DepositHistory[];
   units: PlayerUnits[];
+  items: PlayerItemQuantity[];
   structureUpgrades: {
     fortification: number;
     housing: number;
@@ -184,6 +186,11 @@ export interface PlayerUnits {
   unitType: keyof typeof UnitTypes;
   quantity: number;
 }
+
+export type PlayerItemQuantity = {
+  itemKey: string;
+  quantity: number;
+};
 
 export type UserSessionObject = {
   id: string;
