@@ -90,12 +90,12 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
     setQuantities({ ...quantities, [itemKey]: parsed.toString() });
   };
 
-  function handleTrain() {
-    console.log('Train', quantities);
+  function handleBuy() {
+    console.log('Buy', quantities);
   }
 
-  function handleUnTrain() {
-    console.log('Un Train', quantities);
+  function handleSell() {
+    console.log('Sell', quantities);
   }
 
   if (props.client.authenticatedPlayer.structureUpgrades.armoury === 0) {
@@ -262,15 +262,15 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                           <div>
                             <Button
                               variant="secondary"
-                              text="Un train"
-                              onClick={handleUnTrain}
+                              text="Sell"
+                              onClick={handleSell}
                             />
                           </div>
                           <div>
                             <Button
                               variant="primary"
-                              text="Train"
-                              onClick={handleTrain}
+                              text="Buy"
+                              onClick={handleBuy}
                             />
                           </div>
                         </div>
