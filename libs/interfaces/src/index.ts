@@ -122,8 +122,13 @@ export * from './api/warHistory';
 
 export enum UnitType {
   SUPPORT = 'support',
-  OFFENSE = 'offense',
-  DEFENSE = 'defense',
+  OFFENCE = 'offence',
+  DEFENCE = 'defence',
+}
+
+export enum CombatUnitType {
+  OFFENCE = UnitType.OFFENCE,
+  DEFENCE = UnitType.DEFENCE,
 }
 
 export type Unit = {
@@ -164,6 +169,7 @@ export interface AuthedPlayerObject extends PlayerObject {
   structureUpgrades: {
     fortification: number;
     housing: number;
+    armoury: number;
   };
   goldPerTurn: number;
 }
@@ -227,6 +233,10 @@ export type HousingUpgrade = StructureUpgrade & {
   citizensPerDay: number;
 };
 
+export type ArmouryUpgrade = StructureUpgrade & {
+  type: 'armoury';
+};
+
 export type WarHistoryObject = {
   id: string;
   attackerID: string;
@@ -239,4 +249,27 @@ export type WarHistoryObject = {
   createdAt: Date;
 };
 
-export type StructureUpgradeType = 'fortification' | 'housing';
+export type StructureUpgradeType = 'fortification' | 'housing' | 'armoury';
+
+export type UnitItemType =
+  | 'weapon'
+  | 'helm'
+  | 'armor'
+  | 'boots'
+  | 'bracers'
+  | 'shield';
+
+export type UnitItem = {
+  key: string;
+  unitType: UnitType;
+  itemType: UnitItemType;
+  buyCost: number;
+  sellCost: number;
+  bonuses: {
+    offence?: number;
+    defence?: number;
+  };
+  requirements: {
+    armouryLevel: number;
+  };
+};

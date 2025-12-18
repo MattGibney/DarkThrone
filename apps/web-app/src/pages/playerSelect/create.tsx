@@ -92,7 +92,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
   const raceOptions: RaceCardProps[] = [
     {
       name: 'Human',
-      bonusText: '+5% Offense bonus',
+      bonusText: '+5% Offence bonus',
       icon: () => (
         <svg
           className="fill-sky-400"
@@ -111,7 +111,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     },
     {
       name: 'Elves',
-      bonusText: '+5% Defense bonus',
+      bonusText: '+5% Defence bonus',
       icon: () => (
         <svg
           className="fill-emerald-400"
@@ -126,7 +126,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     },
     {
       name: 'Goblins',
-      bonusText: '+5% Defense bonus',
+      bonusText: '+5% Defence bonus',
       icon: () => (
         <svg
           className="fill-red-400"
@@ -141,7 +141,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     },
     {
       name: 'Undead',
-      bonusText: '+5% Offense bonus',
+      bonusText: '+5% Offence bonus',
       icon: () => (
         <svg
           className="fill-zinc-400"
@@ -165,7 +165,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     {
       name: 'Cleric',
       class: 'cleric',
-      bonusText: '+5% Defense bonus',
+      bonusText: '+5% Defence bonus',
     },
     {
       name: 'Thief',

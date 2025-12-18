@@ -19,8 +19,9 @@ export type PlayerRow = {
   experience: number;
   overall_rank: number;
   structureUpgrades: {
-    fortification: number;
-    housing: number;
+    fortification?: number;
+    housing?: number;
+    armoury?: number;
   };
 };
 

@@ -44,6 +44,7 @@ export default class PlayerModel {
   public structureUpgrades: {
     fortification: number;
     housing: number;
+    armoury: number;
   };
 
   public units: PlayerUnitsModel[];
@@ -171,19 +172,19 @@ export default class PlayerModel {
   }
 
   async calculateAttackStrength(): Promise<number> {
-    let offense = this.units.reduce(
+    let offence = this.units.reduce(
       (acc, unit) => acc + unit.calculateAttackStrength(),
       0,
     );
     if (this.race === 'human' || this.race === 'undead') {
       // Humans and Undead get a 5% bonus to attack strength
-      offense *= 1.05;
+      offence *= 1.05;
     }
     if (this.class === 'fighter') {
       // Fighters get a 5% bonus to attack strength
-      offense *= 1.05;
+      offence *= 1.05;
     }
-    return Math.floor(offense);
+    return Math.floor(offence);
   }
 
   async calculateDefenceStrength(): Promise<number> {
@@ -341,6 +342,7 @@ export default class PlayerModel {
     this.structureUpgrades = {
       fortification: row.structureUpgrades?.fortification || 0,
       housing: row.structureUpgrades?.housing || 0,
+      armoury: row.structureUpgrades?.armoury || 0,
     };
   }
 

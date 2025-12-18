@@ -2,9 +2,11 @@
 import {
   FortificationUpgrade,
   HousingUpgrade,
+  ArmouryUpgrade,
   StructureUpgradeType,
   UnitType,
   type Unit,
+  UnitItem,
 } from '@darkthrone/interfaces';
 
 export const UnitTypes: { [k: string]: Unit } = {
@@ -30,7 +32,7 @@ export const UnitTypes: { [k: string]: Unit } = {
   },
   soldier_1: {
     name: 'Soldier',
-    type: UnitType.OFFENSE,
+    type: UnitType.OFFENCE,
     attack: 3,
     defence: 0,
     cost: 1500,
@@ -40,7 +42,7 @@ export const UnitTypes: { [k: string]: Unit } = {
   },
   guard_1: {
     name: 'Guard',
-    type: UnitType.DEFENSE,
+    type: UnitType.DEFENCE,
     attack: 0,
     defence: 3,
     cost: 1500,
@@ -342,9 +344,25 @@ export const housingUpgrades: HousingUpgrade[] = [
   },
 ];
 
+export const armouryUpgrades: ArmouryUpgrade[] = [
+  {
+    name: 'None',
+    requiredFortificationLevel: 0,
+    cost: 0,
+    type: 'armoury',
+  },
+  {
+    name: 'Basic Armoury',
+    requiredFortificationLevel: 2,
+    cost: 100000,
+    type: 'armoury',
+  },
+];
+
 export const structureUpgrades: Record<StructureUpgradeType, object> = {
   fortification: fortificationUpgrades,
   housing: housingUpgrades,
+  armoury: armouryUpgrades,
 };
 
 const attackLevelRange = 7;
@@ -358,3 +376,84 @@ export const attackableMinLevel = (playerLevel: number): number =>
   Math.max(1, playerLevel - attackLevelRange);
 export const attackableMaxLevel = (playerLevel: number): number =>
   playerLevel + attackLevelRange;
+
+export const unitItems: UnitItem[] = [
+  {
+    key: 'offence:dagger',
+    unitType: UnitType.OFFENCE,
+    itemType: 'weapon',
+    buyCost: 12500,
+    sellCost: 3125,
+    bonuses: {
+      offence: 25,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'offence:padded_hood',
+    unitType: UnitType.OFFENCE,
+    itemType: 'helm',
+    buyCost: 3000,
+    sellCost: 750,
+    bonuses: {
+      offence: 6,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'offence:padded_armor',
+    unitType: UnitType.OFFENCE,
+    itemType: 'armor',
+    buyCost: 9500,
+    sellCost: 2375,
+    bonuses: {
+      offence: 19,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'offence:padded_boots',
+    unitType: UnitType.OFFENCE,
+    itemType: 'boots',
+    buyCost: 3000,
+    sellCost: 750,
+    bonuses: {
+      offence: 6,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'offence:padded_bracers',
+    unitType: UnitType.OFFENCE,
+    itemType: 'bracers',
+    buyCost: 1500,
+    sellCost: 375,
+    bonuses: {
+      offence: 3,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'offence:small_wooden_shield',
+    unitType: UnitType.OFFENCE,
+    itemType: 'shield',
+    buyCost: 6000,
+    sellCost: 1500,
+    bonuses: {
+      offence: 12,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+];
