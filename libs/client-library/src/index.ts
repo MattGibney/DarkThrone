@@ -11,19 +11,6 @@ import type {
 } from '@darkthrone/interfaces';
 import StructuresDAO from './daos/structures';
 
-/** @deprecated */
-export type APIError = {
-  code: string;
-  title: string;
-  detail?: string;
-};
-
-/** @deprecated */
-export type APIResponse<S, T> = {
-  status: S;
-  data: T;
-};
-
 type EventListener = (...args: unknown[]) => void;
 
 export default class DarkThroneClient {
