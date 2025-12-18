@@ -62,10 +62,10 @@ export default function HeaderBar(props: HeaderBarProps) {
   }
 
   return (
-    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-muted border-b border-foreground/10 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
       <button
         type="button"
-        className="-m-2.5 p-2.5 text-zinc-300 lg:hidden"
+        className="-m-2.5 p-2.5 text-foreground/40 lg:hidden"
         onClick={() => props.setSidebarOpen(true)}
       >
         <span className="sr-only">Open sidebar</span>
@@ -73,14 +73,14 @@ export default function HeaderBar(props: HeaderBarProps) {
       </button>
 
       {/* Separator */}
-      <div className="h-6 w-px bg-zinc-900/10 lg:hidden" aria-hidden="true" />
+      <div className="h-6 w-px bg-foreground/10 lg:hidden" aria-hidden="true" />
 
       <div className="flex flex-1 items-center gap-x-6 self-stretch lg:gap-x-6">
-        <div className="flex gap-x-4 text-sm text-zinc-300">
+        <div className="flex gap-x-4 text-sm text-foreground/70">
           {currentTime ? (
             <div>
               DarkThrone Time:{' '}
-              <span className="text-white font-bold">
+              <span className="text-foreground font-bold">
                 {currentTime.toLocaleTimeString()}
               </span>
             </div>
@@ -88,7 +88,7 @@ export default function HeaderBar(props: HeaderBarProps) {
           {timeRemaining ? (
             <div>
               Next Turn In:{' '}
-              <span className="text-white font-bold">{timeRemaining}</span>
+              <span className="text-foreground font-bold">{timeRemaining}</span>
             </div>
           ) : null}
         </div>
@@ -96,7 +96,7 @@ export default function HeaderBar(props: HeaderBarProps) {
           {/* Profile dropdown */}
           <Menu as="div" className="relative ml-3">
             <div>
-              <MenuButton className="relative flex items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600 focus:ring-offset-2 focus:ring-offset-gray-800">
+              <MenuButton className="relative flex items-center rounded-full bg-muted text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:ring-offset-2 focus:ring-offset-muted">
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">Open user menu</span>
 
@@ -108,23 +108,23 @@ export default function HeaderBar(props: HeaderBarProps) {
 
                 <span className="hidden lg:flex lg:items-center">
                   <span
-                    className="ml-4 text-sm font-semibold leading-6 text-zinc-300"
+                    className="ml-4 text-sm font-semibold leading-6 text-foreground/80"
                     aria-hidden="true"
                   >
                     {props.client.authenticatedPlayer?.name}
                   </span>
                   <ChevronDownIcon
-                    className="ml-2 h-5 w-5 text-zinc-300"
+                    className="ml-2 h-5 w-5 text-foreground/50"
                     aria-hidden="true"
                   />
                 </span>
               </MenuButton>
             </div>
-            <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-zinc-700 py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
+            <MenuItems className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-md bg-popover text-popover-foreground border py-1 shadow-lg transition focus:outline-none data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-leave:duration-75 data-enter:ease-out data-leave:ease-in">
               <MenuItem>
                 <button
                   type="button"
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-[focus]:bg-zinc-800/50"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-focus:bg-zinc-800/50"
                   onClick={() => handleSwitchPlayer()}
                 >
                   Switch Players
@@ -133,7 +133,7 @@ export default function HeaderBar(props: HeaderBarProps) {
               <MenuItem>
                 <button
                   type="button"
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-[focus]:bg-zinc-800/50"
+                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-focus:bg-zinc-800/50"
                   onClick={() => props.client.auth.logout()}
                 >
                   Logout
