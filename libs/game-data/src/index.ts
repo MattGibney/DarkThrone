@@ -7,6 +7,7 @@ import {
   UnitType,
   type Unit,
   UnitItem,
+  CombatUnitType,
 } from '@darkthrone/interfaces';
 
 export const UnitTypes: { [k: string]: Unit } = {
@@ -380,7 +381,7 @@ export const attackableMaxLevel = (playerLevel: number): number =>
 export const unitItems: UnitItem[] = [
   {
     key: 'offence:dagger',
-    unitType: UnitType.OFFENCE,
+    unitType: CombatUnitType.OFFENCE,
     itemType: 'weapon',
     buyCost: 12500,
     sellCost: 3125,
@@ -393,7 +394,7 @@ export const unitItems: UnitItem[] = [
   },
   {
     key: 'offence:padded_hood',
-    unitType: UnitType.OFFENCE,
+    unitType: CombatUnitType.OFFENCE,
     itemType: 'helm',
     buyCost: 3000,
     sellCost: 750,
@@ -406,7 +407,7 @@ export const unitItems: UnitItem[] = [
   },
   {
     key: 'offence:padded_armor',
-    unitType: UnitType.OFFENCE,
+    unitType: CombatUnitType.OFFENCE,
     itemType: 'armor',
     buyCost: 9500,
     sellCost: 2375,
@@ -419,7 +420,7 @@ export const unitItems: UnitItem[] = [
   },
   {
     key: 'offence:padded_boots',
-    unitType: UnitType.OFFENCE,
+    unitType: CombatUnitType.OFFENCE,
     itemType: 'boots',
     buyCost: 3000,
     sellCost: 750,
@@ -432,7 +433,7 @@ export const unitItems: UnitItem[] = [
   },
   {
     key: 'offence:padded_bracers',
-    unitType: UnitType.OFFENCE,
+    unitType: CombatUnitType.OFFENCE,
     itemType: 'bracers',
     buyCost: 1500,
     sellCost: 375,
@@ -445,12 +446,90 @@ export const unitItems: UnitItem[] = [
   },
   {
     key: 'offence:small_wooden_shield',
-    unitType: UnitType.OFFENCE,
+    unitType: CombatUnitType.OFFENCE,
     itemType: 'shield',
     buyCost: 6000,
     sellCost: 1500,
     bonuses: {
       offence: 12,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'defence:sling',
+    unitType: CombatUnitType.DEFENCE,
+    itemType: 'weapon',
+    buyCost: 12500,
+    sellCost: 3125,
+    bonuses: {
+      defence: 25,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'defence:padded_hood',
+    unitType: CombatUnitType.DEFENCE,
+    itemType: 'helm',
+    buyCost: 3000,
+    sellCost: 750,
+    bonuses: {
+      defence: 6,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'defence:padded_armor',
+    unitType: CombatUnitType.DEFENCE,
+    itemType: 'armor',
+    buyCost: 9500,
+    sellCost: 2375,
+    bonuses: {
+      defence: 19,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'defence:padded_boots',
+    unitType: CombatUnitType.DEFENCE,
+    itemType: 'boots',
+    buyCost: 3000,
+    sellCost: 750,
+    bonuses: {
+      defence: 6,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'defence:padded_bracers',
+    unitType: CombatUnitType.DEFENCE,
+    itemType: 'bracers',
+    buyCost: 1500,
+    sellCost: 375,
+    bonuses: {
+      defence: 3,
+    },
+    requirements: {
+      armouryLevel: 1,
+    },
+  },
+  {
+    key: 'defence:small_wooden_shield',
+    unitType: CombatUnitType.DEFENCE,
+    itemType: 'shield',
+    buyCost: 6000,
+    sellCost: 1500,
+    bonuses: {
+      defence: 12,
     },
     requirements: {
       armouryLevel: 1,

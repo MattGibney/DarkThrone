@@ -261,7 +261,7 @@ export type UnitItemType =
 
 export type UnitItem = {
   key: string;
-  unitType: UnitType;
+  unitType: CombatUnitType;
   itemType: UnitItemType;
   buyCost: number;
   sellCost: number;
