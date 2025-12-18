@@ -19,6 +19,7 @@ const mockPlayerRow: PlayerRow = {
   structureUpgrades: {
     fortification: 0,
     housing: 0,
+    armoury: 0,
   },
 };
 
@@ -37,7 +38,7 @@ describe('Model: Player', () => {
     it('should return a PlayerObject if the object is not for the authenticated player', async () => {
       const mockCTX = {} as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+      const player = new PlayerModel(mockCTX, mockPlayerRow, [], []);
       const serialised = await player.serialise();
 
       expect(Object.keys(serialised)).toEqual([
@@ -64,7 +65,12 @@ describe('Model: Player', () => {
         },
       } as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
+      const player = new PlayerModel(
+        mockCTX,
+        mockPlayerRow,
+        mockPlayerUnits,
+        [],
+      );
       const serialised = await player.serialiseAuthedPlayer();
 
       expect(Object.keys(serialised)).toEqual([
@@ -86,6 +92,7 @@ describe('Model: Player', () => {
         'citizensPerDay',
         'depositHistory',
         'units',
+        'items',
         'structureUpgrades',
       ]);
     });
@@ -101,7 +108,12 @@ describe('Model: Player', () => {
         },
       } as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
+      const player = new PlayerModel(
+        mockCTX,
+        mockPlayerRow,
+        mockPlayerUnits,
+        [],
+      );
       const serialised = await player.serialiseAuthedPlayer();
 
       expect(serialised).toEqual({
@@ -127,10 +139,12 @@ describe('Model: Player', () => {
             quantity: 10,
           },
         ],
+        items: [],
         citizensPerDay: 26,
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+          armoury: 0,
         },
       });
     });
@@ -154,7 +168,7 @@ describe('Model: Player', () => {
         },
       ] as PlayerUnitsModel[];
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, playerUnits);
+      const player = new PlayerModel(mockCTX, mockPlayerRow, playerUnits, []);
       expect(player.armySize).toEqual(5);
     });
   });
@@ -191,9 +205,12 @@ describe('Model: Player', () => {
             class: testCase.class,
           } as unknown as PlayerRow,
           [],
+          [],
         );
         player.units = [
           {
+            unitType: 'soldier_1',
+            quantity: 1,
             calculateAttackStrength: jest.fn().mockReturnValue(100),
           } as unknown as PlayerUnitsModel,
         ];
@@ -236,9 +253,12 @@ describe('Model: Player', () => {
             class: testCase.class,
           } as unknown as PlayerRow,
           [],
+          [],
         );
         player.units = [
           {
+            unitType: 'guard_1',
+            quantity: 1,
             calculateDefenceStrength: jest.fn().mockReturnValue(100),
           } as unknown as PlayerUnitsModel,
         ];
@@ -253,7 +273,7 @@ describe('Model: Player', () => {
     it('should return 0 if the player has no units', async () => {
       const mockCTX = {} as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+      const player = new PlayerModel(mockCTX, mockPlayerRow, [], []);
       const goldPerTurn = await player.calculateGoldPerTurn();
 
       expect(goldPerTurn).toEqual(10000);
@@ -261,7 +281,12 @@ describe('Model: Player', () => {
     it('should return the sum of goldPerTurn for each unit', async () => {
       const mockCTX = {} as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, mockPlayerUnits);
+      const player = new PlayerModel(
+        mockCTX,
+        mockPlayerRow,
+        mockPlayerUnits,
+        [],
+      );
       const goldPerTurn = await player.calculateGoldPerTurn();
 
       expect(goldPerTurn).toEqual(10100);
@@ -274,7 +299,12 @@ describe('Model: Player', () => {
         class: 'thief',
       } as unknown as PlayerRow;
 
-      const player = new PlayerModel(mockCTX, thiefPlayerRow, mockPlayerUnits);
+      const player = new PlayerModel(
+        mockCTX,
+        thiefPlayerRow,
+        mockPlayerUnits,
+        [],
+      );
       const goldPerTurn = await player.calculateGoldPerTurn();
 
       expect(goldPerTurn).toEqual(10105); // Includes the housing bonus
@@ -291,7 +321,7 @@ describe('Model: Player', () => {
       } as unknown as PlayerRow;
       const attackerUnits = [
         {
-          unitType: 'offence',
+          unitType: 'soldier_1',
           quantity: 6,
           calculateAttackStrength: jest.fn().mockReturnValue(18),
         } as unknown as PlayerUnitsModel,
@@ -305,7 +335,7 @@ describe('Model: Player', () => {
       } as unknown as PlayerRow;
       const defenderUnits = [
         {
-          unitType: 'defence',
+          unitType: 'guard_1',
           quantity: 1,
           calculateDefenceStrength: jest.fn().mockReturnValue(3),
         } as unknown as PlayerUnitsModel,
@@ -328,12 +358,14 @@ describe('Model: Player', () => {
         mockCTX,
         attackerPlayerRow,
         attackerUnits,
+        [],
       );
 
       const defender = new PlayerModel(
         mockCTX,
         defenderPlayerRow,
         defenderUnits,
+        [],
       );
 
       await attacker.attackPlayer(defender, 10);
@@ -361,6 +393,7 @@ describe('Model: Player', () => {
     const player = new PlayerModel(
       {} as unknown as Context,
       {} as unknown as PlayerRow,
+      [],
       [],
     );
     it('should return true if the attacker strength is greater than the defender strength', async () => {
@@ -399,7 +432,7 @@ describe('Model: Player', () => {
         },
       } as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+      const player = new PlayerModel(mockCTX, mockPlayerRow, [], []);
 
       const saveMock = jest.fn().mockResolvedValue({});
       player.save = saveMock;
@@ -434,7 +467,7 @@ describe('Model: Player', () => {
         },
       } as unknown as Context;
 
-      const player = new PlayerModel(mockCTX, mockPlayerRow, []);
+      const player = new PlayerModel(mockCTX, mockPlayerRow, [], []);
 
       const saveMock = jest.fn().mockResolvedValue({});
       player.save = saveMock;
@@ -467,6 +500,9 @@ describe('Model: Player', () => {
           playerUnits: {
             fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
           },
+          playerItems: {
+            fetchItemsForPlayer: jest.fn().mockResolvedValue([]),
+          },
         },
       } as unknown as Context;
 
@@ -491,6 +527,9 @@ describe('Model: Player', () => {
         modelFactory: {
           playerUnits: {
             fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
+          },
+          playerItems: {
+            fetchItemsForPlayer: jest.fn().mockResolvedValue([]),
           },
         },
       } as unknown as Context;
@@ -519,6 +558,9 @@ describe('Model: Player', () => {
         modelFactory: {
           playerUnits: {
             fetchUnitsForPlayer: jest.fn().mockResolvedValue(mockPlayerUnits),
+          },
+          playerItems: {
+            fetchItemsForPlayer: jest.fn().mockResolvedValue([]),
           },
         },
         logger: {},

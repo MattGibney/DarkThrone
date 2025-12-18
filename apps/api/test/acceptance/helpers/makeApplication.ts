@@ -43,9 +43,19 @@ export default function makeApplication(
     fatal: jest.fn(),
     ...options.logger,
   } as unknown as pino.Logger;
-  let daoFactory = options.daoFactory as unknown as DaoFactory;
+  let daoFactory = deepmerge(
+    {
+      playerUnits: {
+        fetchUnitsForPlayer: jest.fn().mockResolvedValue([]),
+      },
+      playerItems: {
+        fetchItemsForPlayer: jest.fn().mockResolvedValue([]),
+      },
+    } as unknown as Partial<DaoFactory>,
+    (options.daoFactory || {}) as Partial<DaoFactory>,
+  ) as unknown as DaoFactory;
   if (options.authenticatedUser) {
-    daoFactory = Object.assign(
+    daoFactory = deepmerge(
       {
         userSession: {
           fetchValidByToken: jest
@@ -58,7 +68,7 @@ export default function makeApplication(
             .mockResolvedValue(options.authenticatedUser.user),
         },
       },
-      daoFactory,
+      daoFactory as Partial<DaoFactory>,
     ) as unknown as DaoFactory;
   }
   if (options.authenticatedPlayer) {

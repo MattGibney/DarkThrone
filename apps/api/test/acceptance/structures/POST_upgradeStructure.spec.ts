@@ -14,6 +14,7 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+          armoury: 0,
         },
       },
     });
@@ -40,6 +41,7 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+          armoury: 0,
         },
       },
     });
@@ -68,6 +70,7 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+          armoury: 0,
         },
       },
     });
@@ -97,6 +100,7 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 0,
           housing: 0,
+          armoury: 0,
         },
       },
     });
@@ -114,6 +118,7 @@ describe('POST_upgradeStructure.spec', () => {
         structureUpgrades: {
           fortification: 1,
           housing: 0,
+          armoury: 0,
         },
       }),
     );

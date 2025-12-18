@@ -280,9 +280,9 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                                         <td className="py-3 px-3 text-zinc-100">
                                           {formatBonuses(item.bonuses)}
                                         </td>
-                                      <td className="py-3 px-3 text-zinc-100">
-                                        {ownedQuantity(item.key)}
-                                      </td>
+                                        <td className="py-3 px-3 text-zinc-100">
+                                          {ownedQuantity(item.key)}
+                                        </td>
                                         <td className="py-3 px-3 text-zinc-100">
                                           {new Intl.NumberFormat().format(
                                             item.buyCost,
