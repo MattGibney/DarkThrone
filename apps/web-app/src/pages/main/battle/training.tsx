@@ -1,5 +1,4 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import SubNavigation from '../../../components/layout/subNavigation';
 import { Button, InputField } from '@darkthrone/react-components';
 import { useEffect, useState } from 'react';
 import { UnitTypes } from '@darkthrone/game-data';
@@ -78,8 +77,6 @@ export default function TrainingScreen(props: TrainingScreenProps) {
 
   return (
     <main>
-      <SubNavigation />
-
       <div className="border border-zinc-700/50 bg-zinc-800/50 p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
         <div>
           Gold{' '}

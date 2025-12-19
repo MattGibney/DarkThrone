@@ -1,6 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Alert, Button, InputField } from '@darkthrone/react-components';
-import SubNavigation from '../../../../components/layout/subNavigation';
 import { useEffect, useState } from 'react';
 import BankNavigation from './components/bankNavigation';
 import {
@@ -102,8 +101,6 @@ export default function BankDepositPage(props: BankDepositPageProps) {
 
   return (
     <main>
-      <SubNavigation />
-
       <div className="my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden">
         <BankNavigation />
 

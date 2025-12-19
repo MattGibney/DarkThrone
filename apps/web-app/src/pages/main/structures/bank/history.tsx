@@ -1,5 +1,4 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import SubNavigation from '../../../../components/layout/subNavigation';
 import BankNavigation from './components/bankNavigation';
 
 interface BankDepositPageProps {
@@ -10,8 +9,6 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
 
   return (
     <main>
-      <SubNavigation />
-
       <div className="my-12 w-full max-w-2xl mx-auto overflow-hidden">
         <BankNavigation />
 

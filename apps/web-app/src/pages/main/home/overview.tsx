@@ -1,5 +1,4 @@
 import { fortificationUpgrades } from '@darkthrone/game-data';
-import SubNavigation from '../../../components/layout/subNavigation';
 import DarkThroneClient from '@darkthrone/client-library';
 import Stat from '../../../components/home/Stat';
 
@@ -79,8 +78,6 @@ export default function OverviewPage(props: OverviewPageProps) {
 
   return (
     <div>
-      <SubNavigation />
-
       <div className="my-12 flex flex-col gap-12">
         <h2 className="text-2xl font-semibold text-zinc-200 text-center">
           {props.client.authenticatedPlayer.name}{' '}

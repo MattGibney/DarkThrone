@@ -1,12 +1,12 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Avatar } from '@darkthrone/react-components';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { Bars3Icon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SidebarTrigger } from '@darkthrone/shadcnui/sidebar';
 
 interface HeaderBarProps {
-  setSidebarOpen: (open: boolean) => void;
   client: DarkThroneClient;
 }
 export default function HeaderBar(props: HeaderBarProps) {
@@ -63,17 +63,10 @@ export default function HeaderBar(props: HeaderBarProps) {
 
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-muted border-b border-foreground/10 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-      <button
-        type="button"
-        className="-m-2.5 p-2.5 text-foreground/40 lg:hidden"
-        onClick={() => props.setSidebarOpen(true)}
-      >
-        <span className="sr-only">Open sidebar</span>
-        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-      </button>
+      <SidebarTrigger className="text-foreground/40 md:hidden" />
 
       {/* Separator */}
-      <div className="h-6 w-px bg-foreground/10 lg:hidden" aria-hidden="true" />
+      <div className="h-6 w-px bg-foreground/10 md:hidden" aria-hidden="true" />
 
       <div className="flex flex-1 items-center gap-x-6 self-stretch lg:gap-x-6">
         <div className="flex gap-x-4 text-sm text-foreground/70">

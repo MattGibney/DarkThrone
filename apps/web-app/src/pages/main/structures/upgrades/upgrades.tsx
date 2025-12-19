@@ -1,5 +1,4 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import SubNavigation from '../../../../components/layout/subNavigation';
 import {
   fortificationUpgrades,
   housingUpgrades,
@@ -53,8 +52,6 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
 
   return (
     <main className="max-w-7xl mx-auto">
-      <SubNavigation />
-
       <div className="max-w-3xl mx-auto flex flex-col gap-y-8">
         <div className="bg-zinc-800/50 rounded-lg p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
           <div>

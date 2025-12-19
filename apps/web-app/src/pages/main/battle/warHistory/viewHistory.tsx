@@ -1,5 +1,4 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import SubNavigation from '../../../../components/layout/subNavigation';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@darkthrone/react-components';
@@ -47,7 +46,6 @@ export default function WarHistoryView(props: WarHistoryViewProps) {
 
   return (
     <main>
-      <SubNavigation />
       <div className="my-12 w-full max-w-2xl mx-auto rounded-xl">
         <div className="bg-zinc-800/50 p-8 flex justify-center">
           <div className="w-1/4">

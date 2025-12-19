@@ -2,7 +2,6 @@ import DarkThroneClient from '@darkthrone/client-library';
 import { useCallback } from 'react';
 import { Avatar } from '@darkthrone/react-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import SubNavigation from '../../../../components/layout/subNavigation';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Paginator } from '../../../../libs/pagination';
 import { Pagination } from '@darkthrone/react-components';
@@ -65,7 +64,6 @@ export default function AttackListPage(props: AttackListPageProps) {
 
   return (
     <main>
-      <SubNavigation />
       <h2 className="text-base font-semibold text-zinc-300 text-center">
         You may attack a player from levels {attackableMinLevel(playerLevel)} to{' '}
         {attackableMaxLevel(playerLevel)}.

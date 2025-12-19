@@ -1,4 +1,3 @@
-import SubNavigation from '../../../components/layout/subNavigation';
 // import DarkThroneClient from '@darkthrone/client-library';
 import { Pagination } from '@darkthrone/react-components';
 
@@ -46,8 +45,6 @@ export default function NewsPage() {
 
   return (
     <div>
-      <SubNavigation />
-
       <div className="mb-10 flex flex-col gap-y-6">
         {news.map((n, i) => (
           <div className="border border-zinc-700" key={i}>
