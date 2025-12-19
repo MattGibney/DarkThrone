@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@darkthrone/shadcnui/dropdown-menu';
-import { AvatarFallback, Avatar } from '@darkthrone/shadcnui/avatar';
+import { Avatar } from '../avatar';
 import { globalNavigation } from '../../app';
 
 function pathMatches(pattern: string, pathname: string) {
@@ -128,10 +128,12 @@ export default function AppSidebar(props: AppSidebarProps) {
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
+                  <Avatar
+                    url={props.client.authenticatedPlayer?.avatarURL}
+                    race={props.client.authenticatedPlayer?.race}
+                    size="small"
+                    variant="square"
+                  />
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">{playerName}</span>
                     <span className="truncate text-xs">{userEmail}</span>
@@ -147,10 +149,12 @@ export default function AppSidebar(props: AppSidebarProps) {
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                    </Avatar>
+                    <Avatar
+                      url={props.client.authenticatedPlayer?.avatarURL}
+                      race={props.client.authenticatedPlayer?.race}
+                      size="small"
+                      variant="square"
+                    />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{playerName}</span>
                       <span className="truncate text-xs">{userEmail}</span>

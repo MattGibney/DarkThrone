@@ -1,6 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { PlayerObject } from '@darkthrone/interfaces';
-import { Avatar, Logo } from '@darkthrone/react-components';
+import { Logo } from '@darkthrone/react-components';
+import { Avatar } from '../../components/avatar';
 import { Button } from '@darkthrone/shadcnui/button';
 import { ChevronRightIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';

@@ -1,6 +1,6 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { useCallback } from 'react';
-import { Avatar } from '@darkthrone/react-components';
+import { Avatar } from '../../../../components/avatar';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Paginator } from '../../../../libs/pagination';

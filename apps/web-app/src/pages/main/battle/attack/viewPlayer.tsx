@@ -1,5 +1,5 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Avatar } from '@darkthrone/react-components';
+import { Avatar } from '../../../../components/avatar';
 import { classNames } from '../../../../utils';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

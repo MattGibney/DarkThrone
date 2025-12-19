@@ -1,46 +1,33 @@
-import { tv } from 'tailwind-variants';
 import { PlayerRace } from '@darkthrone/interfaces';
+import {
+  Avatar as ShadcnAvatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@darkthrone/shadcnui/avatar';
+import { cn } from '@darkthrone/shadcnutils';
 
-const styles = tv({
-  slots: {
-    image: 'h-12 w-12 flex-none rounded-full bg-zinc-600',
-    racePlaceholder:
-      'h-12 w-12 rounded-full bg-zinc-700 flex justify-center items-center',
-    raceIcon: 'h-8',
-    defaultPlaceholder:
-      'inline-block h-12 w-12 overflow-hidden rounded-full bg-zinc-700',
+const sizeClasses = {
+  default: {
+    root: 'h-12 w-12',
+    icon: 'h-8',
+    fallback: '',
   },
-  variants: {
-    size: {
-      small: {
-        image: 'h-8 w-8',
-        racePlaceholder: 'h-8 w-8',
-        raceIcon: 'h-5',
-        defaultPlaceholder: 'h-8 w-8',
-      },
-      fill: {
-        image: 'h-full w-full',
-        racePlaceholder: 'h-full w-full p-12 aspect-square',
-      },
-    },
-    variant: {
-      square: {
-        image: 'rounded-md',
-        racePlaceholder: 'rounded-md',
-        raceIcon: 'h-full',
-      },
-      circle: {},
-    },
+  small: {
+    root: 'h-8 w-8',
+    icon: 'h-5',
+    fallback: '',
   },
-});
+  fill: {
+    root: 'h-full w-full aspect-square',
+    icon: 'h-full',
+    fallback: 'p-12 aspect-square',
+  },
+};
 
-/* eslint-disable-next-line */
-export interface AvatarProps {
-  url?: string;
-  race?: PlayerRace;
-  size?: 'small' | 'fill';
-  variant?: 'circle' | 'square';
-}
+const shapeClasses = {
+  circle: 'rounded-full',
+  square: 'rounded-lg',
+};
 
 const raceIcons = {
   human: (className: string) => (
@@ -89,34 +76,51 @@ const raceIcons = {
   ),
 };
 
+const defaultIcon = (
+  <svg
+    className="h-full w-full text-zinc-500"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+  </svg>
+);
+
+export interface AvatarProps {
+  url?: string;
+  race?: PlayerRace;
+  size?: 'default' | 'small' | 'fill';
+  variant?: 'circle' | 'square';
+  className?: string;
+}
+
 export function Avatar(props: AvatarProps) {
-  const { image, racePlaceholder, raceIcon, defaultPlaceholder } = styles({
-    size: props.size,
-    variant: props.variant,
-  });
+  const sizeKey = props.size ?? 'default';
+  const variantKey = props.variant ?? 'circle';
+  const size = sizeClasses[sizeKey];
 
-  if (!props.url) {
-    if (props.race) {
-      return (
-        <div className={racePlaceholder()}>
-          {raceIcons[props.race](raceIcon())}
-        </div>
-      );
-    }
-    return (
-      <span className={defaultPlaceholder()}>
-        <svg
-          className="h-full w-full text-zinc-500"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      </span>
-    );
-  }
-
-  return <img className={image()} src={props.url} alt="" />;
+  return (
+    <ShadcnAvatar
+      className={cn(
+        'overflow-hidden',
+        size.root,
+        shapeClasses[variantKey],
+        props.className,
+      )}
+    >
+      {props.url ? <AvatarImage src={props.url} alt="" /> : null}
+      <AvatarFallback
+        className={cn(
+          'bg-muted flex items-center justify-center',
+          size.root,
+          size.fallback,
+          shapeClasses[variantKey],
+        )}
+      >
+        {props.race ? raceIcons[props.race](size.icon) : defaultIcon}
+      </AvatarFallback>
+    </ShadcnAvatar>
+  );
 }
 
 export default Avatar;

@@ -4,7 +4,8 @@ import {
   PlayerObject,
   POST_attackPlayer,
 } from '@darkthrone/interfaces';
-import { Alert, Avatar, Button } from '@darkthrone/react-components';
+import { Alert, Button } from '@darkthrone/react-components';
+import { Avatar } from '../../../../components/avatar';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {

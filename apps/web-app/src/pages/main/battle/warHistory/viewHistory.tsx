@@ -1,7 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Avatar } from '@darkthrone/react-components';
+import { Avatar } from '../../../../components/avatar';
 import { PlayerObject, WarHistoryObject } from '@darkthrone/interfaces';
 
 interface WarHistoryViewProps {
