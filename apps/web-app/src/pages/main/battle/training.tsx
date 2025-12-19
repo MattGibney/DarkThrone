@@ -106,7 +106,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
           <div className="mt-8 flow-root">
             <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full sm:py-2 align-middle">
-                <table className="min-w-full border-separate border-spacing-0 rounded-lg overflow-hidden">
+                <table className="min-w-full border border-card-border border-separate border-spacing-0 rounded-lg overflow-hidden">
                   <thead>
                     <tr>
                       <th

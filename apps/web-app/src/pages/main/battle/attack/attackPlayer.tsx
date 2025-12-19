@@ -4,7 +4,7 @@ import {
   PlayerObject,
   POST_attackPlayer,
 } from '@darkthrone/interfaces';
-import { Alert, Button } from '@darkthrone/react-components';
+import { Alert } from '@darkthrone/react-components';
 import { Avatar } from '../../../../components/avatar';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,6 +13,8 @@ import {
   attackableMaxLevel,
   attackableMinLevel,
 } from '@darkthrone/game-data';
+import { Input } from '@darkthrone/shadcnui/input';
+import { Button } from '@darkthrone/shadcnui/button';
 
 type PossibleErrorCodes = ExtractErrorCodesForStatuses<
   POST_attackPlayer,
@@ -123,20 +125,22 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
 
   return (
     <div className="my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden">
-      <div className="bg-zinc-800/50 p-8">
+      <div className="bg-muted/50 p-8">
         <div className="flex items-center">
           <div className="grow flex items-center gap-x-4">
             <Avatar race={player.race} url={player.avatarURL} />
             <div>
-              <div className="text-sm font-bold text-zinc-400">Attack</div>
-              <div className="grow text-2xl font-semibold text-zinc-200">
+              <div className="text-sm font-bold text-foreground/50">Attack</div>
+              <div className="grow text-2xl font-semibold text-foreground">
                 {player.name}
               </div>
             </div>
           </div>
           <div className="flex flex-col items-center">
-            <div className="text-sm font-bold text-zinc-400">Current Turns</div>
-            <div className="text-2xl font-light">
+            <div className="text-sm font-bold text-foreground/50">
+              Current Turns
+            </div>
+            <div className="text-2xl font-medium">
               {Intl.NumberFormat('en-GB').format(
                 props.client.authenticatedPlayer?.attackTurns || 0,
               )}
@@ -145,7 +149,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         </div>
       </div>
       <form
-        className="flex flex-col gap-y-6 bg-zinc-800 p-8"
+        className="flex flex-col gap-y-6 bg-muted p-8"
         onSubmit={handleAttack}
       >
         {errorMessages.length > 0 ? (
@@ -156,14 +160,15 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         ) : null}
         <div className="flex justify-between items-center">
           <div>
-            Attack Turns <span className="text-sm text-zinc-400">(1 / 10)</span>
+            Attack Turns{' '}
+            <span className="text-sm text-foreground/50">(1 / 10)</span>
           </div>
-          <input
+          <Input
             type="number"
             value={attackTurns.toString()}
             onChange={(e) => setAttackTurns(parseInt(e.target.value) || 0)}
             onFocus={() => setErrorMessages([])}
-            className="rounded-md border-0 py-1.5 bg-zinc-700 text-zinc-200 ring-1 ring-inset ring-zinc-500 focus:ring-2 focus:ring-inset focus:ring-yellow-600 invalid:ring-red-600 sm:text-sm sm:leading-6"
+            className="w-32"
             min={1}
             max={10}
           />
@@ -171,14 +176,18 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         <div className="flex justify-end gap-x-4">
           <div>
             <Button
-              text={'Cancel'}
-              variant="secondary"
+              variant="outline"
               type="button"
+              size={'lg'}
               onClick={() => navigate(-1)}
-            />
+            >
+              Cancel
+            </Button>
           </div>
           <div>
-            <Button text={'Attack'} type="submit" />
+            <Button type="submit" size={'lg'}>
+              Attack
+            </Button>
           </div>
         </div>
       </form>

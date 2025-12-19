@@ -64,7 +64,7 @@ export default function AttackListPage(props: AttackListPageProps) {
 
   return (
     <main>
-      <h2 className="text-base font-semibold text-zinc-300 text-center">
+      <h2 className="text-base font-semibold text-foreground text-center">
         You may attack a player from levels {attackableMinLevel(playerLevel)} to{' '}
         {attackableMaxLevel(playerLevel)}.
       </h2>
@@ -72,42 +72,42 @@ export default function AttackListPage(props: AttackListPageProps) {
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full sm:py-2 align-middle">
-              <table className="min-w-full border-separate border-spacing-0">
+              <table className="min-w-full border border-card-border border-separate border-spacing-0 rounded-lg overflow-hidden">
                 <thead>
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-16"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-16"
                     >
                       Rank
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border"
                     >
                       Username
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-6 sm:w-32"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-6 sm:w-32"
                     >
                       Gold
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-32"
                     >
                       Army Size
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-20"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-20"
                     >
                       Level
                     </th>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-20"
+                      className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-20"
                     >
                       Race
                     </th>
@@ -121,19 +121,19 @@ export default function AttackListPage(props: AttackListPageProps) {
                         if (player.id === playerID) {
                           return 'bg-yellow-300/10 cursor-pointer';
                         }
-                        return 'even:bg-zinc-800/50 cursor-pointer';
+                        return 'cursor-pointer hover:bg-accent/50';
                       })()}
                       onClick={() => {
                         navigate(`/player/${player.id}`);
                       }}
                     >
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground">
                         {player.overallRank}
                       </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground">
                         {player.name}
                       </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
                         <span className="block sm:hidden">
                           {new Intl.NumberFormat('en-GB', {
                             notation: 'compact',
@@ -143,13 +143,13 @@ export default function AttackListPage(props: AttackListPageProps) {
                           {new Intl.NumberFormat('en-GB').format(player.gold)}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
                         {new Intl.NumberFormat('en-GB').format(player.armySize)}
                       </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
                         {player.level}
                       </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
                         <Avatar race={player.race} size="small" />
                       </td>
                     </tr>
