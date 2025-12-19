@@ -78,7 +78,7 @@ const raceIcons = {
 
 const defaultIcon = (
   <svg
-    className="h-full w-full text-zinc-500"
+    className="h-full w-full text-muted"
     fill="currentColor"
     viewBox="0 0 24 24"
   >

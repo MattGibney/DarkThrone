@@ -27,7 +27,7 @@ export default function MainLayout(props: MainLayoutProps) {
       <SidebarInset>
         <HeaderBar client={props.client} />
 
-        <div className="px-4 sm:px-6 lg:px-8 lg:py-4">
+        <div className="p-4 sm:px-6 lg:px-8 lg:py-8">
           <Outlet />
         </div>
 
