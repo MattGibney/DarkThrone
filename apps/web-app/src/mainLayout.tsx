@@ -23,7 +23,7 @@ export default function MainLayout(props: MainLayoutProps) {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar client={props.client} />
       <SidebarInset>
         <HeaderBar client={props.client} />
 

@@ -1,17 +1,11 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { Avatar } from '@darkthrone/react-components';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { SidebarTrigger } from '@darkthrone/shadcnui/sidebar';
 
 interface HeaderBarProps {
   client: DarkThroneClient;
 }
 export default function HeaderBar(props: HeaderBarProps) {
-  const navigate = useNavigate();
-
   const [currentTime, setCurrentTime] = useState(
     props.client.serverTime ? new Date(props.client.serverTime) : undefined,
   );
@@ -56,13 +50,8 @@ export default function HeaderBar(props: HeaderBarProps) {
     return `${String(minutesRemaining).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   }
 
-  async function handleSwitchPlayer() {
-    await props.client.auth.unassumePlayer();
-    navigate('/player-select');
-  }
-
   return (
-    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-muted border-b border-foreground/10 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+    <div className="sticky top-0 z-40 flex h-15 shrink-0 items-center gap-x-4 bg-sidebar border-b border-sidebar-border px-4 sm:gap-x-6">
       <SidebarTrigger className="text-foreground/40 md:hidden" />
 
       {/* Separator */}
@@ -85,56 +74,7 @@ export default function HeaderBar(props: HeaderBarProps) {
             </div>
           ) : null}
         </div>
-        <div className="ml-auto flex items-center gap-x-4 lg:gap-x-6">
-          {/* Profile dropdown */}
-          <Menu as="div" className="relative ml-3">
-            <div>
-              <MenuButton className="relative flex items-center rounded-full bg-muted text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:ring-offset-2 focus:ring-offset-muted">
-                <span className="absolute -inset-1.5" />
-                <span className="sr-only">Open user menu</span>
-
-                <Avatar
-                  race={props.client.authenticatedPlayer?.race}
-                  url={props.client.authenticatedPlayer?.avatarURL}
-                  size="small"
-                />
-
-                <span className="hidden lg:flex lg:items-center">
-                  <span
-                    className="ml-4 text-sm font-semibold leading-6 text-foreground/80"
-                    aria-hidden="true"
-                  >
-                    {props.client.authenticatedPlayer?.name}
-                  </span>
-                  <ChevronDownIcon
-                    className="ml-2 h-5 w-5 text-foreground/50"
-                    aria-hidden="true"
-                  />
-                </span>
-              </MenuButton>
-            </div>
-            <MenuItems className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-md bg-popover text-popover-foreground border py-1 shadow-lg transition focus:outline-none data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-leave:duration-75 data-enter:ease-out data-leave:ease-in">
-              <MenuItem>
-                <button
-                  type="button"
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-focus:bg-zinc-800/50"
-                  onClick={() => handleSwitchPlayer()}
-                >
-                  Switch Players
-                </button>
-              </MenuItem>
-              <MenuItem>
-                <button
-                  type="button"
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-300 data-focus:bg-zinc-800/50"
-                  onClick={() => props.client.auth.logout()}
-                >
-                  Logout
-                </button>
-              </MenuItem>
-            </MenuItems>
-          </Menu>
-        </div>
+        <div className="ml-auto" />
       </div>
     </div>
   );
