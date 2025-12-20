@@ -4,7 +4,7 @@ import { Avatar } from '../../../../components/avatar';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { Paginator } from '../../../../libs/pagination';
-import { Pagination } from '@darkthrone/react-components';
+import { Pagination } from '@darkthrone/shadcnui/components/pagination';
 import { attackableMinLevel, attackableMaxLevel } from '@darkthrone/game-data';
 
 interface AttackListPageProps {
