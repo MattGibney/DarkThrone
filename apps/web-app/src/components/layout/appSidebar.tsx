@@ -1,7 +1,7 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Logo } from '@darkthrone/react-components';
 import DarkThroneClient from '@darkthrone/client-library';
-import { ChevronsUpDown, LogOut, Bell } from 'lucide-react';
+import { ChevronsUpDown, LogOut, ReplaceAll } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -164,7 +164,7 @@ export default function AppSidebar(props: AppSidebarProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={handleSwitchPlayer}>
-                    <Bell />
+                    <ReplaceAll />
                     Switch Player
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
