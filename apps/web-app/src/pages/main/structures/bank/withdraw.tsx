@@ -1,11 +1,18 @@
-import DarkThroneClient from '@darkthrone/client-library';
-import { Alert, Button, InputField } from '@darkthrone/react-components';
 import { useState } from 'react';
+import DarkThroneClient from '@darkthrone/client-library';
 import BankNavigation from './components/bankNavigation';
 import {
   ExtractErrorCodesForStatuses,
   POST_withdraw,
 } from '@darkthrone/interfaces';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@darkthrone/shadcnui/alert';
+import { Input } from '@darkthrone/shadcnui/input';
+import { Button } from '@darkthrone/shadcnui/button';
+import { AlertCircleIcon } from 'lucide-react';
 
 type PossibleErrorCodes = ExtractErrorCodesForStatuses<
   POST_withdraw,
@@ -64,51 +71,63 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
 
   return (
     <main>
-      <div className="my-12 w-full max-w-2xl mx-auto rounded-md overflow-hidden">
+      <div className="my-12 w-full max-w-2xl mx-auto">
         <BankNavigation />
 
-        <div className="bg-zinc-800/50 p-8 flex justify-around text-zinc-300">
-          <div className="flex flex-col items-center">
-            <div className="text-yellow-500 text-2xl font-bold">
-              {new Intl.NumberFormat().format(
-                props.client.authenticatedPlayer.gold,
-              )}
+        <div className="rounded-lg overflow-hidden">
+          <div className="bg-card p-8 flex justify-around text-card-foreground">
+            <div className="flex flex-col items-center">
+              <div className="text-primary text-2xl font-bold">
+                {new Intl.NumberFormat().format(
+                  props.client.authenticatedPlayer.gold,
+                )}
+              </div>
+              <p>Gold on Hand</p>
             </div>
-            <p>Gold on Hand</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="text-yellow-500 text-2xl font-bold">
-              {new Intl.NumberFormat().format(
-                props.client.authenticatedPlayer.goldInBank,
-              )}
+            <div className="flex flex-col items-center">
+              <div className="text-primary text-2xl font-bold">
+                {new Intl.NumberFormat().format(
+                  props.client.authenticatedPlayer.goldInBank,
+                )}
+              </div>
+              <p>Gold in Bank</p>
             </div>
-            <p>Gold in Bank</p>
           </div>
+          <form
+            className="flex flex-col gap-y-6 bg-muted p-8"
+            onSubmit={handleWithdraw}
+          >
+            {errorMessages.length > 0 ? (
+              <Alert variant="destructive" className="text-sm [&>svg]:size-4">
+                <AlertCircleIcon />
+                <AlertTitle>There was a problem</AlertTitle>
+                <AlertDescription>
+                  <ul className="list-inside list-disc text-sm">
+                    {errorMessages.map((code) => (
+                      <li key={code}>{errorTranslations[code]}</li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            ) : null}
+            <div className="flex justify-end items-center text-muted-foreground">
+              <Input
+                type="number"
+                value={inputAmount.toString()}
+                className="w-32"
+                onChange={(e) => setInputAmount(parseInt(e.target.value) || 0)}
+                onFocus={() => setErrorMessages([])}
+              />
+            </div>
+            <div className="flex justify-end items-end">
+              <div className="flex gap-x-4">
+                <Button type="submit" size={'lg'}>
+                  Withdraw
+                </Button>
+              </div>
+            </div>
+          </form>
         </div>
-        <form
-          className="flex flex-col gap-y-6 bg-zinc-800 p-8"
-          onSubmit={handleWithdraw}
-        >
-          {errorMessages.length > 0 ? (
-            <Alert
-              messages={errorMessages.map((err) => errorTranslations[err])}
-              type={'error'}
-            />
-          ) : null}
-          <div className="flex justify-end items-center text-zinc-400">
-            <InputField
-              type="number"
-              value={inputAmount.toString()}
-              setValue={(value) => setInputAmount(parseInt(value) || 0)}
-              onFocus={() => setErrorMessages([])}
-            />
-          </div>
-          <div className="flex justify-end items-end">
-            <div className="flex gap-x-4">
-              <Button text={'Withdraw'} type="submit" />
-            </div>
-          </div>
-        </form>
       </div>
     </main>
   );

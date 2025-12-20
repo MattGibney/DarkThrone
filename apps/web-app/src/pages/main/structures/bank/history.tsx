@@ -12,54 +12,70 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
       <div className="my-12 w-full max-w-2xl mx-auto overflow-hidden">
         <BankNavigation />
 
-        <div className="bg-zinc-800/50 flex rounded-md overflow-hidden text-zinc-300">
-          <table className="min-w-full">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  className="px-8 py-5 text-left text-sm font-semibold text-white"
-                >
-                  Date
-                </th>
-                <th
-                  scope="col"
-                  className="px-8 py-5 text-sm text-right font-semibold text-white"
-                >
-                  Amount
-                </th>
-                <th
-                  scope="col"
-                  className="px-8 py-5 text-left text-sm font-semibold text-white"
-                >
-                  Type
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-zinc-800 divide-y divide-zinc-700/50">
-              {props.client.authenticatedPlayer.depositHistory
-                .sort(
-                  (a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime(),
-                )
-                .map((history, historyIdx) => (
-                  <tr key={historyIdx}>
-                    <td className="whitespace-nowrap px-8 py-5 text-sm text-zinc-300">
-                      {new Date(history.date).toLocaleString()}
-                    </td>
-                    <td className="whitespace-nowrap px-8 py-5 text-sm text-right text-zinc-300">
-                      {new Intl.NumberFormat().format(history.amount)}
-                    </td>
-                    <td className="whitespace-nowrap px-8 py-5 text-sm text-zinc-300">
-                      {history.type === 'deposit' ? 'Deposit' : 'Withdrawal'}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        <div className="px-0 sm:px-6 lg:px-8">
+          <div className="mt-8 flow-root">
+            <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full sm:py-2 align-middle">
+                <table className="min-w-full border border-card-border border-separate border-spacing-0 rounded-lg overflow-hidden">
+                  <thead>
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border"
+                      >
+                        Date
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-right text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border"
+                      >
+                        Amount
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border"
+                      >
+                        Type
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {props.client.authenticatedPlayer.depositHistory
+                      .sort(
+                        (a, b) =>
+                          new Date(b.date).getTime() -
+                          new Date(a.date).getTime(),
+                      )
+                      .map((history, historyIdx) => (
+                        <tr key={historyIdx} className="hover:bg-accent/50">
+                          <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
+                            <span className="block sm:hidden">
+                              {new Intl.DateTimeFormat(undefined, {
+                                dateStyle: 'short',
+                              }).format(new Date(history.date))}
+                            </span>
+                            <span className="hidden sm:block">
+                              {new Date(history.date).toLocaleString()}
+                            </span>
+                          </td>
+                          <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-right text-foreground/75">
+                            {new Intl.NumberFormat().format(history.amount)}
+                          </td>
+                          <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
+                            {history.type === 'deposit'
+                              ? 'Deposit'
+                              : 'Withdrawal'}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-zinc-800 p-8 mt-8 rounded-md text-zinc-400 text-sm font-semibold">
+        <div className="bg-card p-6 mt-8 rounded-md text-card-foreground/70 text-sm font-semibold">
           Only transactions within the last 24 hours are currently visible.
         </div>
       </div>
