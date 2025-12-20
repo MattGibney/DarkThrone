@@ -1,10 +1,12 @@
-import DarkThroneClient from '@darkthrone/client-library';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import DarkThroneClient from '@darkthrone/client-library';
 import { unitItems } from '@darkthrone/game-data';
 import { CombatUnitType, UnitItemType, UnitType } from '@darkthrone/interfaces';
-import { Button, InputField } from '@darkthrone/react-components';
-import { useState } from 'react';
 import type { UnitItem } from '@darkthrone/interfaces';
+import { Button } from '@darkthrone/shadcnui/button';
+import { Card, CardContent } from '@darkthrone/shadcnui/card';
+import { Input } from '@darkthrone/shadcnui/input';
 
 interface ArmouryScreenProps {
   client: DarkThroneClient;
@@ -158,20 +160,22 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
     return (
       <main className="mx-auto max-w-4xl">
         <div className="flex flex-col gap-y-8">
-          <div className="bg-zinc-800/50 rounded-lg p-4 flex flex-col gap-y-4 text-zinc-400 text-sm">
-            <p>
-              You do not currently have an armoury. Visit the Upgrades page to
-              build one.{' '}
-              <Link to="/upgrades" className="text-yellow-500">
-                Go to Upgrades
-              </Link>
-            </p>
-            <p>
-              Once you have built an armoury, you will be able to research and
-              upgrade various types of armour to improve your troops&apos;
-              effectiveness in battle.
-            </p>
-          </div>
+          <Card>
+            <CardContent className="flex flex-col gap-y-4 text-card-foreground/70 text-sm">
+              <p>
+                You do not currently have an armoury. Visit the Upgrades page to
+                build one.{' '}
+                <Link to="/upgrades" className="text-primary font-semibold">
+                  Go to Upgrades
+                </Link>
+              </p>
+              <p>
+                Once you have built an armoury, you will be able to research and
+                upgrade various types of armour to improve your troops&apos;
+                effectiveness in battle.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </main>
     );
@@ -180,24 +184,26 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
   return (
     <main className="mx-auto max-w-4xl">
       <div className="flex flex-col gap-y-8">
-        <div className="bg-zinc-800/50 rounded-lg p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
-          <div>
-            Gold{' '}
-            <span className="text-white font-bold text-md">
-              {new Intl.NumberFormat().format(
-                props.client.authenticatedPlayer.gold,
-              )}
-            </span>
-          </div>
-          <div>
-            Current Player Level{' '}
-            <span className="text-white font-bold text-md">
-              {new Intl.NumberFormat().format(
-                props.client.authenticatedPlayer.level,
-              )}
-            </span>
-          </div>
-        </div>
+        <Card>
+          <CardContent className="flex justify-center gap-x-12 text-card-foreground/70 text-sm">
+            <div>
+              Gold{' '}
+              <span className="text-card-foreground font-bold text-md">
+                {new Intl.NumberFormat().format(
+                  props.client.authenticatedPlayer.gold,
+                )}
+              </span>
+            </div>
+            <div>
+              Current Player Level{' '}
+              <span className="text-card-foreground font-bold text-md">
+                {new Intl.NumberFormat().format(
+                  props.client.authenticatedPlayer.level,
+                )}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
 
         <div>
           <div className="flex flex-col gap-y-16">
@@ -211,7 +217,7 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                 <div key={combatType}>
                   <div>
                     {!hasItems ? (
-                      <div className="text-sm text-zinc-400 px-2">
+                      <div className="text-sm text-card-foreground/60 px-2">
                         No equipment available yet.
                       </div>
                     ) : (
@@ -223,18 +229,18 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                             return (
                               <div
                                 key={itemType}
-                                className="overflow-hidden rounded-lg border border-zinc-700/70 bg-zinc-900/40"
+                                className="overflow-hidden rounded-lg border border-card-border bg-card"
                               >
-                                <table className="w-full text-sm text-zinc-200 table-fixed">
+                                <table className="w-full text-sm text-card-foreground table-fixed">
                                   <colgroup>
                                     {columnWidths.map((width, idx) => (
                                       <col key={idx} style={{ width }} />
                                     ))}
                                   </colgroup>
                                   {showHeader ? (
-                                    <thead className="bg-zinc-900/80 text-xs uppercase tracking-wide text-zinc-400">
+                                    <thead className="bg-card text-xs uppercase tracking-wide text-card-foreground/60">
                                       <tr>
-                                        <th className="py-3 px-3 text-left font-semibold text-white">
+                                        <th className="py-3 px-3 text-left font-semibold text-card-foreground">
                                           {combatTypeLabels[combatType]}
                                         </th>
                                         <th className="py-3 px-3 text-center font-semibold">
@@ -255,8 +261,8 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                                       </tr>
                                     </thead>
                                   ) : null}
-                                  <tbody className="divide-y divide-zinc-800/80">
-                                    <tr className="bg-zinc-800/70 text-zinc-100">
+                                  <tbody className="divide-y divide-card-border">
+                                    <tr className="bg-muted/60 text-card-foreground">
                                       <td
                                         colSpan={6}
                                         className="py-3 px-3 text-xs font-semibold uppercase tracking-wide"
@@ -267,36 +273,36 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                                     {typeItems.map((item) => (
                                       <tr
                                         key={item.key}
-                                        className="hover:bg-zinc-800/50 transition-colors"
+                                        className="hover:bg-muted/40 transition-colors"
                                       >
-                                        <td className="py-3 px-3 font-semibold text-white">
+                                        <td className="py-3 px-3 font-semibold text-card-foreground">
                                           {formatItemName(item.key)}
                                         </td>
-                                        <td className="py-3 px-3 text-zinc-100">
+                                        <td className="py-3 px-3 text-card-foreground/80">
                                           {formatBonuses(item.bonuses)}
                                         </td>
-                                        <td className="py-3 px-3 text-zinc-100">
+                                        <td className="py-3 px-3 text-card-foreground/80">
                                           {ownedQuantity(item.key)}
                                         </td>
-                                        <td className="py-3 px-3 text-zinc-100">
+                                        <td className="py-3 px-3 text-card-foreground/80">
                                           {new Intl.NumberFormat().format(
                                             item.buyCost,
                                           )}
                                         </td>
-                                        <td className="py-3 px-3 text-zinc-100">
+                                        <td className="py-3 px-3 text-card-foreground/80">
                                           {new Intl.NumberFormat().format(
                                             item.sellCost,
                                           )}
                                         </td>
                                         <td className="py-3 px-3">
                                           <div className="max-w-32">
-                                            <InputField
+                                            <Input
                                               type="number"
                                               value={quantities[item.key] ?? ''}
-                                              setValue={(val) =>
+                                              onChange={(event) =>
                                                 handleQuantityChange(
                                                   item.key,
-                                                  val,
+                                                  event.target.value,
                                                 )
                                               }
                                             />
@@ -314,16 +320,20 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
                           <div>
                             <Button
                               variant="secondary"
-                              text="Sell"
+                              size={'lg'}
                               onClick={handleSell}
-                            />
+                            >
+                              Sell
+                            </Button>
                           </div>
                           <div>
                             <Button
-                              variant="primary"
-                              text="Buy"
+                              variant="default"
+                              size={'lg'}
                               onClick={handleBuy}
-                            />
+                            >
+                              Buy
+                            </Button>
                           </div>
                         </div>
                       </div>
