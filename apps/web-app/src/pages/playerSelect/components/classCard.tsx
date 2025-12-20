@@ -3,7 +3,7 @@ import { tv } from 'tailwind-variants';
 const styles = tv({
   slots: {
     container:
-      'text-center p-2 border-2 border-zinc-600 rounded-lg flex flex-col cursor-pointer',
+      'text-center p-2 border-2 border-bder rounded-lg flex flex-col cursor-pointer',
     bonusText: 'text-sm text-foreground/45',
   },
   variants: {
