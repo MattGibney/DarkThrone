@@ -3,7 +3,6 @@ import Layout from '../components/layout/layout';
 import HomePage from './page/home';
 import PrivacyPage from './page/legal/privacy';
 import NewsPage from './page/news/news';
-import RoadmapPage from './page/roadmap/roadmap';
 import ContactPage from './page/contact/contact';
 import TermsPage from './page/legal/terms';
 import { environment } from '../environments/environment';
@@ -18,7 +17,6 @@ export type NavigationItem = {
 export const screens: { [k: string]: NavigationItem } = {
   home: { name: 'Home', href: '/', element: HomePage },
   news: { name: 'News', href: '/news', element: NewsPage },
-  roadmap: { name: 'Roadmap', href: '/roadmap', element: RoadmapPage },
   contact: { name: 'Contact', href: '/contact', element: ContactPage },
   privacy: { name: 'Privacy', href: '/privacy', element: PrivacyPage },
   terms: { name: 'Terms & Conditions', href: '/terms', element: TermsPage },

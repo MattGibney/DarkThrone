@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { NewsPost } from '@darkthrone/interfaces';
 import { newsPosts } from '@darkthrone/shared-data';
 import Markdown from 'react-markdown';
-import { Pagination } from '@darkthrone/react-components';
+import { Pagination } from '@darkthrone/shadcnui/components/pagination';
 
 export default function NewsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
