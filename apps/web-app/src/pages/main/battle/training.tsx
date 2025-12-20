@@ -78,7 +78,7 @@ export default function TrainingScreen(props: TrainingScreenProps) {
   }
 
   return (
-    <main className="max-w-5xl mx-auto">
+    <main className="mx-auto max-w-4xl">
       <Card>
         <CardContent className="flex justify-center gap-x-12 text-card-foreground/70 text-sm">
           <div>

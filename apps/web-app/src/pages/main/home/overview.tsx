@@ -108,7 +108,7 @@ export default function OverviewPage(props: OverviewPageProps) {
   ];
 
   return (
-    <main className="grid gap-6 max-w-7xl mx-auto">
+    <main className="grid gap-6 mx-auto max-w-4xl">
       <section>
         <Card>
           <CardContent className="p-6 sm:p-8">

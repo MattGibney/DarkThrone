@@ -156,8 +156,8 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
 
   if (props.client.authenticatedPlayer.structureUpgrades.armoury === 0) {
     return (
-      <main className="max-w-7xl mx-auto">
-        <div className="max-w-3xl mx-auto flex flex-col gap-y-8">
+      <main className="mx-auto max-w-4xl">
+        <div className="flex flex-col gap-y-8">
           <div className="bg-zinc-800/50 rounded-lg p-4 flex flex-col gap-y-4 text-zinc-400 text-sm">
             <p>
               You do not currently have an armoury. Visit the Upgrades page to
@@ -178,8 +178,8 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
   }
 
   return (
-    <main className="max-w-7xl mx-auto">
-      <div className="max-w-3xl mx-auto flex flex-col gap-y-8">
+    <main className="mx-auto max-w-4xl">
+      <div className="flex flex-col gap-y-8">
         <div className="bg-zinc-800/50 rounded-lg p-4 flex justify-center gap-x-12 text-zinc-400 text-sm">
           <div>
             Gold{' '}
