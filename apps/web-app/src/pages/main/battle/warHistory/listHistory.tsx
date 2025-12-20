@@ -46,65 +46,70 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
   }
 
   return (
-    <main>
-      <div className="sm:px-6 lg:px-8">
-        <div className="mt-8 flow-root">
-          <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full sm:py-2 align-middle">
-              <table className="min-w-full border-separate border-spacing-0">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500"
-                    >
-                      Description
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
-                    >
-                      Gold Stolen
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold bg-zinc-800 text-zinc-400 border-b border-zinc-500 w-32"
-                    >
-                      Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {historyItems.map((historyItem, historyItemIdx) => (
-                    <tr
-                      key={historyItemIdx}
-                      className="even:bg-zinc-800/50 cursor-pointer"
-                      onClick={() => {
-                        navigate(`/war-history/${historyItem.id}`);
-                      }}
-                    >
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-400">
-                        <span className="font-bold text-white">
-                          {getNameForID(historyItem.attackerID)}
-                        </span>{' '}
-                        attacks{' '}
-                        <span className="font-bold text-white">
-                          {getNameForID(historyItem.defenderID)}
-                        </span>
-                      </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
-                        {new Intl.NumberFormat('en-GB').format(
-                          historyItem.goldStolen,
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium text-zinc-300">
+    <main className="mx-auto max-w-4xl">
+      <div className="px-0 sm:px-6 lg:px-8">
+        <div className="-mx-4 -my-2 sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full sm:py-2 align-middle">
+            <table className="min-w-full border border-card-border border-separate border-spacing-0 rounded-lg overflow-hidden">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border"
+                  >
+                    Description
+                  </th>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-32"
+                  >
+                    Gold Stolen
+                  </th>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-medium bg-card text-card-foreground/80 border-b border-card-border w-32"
+                  >
+                    Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {historyItems.map((historyItem, historyItemIdx) => (
+                  <tr
+                    key={historyItemIdx}
+                    className="cursor-pointer hover:bg-accent/50"
+                    onClick={() => {
+                      navigate(`/war-history/${historyItem.id}`);
+                    }}
+                  >
+                    <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/40">
+                      <span className="font-bold text-foreground">
+                        {getNameForID(historyItem.attackerID)}
+                      </span>{' '}
+                      attacks{' '}
+                      <span className="font-bold text-foreground">
+                        {getNameForID(historyItem.defenderID)}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
+                      {new Intl.NumberFormat('en-GB').format(
+                        historyItem.goldStolen,
+                      )}
+                    </td>
+                    <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
+                      <span className="block sm:hidden">
+                        {new Intl.DateTimeFormat(undefined, {
+                          dateStyle: 'short',
+                        }).format(new Date(historyItem.createdAt))}
+                      </span>
+                      <span className="hidden sm:block">
                         {new Date(historyItem.createdAt).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
