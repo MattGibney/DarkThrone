@@ -52,7 +52,7 @@ export default function AppSidebar(props: AppSidebarProps) {
   };
 
   const playerName = props.client.authenticatedPlayer?.name ?? 'Player';
-  const userEmail = props.client.authenticatedUser?.email ?? 'Unknown';
+  // const userEmail = props.client.authenticatedUser?.email ?? 'Unknown';
 
   async function handleSwitchPlayer() {
     await props.client.auth.unassumePlayer();
@@ -136,7 +136,7 @@ export default function AppSidebar(props: AppSidebarProps) {
                   />
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">{playerName}</span>
-                    <span className="truncate text-xs">{userEmail}</span>
+                    {/* <span className="truncate text-xs">{userEmail}</span> */}
                   </div>
                   <ChevronsUpDown className="ml-auto size-4" />
                 </SidebarMenuButton>
@@ -157,7 +157,7 @@ export default function AppSidebar(props: AppSidebarProps) {
                     />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{playerName}</span>
-                      <span className="truncate text-xs">{userEmail}</span>
+                      {/* <span className="truncate text-xs">{userEmail}</span> */}
                     </div>
                   </div>
                 </DropdownMenuLabel>
