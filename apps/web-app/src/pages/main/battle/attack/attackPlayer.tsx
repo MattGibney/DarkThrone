@@ -4,7 +4,11 @@ import {
   PlayerObject,
   POST_attackPlayer,
 } from '@darkthrone/interfaces';
-import { Alert } from '@darkthrone/react-components';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@darkthrone/shadcnui/alert';
 import { Avatar } from '../../../../components/avatar';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,6 +19,7 @@ import {
 } from '@darkthrone/game-data';
 import { Input } from '@darkthrone/shadcnui/input';
 import { Button } from '@darkthrone/shadcnui/button';
+import { AlertCircleIcon } from 'lucide-react';
 
 type PossibleErrorCodes = ExtractErrorCodesForStatuses<
   POST_attackPlayer,
@@ -153,10 +158,17 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         onSubmit={handleAttack}
       >
         {errorMessages.length > 0 ? (
-          <Alert
-            messages={errorMessages.map((err) => errorTranslations[err])}
-            type={'error'}
-          />
+          <Alert variant="destructive" className="text-sm [&>svg]:size-4">
+            <AlertCircleIcon />
+            <AlertTitle>There was a problem</AlertTitle>
+            <AlertDescription>
+              <ul className="list-inside list-disc text-sm">
+                {errorMessages.map((errorCode, index) => (
+                  <li key={index}>{errorTranslations[errorCode]}</li>
+                ))}
+              </ul>
+            </AlertDescription>
+          </Alert>
         ) : null}
         <div className="flex justify-between items-center">
           <div>
