@@ -14,7 +14,19 @@ export default {
     ) => {
       const { amount } = req.body;
 
-      if (amount <= 0) {
+      // Ensure amount is an integer
+      const amountInt = parseInt(amount.toString(), 10);
+
+      if (isNaN(amountInt)) {
+        res.status(400).json({
+          errors: ['banking.deposit.invalidAmount'],
+        });
+        return;
+      }
+
+      // Use amountInt instead of amount below
+
+      if (amountInt <= 0) {
         res.status(400).json({
           errors: ['banking.deposit.negativeAmount'],
         });
@@ -37,16 +49,16 @@ export default {
       }
 
       const maxDeposit = Math.floor(req.ctx.authedPlayer.gold * 0.8);
-      if (amount > maxDeposit) {
+      if (amountInt > maxDeposit) {
         res.status(400).json({
           errors: ['banking.deposit.exceedsMaxDeposit'],
         });
         return;
       }
 
-      await req.ctx.authedPlayer.depositGold(amount);
+      await req.ctx.authedPlayer.depositGold(amountInt);
 
-      res.status(200).json({ amount });
+      res.status(200).json({ amount: amountInt });
     },
   ),
 
@@ -57,7 +69,19 @@ export default {
     ) => {
       const { amount } = req.body;
 
-      if (amount <= 0) {
+      // Ensure amount is an integer
+      const amountInt = parseInt(amount.toString(), 10);
+
+      if (isNaN(amountInt)) {
+        res.status(400).json({
+          errors: ['banking.withdraw.invalidAmount'],
+        });
+        return;
+      }
+
+      // Use amountInt instead of amount below
+
+      if (amountInt <= 0) {
         res.status(400).json({
           errors: ['banking.withdraw.negativeAmount'],
         });
@@ -65,16 +89,16 @@ export default {
       }
 
       const playerGoldInBank = req.ctx.authedPlayer.goldInBank;
-      if (amount > playerGoldInBank) {
+      if (amountInt > playerGoldInBank) {
         res.status(400).json({
           errors: ['banking.withdraw.insufficientFunds'],
         });
         return;
       }
 
-      await req.ctx.authedPlayer.withdrawGold(amount);
+      await req.ctx.authedPlayer.withdrawGold(amountInt);
 
-      res.status(200).json({ amount });
+      res.status(200).json({ amount: amountInt });
     },
   ),
 };

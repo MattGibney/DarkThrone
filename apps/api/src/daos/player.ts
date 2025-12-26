@@ -31,13 +31,28 @@ export default class PlayerDao {
     this.database = database;
   }
 
+  private ensureTypeSafety(row: PlayerRow): PlayerRow {
+    return {
+      ...row,
+      attack_turns: Number(row.attack_turns),
+      gold: Number(row.gold),
+      gold_in_bank: Number(row.gold_in_bank),
+      experience: Number(row.experience),
+      overall_rank: Number(row.overall_rank),
+      structureUpgrades: {
+        fortification: Number(row.structureUpgrades?.fortification ?? 0),
+        housing: Number(row.structureUpgrades?.housing ?? 0),
+      },
+    };
+  }
+
   async fetchAllForUser(logger: Logger, userID: string): Promise<PlayerRow[]> {
     try {
       const players = await this.database<PlayerRow>('players')
         .where({ user_id: userID })
         .select('*');
 
-      return players;
+      return players.map(this.ensureTypeSafety);
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch players for user');
       return [];
@@ -48,7 +63,7 @@ export default class PlayerDao {
     try {
       const players = await this.database<PlayerRow>('players').select('*');
 
-      return players;
+      return players.map(this.ensureTypeSafety);
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch all players');
       return [];
@@ -69,7 +84,7 @@ export default class PlayerDao {
         .limit(paginator.pageSize)
         .offset((paginator.page - 1) * paginator.pageSize);
 
-      paginator.dataRows = rows;
+      paginator.dataRows = rows.map(this.ensureTypeSafety);
 
       // All rows have the same total_count, so just pick the first one
       paginator.totalItemCount = rows.length > 0 ? rows[0].total_count : 0;
@@ -98,7 +113,7 @@ export default class PlayerDao {
         .where({ id })
         .first();
 
-      return player;
+      return this.ensureTypeSafety(player);
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch player by ID');
       return null;
@@ -114,7 +129,7 @@ export default class PlayerDao {
         .whereIn('id', playerIDs)
         .select('*');
 
-      return players;
+      return players.map(this.ensureTypeSafety);
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch players by IDs');
       return [];
@@ -130,7 +145,7 @@ export default class PlayerDao {
         .where({ display_name: displayName })
         .first();
 
-      return player;
+      return this.ensureTypeSafety(player);
     } catch (error) {
       logger.error(error, 'DAO: Failed to fetch player by display name');
       return null;
@@ -168,7 +183,7 @@ export default class PlayerDao {
         })
         .returning('*');
 
-      return player[0];
+      return this.ensureTypeSafety(player[0]);
     } catch (error) {
       logger.error(error, 'DAO: Failed to create player');
       return null;
@@ -186,7 +201,7 @@ export default class PlayerDao {
         .update(update)
         .returning('*');
 
-      return player[0];
+      return this.ensureTypeSafety(player[0]);
     } catch (error) {
       logger.error(error, 'DAO: Failed to update player');
       return null;
