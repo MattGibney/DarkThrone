@@ -153,6 +153,15 @@ export default class PlayerModel {
   async depositGold(amount: number) {
     this.ctx.logger.debug({ amount }, 'Depositing gold');
 
+    this.ctx.logger.debug({
+      amount,
+      amountType: typeof amount,
+      gold: this.gold,
+      goldType: typeof this.gold,
+      goldInBank: this.goldInBank,
+      goldInBankType: typeof this.goldInBank,
+    });
+
     this.gold -= amount;
     this.goldInBank += amount;
 
