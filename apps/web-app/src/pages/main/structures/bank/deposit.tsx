@@ -32,6 +32,7 @@ export default function BankDepositPage(props: BankDepositPageProps) {
     'banking.deposit.maxDepositsReached':
       'You have reached the maximum deposits allowed.',
     'server.error': 'An unexpected server error occurred. Please try again.',
+    'banking.deposit.invalidAmount': 'The deposit amount is invalid.',
   };
 
   const [inputAmount, setInputAmount] = useState<number>(0);
