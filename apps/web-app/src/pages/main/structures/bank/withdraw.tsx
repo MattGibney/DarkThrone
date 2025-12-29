@@ -23,6 +23,7 @@ export default function BankWithdrawPage(props: BankWithdrawPageProps) {
     'banking.withdraw.insufficientFunds':
       'You do not have enough gold in the bank to complete this withdrawal.',
     'server.error': 'An unexpected server error occurred. Please try again.',
+    'banking.withdraw.invalidAmount': 'The withdrawal amount is invalid.',
   };
 
   const [inputAmount, setInputAmount] = useState<number>(0);
