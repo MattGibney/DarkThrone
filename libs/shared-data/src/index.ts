@@ -2,6 +2,70 @@ import { NewsPost } from '@darkthrone/interfaces';
 
 export const newsPosts: NewsPost[] = [
   {
+    title: 'A Change in Direction for DarkThrone Reborn',
+    content: `DarkThrone Reborn started life as an attempt to recreate something
+that no longer exists.
+
+For a long time, the goal was accuracy. To rebuild the game as it was remembered,
+to preserve the mechanics and the feel as faithfully as possible. That made
+sense at the beginning, but over time it's become clear that this approach has
+limits that are hard to work around.
+
+There is no definitive reference for the original game. What remains is memory,
+nostalgia, and interpretation, all of which vary wildly from person to person.
+Trying to recreate a system under those conditions leads to hesitation. Every
+change feels risky, every decision feels like it might be “wrong”, even when
+there is no single correct answer.
+
+Because of that, I'm changing how I think about DarkThrone Reborn. Going forward,
+this is no longer a strict recreation. It's a spiritual successor.
+
+That doesn't mean abandoning what made the game what it was. DarkThrone Reborn
+will remain text-based. It will remain a persistent world with long-term
+progression, meaningful decisions, and consequences that carry weight. The pacing
+will stay deliberate. The core feel is not being thrown away.
+
+What is changing is the willingness to evolve.
+
+This project is built and maintained by one person, in their own time. That
+reality matters. If DarkThrone Reborn is going to continue to exist, it needs
+to be sustainable to build, enjoyable to work on, and flexible enough to grow
+without constantly second-guessing every decision through the lens of nostalgia.
+
+Another part of this shift is a broader view of what progression in the game can
+look like. Historically, DarkThrone has been almost entirely PvP-driven. PvP
+will remain a core part of the game, but it won't be the only path forward. Not
+every meaningful system needs to be adversarial, and not every reason to log in
+needs to involve attacking another player.
+
+The aim is to add depth and longevity without increasing pressure.
+
+You'll see new systems introduced more deliberately, explained before they
+arrive, and adjusted over time rather than dropped in all at once. Some ideas
+will be experimental. Some won't work as intended. That's part of building
+something that's alive rather than frozen in time.
+
+Communication around the game will also change. There will be clearer direction,
+a visible roadmap, and more written updates explaining not just what is changing,
+but why. Feedback will always be welcome, but decisions won't be made by
+consensus. The goal is coherence and longevity, not noise.
+
+This direction won't be for everyone. DarkThrone remains a niche game by design.
+It's slow, text-based, and unapologetically long-term. If you're looking for a
+perfect snapshot of the past, this may no longer be the right fit, and that's
+okay.
+
+This change is about making DarkThrone Reborn something that can continue to
+exist and evolve without being constrained by fear of getting it wrong.
+Everything that comes next builds on that foundation.
+
+More soon, promise.
+
+-Moppler
+`,
+    date: new Date('2025-12-31'),
+  },
+  {
     title: 'Some Quality of life updates',
     content: `Hello everyone!
 It's been a little while since the last update. This update is only a small one with some quality of life updates.
