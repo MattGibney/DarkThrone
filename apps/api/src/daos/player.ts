@@ -43,6 +43,7 @@ export default class PlayerDao {
       structureUpgrades: {
         fortification: Number(row.structureUpgrades?.fortification ?? 0),
         housing: Number(row.structureUpgrades?.housing ?? 0),
+        armoury: Number(row.structureUpgrades?.armoury ?? 0),
       },
     };
   }
