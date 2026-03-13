@@ -4,12 +4,12 @@ DarkThrone Reborn is an Nx-managed TypeScript monorepo containing the DarkThrone
 
 ## Requirements
 
-| Requirement | Version |
-| --- | --- |
-| Node | 22.x |
-| npm | 10.x |
-| Docker | Current |
-| Caddy | Optional, for local domains |
+| Requirement | Version                     |
+| ----------- | --------------------------- |
+| Node        | 22.x                        |
+| npm         | 10.x                        |
+| Docker      | Current                     |
+| Caddy       | Optional, for local domains |
 
 If you prefer `mise`, the repo includes [`./.mise.toml`](./.mise.toml).
 
@@ -77,6 +77,37 @@ For parallel workstreams:
 4. Start the apps with Nx.
 
 The tooling derives the work ID from the worktree path when possible and allocates isolated ports and data directories under `.data/<work-id>/`.
+
+## Release Deployments
+
+The repo now includes a GitHub Actions workflow for release-driven Coolify deploys at [`./.github/workflows/coolify-release-deploy.yml`](./.github/workflows/coolify-release-deploy.yml).
+
+Deployment routing is based on the GitHub release event:
+
+- publish a prerelease to deploy the tagged version to the `staging` GitHub environment,
+- publish a full release, or promote a prerelease to a full release, to deploy the tagged version to the `production` GitHub environment.
+
+The workflow uses the published release tag, updates one or more application environment variables in Coolify, and then triggers a rebuild/redeploy for each configured application UUID. By default it updates `COOLIFY_BRANCH`, which fits the existing tag-based workaround, but you can add extra keys such as `APP_VERSION` through a GitHub environment variable.
+
+Required GitHub environment secrets for both `staging` and `production`:
+
+- `COOLIFY_URL`: base URL for the Coolify instance, for example `https://coolify.example.com`
+- `COOLIFY_TOKEN`: Coolify API token
+- `COOLIFY_APPLICATION_UUIDS`: comma-separated or newline-separated Coolify application UUIDs for `api`, `web-app`, and `website`
+
+Optional GitHub environment variables for both `staging` and `production`:
+
+- `COOLIFY_VERSION_ENV_KEYS`: comma-separated env keys to set to the release tag. Defaults to `COOLIFY_BRANCH`.
+- `COOLIFY_FORCE_REBUILD`: `true` or `false`. Defaults to `false`.
+- `COOLIFY_WAIT_FOR_DEPLOYMENTS`: `true` or `false`. Defaults to `true`.
+- `COOLIFY_DEPLOY_TIMEOUT_SECONDS`: max wait time when polling deployment status. Defaults to `1800`.
+- `COOLIFY_POLL_INTERVAL_SECONDS`: polling interval in seconds. Defaults to `10`.
+
+Recommended Coolify setup:
+
+- keep the database out of `COOLIFY_APPLICATION_UUIDS`; release publishes should redeploy the git-backed apps, not the database,
+- disable any conflicting auto-deploy-on-push behavior for these release-managed applications,
+- make sure each application can resolve the published git tag you intend to deploy.
 
 ## Legacy Minimal Setup
 
