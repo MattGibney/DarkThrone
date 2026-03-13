@@ -12,7 +12,12 @@ const devPort = Number(process.env.VITE_DEV_PORT ?? process.env.PORT ?? 4201);
 const previewPort = Number(process.env.VITE_PREVIEW_PORT ?? 4301);
 const devHost = process.env.VITE_DEV_HOST ?? process.env.HOST ?? '0.0.0.0';
 
-const allowedHosts = ['localhost', '127.0.0.1', '.darkthrone.test', '.darkthrone.local']
+const allowedHosts = [
+  'localhost',
+  '127.0.0.1',
+  '.darkthrone.test',
+  '.darkthrone.local',
+]
   .concat((process.env.VITE_ALLOWED_HOSTS ?? '').split(','))
   .map((host) => host.trim())
   .filter(Boolean);

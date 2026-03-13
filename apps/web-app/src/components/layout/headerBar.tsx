@@ -1,6 +1,7 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { useEffect, useState } from 'react';
 import { SidebarTrigger } from '@darkthrone/shadcnui/sidebar';
+import { formatTimeUntilNextTurn } from '../../libs/turnTiming';
 
 interface HeaderBarProps {
   client: DarkThroneClient;
@@ -9,46 +10,27 @@ export default function HeaderBar(props: HeaderBarProps) {
   const [currentTime, setCurrentTime] = useState(
     props.client.serverTime ? new Date(props.client.serverTime) : undefined,
   );
-  const [timeRemaining, setTimeRemaining] = useState(
-    props.client.serverTime
-      ? calculateTimeRemaining(props.client.serverTime)
-      : undefined,
-  );
 
-  props.client.on('updateCurrentUser', async () => {
+  useEffect(() => {
     setCurrentTime(
       props.client.serverTime ? new Date(props.client.serverTime) : undefined,
     );
-  });
+  }, [props.client.serverTime?.getTime()]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (!currentTime) return;
-      const newTime = new Date(currentTime.getTime() + 1000);
-
-      setCurrentTime(newTime);
-      setTimeRemaining(calculateTimeRemaining(newTime));
+    const intervalId = window.setInterval(() => {
+      setCurrentTime((previousTime) => {
+        if (!previousTime) return previousTime;
+        return new Date(previousTime.getTime() + 1000);
+      });
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [currentTime]);
+  }, []);
 
-  function calculateTimeRemaining(serverTime: Date) {
-    const minutes = serverTime.getMinutes();
-    const seconds = serverTime.getSeconds();
-
-    const halfHourInSeconds = 60 * 30;
-
-    const timeInSeconds = minutes * 60 + seconds;
-    const timeSinceHourOrHalfHourInSeconds = timeInSeconds % halfHourInSeconds;
-    const timeToHourOrHalfHourInSeconds =
-      halfHourInSeconds - timeSinceHourOrHalfHourInSeconds;
-
-    const minutesRemaining = Math.floor(timeToHourOrHalfHourInSeconds / 60);
-    const remainingSeconds = timeToHourOrHalfHourInSeconds % 60;
-
-    return `${String(minutesRemaining).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-  }
+  const timeRemaining = currentTime
+    ? formatTimeUntilNextTurn(currentTime)
+    : undefined;
 
   return (
     <div className="sticky top-0 z-40 flex h-15 shrink-0 items-center gap-x-4 bg-sidebar border-b border-sidebar-border px-4 sm:gap-x-6">

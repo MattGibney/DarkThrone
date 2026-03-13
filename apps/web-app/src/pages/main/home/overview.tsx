@@ -11,6 +11,7 @@ import {
 } from '@darkthrone/shadcnui/card';
 import { Avatar } from '../../../components/avatar';
 import Stat from '../../../components/home/Stat';
+import { formatTimeUntilNextTurn } from '../../../libs/turnTiming';
 
 interface OverviewPageProps {
   client: DarkThroneClient;
@@ -59,34 +60,27 @@ export default function OverviewPage(props: OverviewPageProps) {
   const [currentTime, setCurrentTime] = useState(
     props.client.serverTime ? new Date(props.client.serverTime) : undefined,
   );
-  const [timeRemaining, setTimeRemaining] = useState(
-    currentTime ? calculateTimeRemaining(currentTime) : undefined,
-  );
 
   useEffect(() => {
-    if (!currentTime) return;
-    const intervalId = setInterval(() => {
-      const newTime = new Date(currentTime.getTime() + 1000);
-      setCurrentTime(newTime);
-      setTimeRemaining(calculateTimeRemaining(newTime));
+    setCurrentTime(
+      props.client.serverTime ? new Date(props.client.serverTime) : undefined,
+    );
+  }, [props.client.serverTime?.getTime()]);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setCurrentTime((previousTime) => {
+        if (!previousTime) return previousTime;
+        return new Date(previousTime.getTime() + 1000);
+      });
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [currentTime]);
+  }, []);
 
-  function calculateTimeRemaining(serverTime: Date) {
-    const minutes = serverTime.getMinutes();
-    const seconds = serverTime.getSeconds();
-    const halfHourInSeconds = 60 * 30;
-    const timeInSeconds = minutes * 60 + seconds;
-    const timeSinceHourOrHalfHourInSeconds = timeInSeconds % halfHourInSeconds;
-    const timeToHourOrHalfHourInSeconds =
-      halfHourInSeconds - timeSinceHourOrHalfHourInSeconds;
-    const minutesRemaining = Math.floor(timeToHourOrHalfHourInSeconds / 60);
-    const remainingSeconds = timeToHourOrHalfHourInSeconds % 60;
-
-    return `${String(minutesRemaining).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-  }
+  const timeRemaining = currentTime
+    ? formatTimeUntilNextTurn(currentTime)
+    : undefined;
 
   const stats = [
     {
