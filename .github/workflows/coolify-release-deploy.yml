@@ -1,0 +1,45 @@
+name: Coolify Release Deploy
+
+on:
+  release:
+    types:
+      - published
+      - released
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coolify-release-${{ github.event.release.prerelease && 'staging' || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy release to Coolify
+    if: |
+      (github.event.action == 'published' && github.event.release.prerelease) ||
+      (github.event.action == 'released' && !github.event.release.prerelease)
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.release.prerelease && 'staging' || 'production' }}
+    env:
+      COOLIFY_APPLICATION_UUIDS: ${{ secrets.COOLIFY_APPLICATION_UUIDS }}
+      COOLIFY_DEPLOY_TIMEOUT_SECONDS: ${{ vars.COOLIFY_DEPLOY_TIMEOUT_SECONDS }}
+      COOLIFY_FORCE_REBUILD: ${{ vars.COOLIFY_FORCE_REBUILD }}
+      COOLIFY_POLL_INTERVAL_SECONDS: ${{ vars.COOLIFY_POLL_INTERVAL_SECONDS }}
+      COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+      COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
+      COOLIFY_VERSION_ENV_KEYS: ${{ vars.COOLIFY_VERSION_ENV_KEYS }}
+      COOLIFY_WAIT_FOR_DEPLOYMENTS: ${{ vars.COOLIFY_WAIT_FOR_DEPLOYMENTS }}
+      RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show deployment target
+        run: |
+          echo "Release tag: ${RELEASE_TAG}"
+          echo "Prerelease: ${RELEASE_IS_PRERELEASE}"
+          echo "GitHub environment: ${{ github.event.release.prerelease && 'staging' || 'production' }}"
+
+      - name: Update Coolify release ref and redeploy
+        run: bash ./tools/coolify-release-deploy.sh
