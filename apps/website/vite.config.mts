@@ -8,6 +8,15 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const devPort = Number(process.env.VITE_DEV_PORT ?? process.env.PORT ?? 4201);
+const previewPort = Number(process.env.VITE_PREVIEW_PORT ?? 4301);
+const devHost = process.env.VITE_DEV_HOST ?? process.env.HOST ?? '0.0.0.0';
+
+const allowedHosts = ['localhost', '127.0.0.1', '.darkthrone.test', '.darkthrone.local']
+  .concat((process.env.VITE_ALLOWED_HOSTS ?? '').split(','))
+  .map((host) => host.trim())
+  .filter(Boolean);
+
 export default defineConfig({
   root: __dirname,
   build: {
@@ -20,13 +29,18 @@ export default defineConfig({
   cacheDir: '../../node_modules/.vite/website',
 
   server: {
-    port: 4200,
-    host: 'localhost',
+    port: Number.isFinite(devPort) ? devPort : 4201,
+    host: devHost,
+    allowedHosts,
+    fs: {
+      allow: ['..'],
+    },
   },
 
   preview: {
-    port: 4300,
-    host: 'localhost',
+    port: Number.isFinite(previewPort) ? previewPort : 4301,
+    host: devHost,
+    allowedHosts,
   },
 
   plugins: [react(), nxViteTsPaths()],

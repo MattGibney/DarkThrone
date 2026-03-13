@@ -1,7 +1,7 @@
 {
-  "name": "website",
+  "name": "worktree-manager",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/website/src",
+  "sourceRoot": "apps/worktree-manager/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -10,7 +10,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/website"
+        "outputPath": "dist/apps/worktree-manager"
       },
       "configurations": {
         "development": {
@@ -22,18 +22,28 @@
       }
     },
     "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": true,
+        "commands": [
+          "npx nx run worktree-manager:serve-ui",
+          "node tools/dev.d/manager-server.mjs"
+        ]
+      }
+    },
+    "serve-ui": {
       "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "website:build"
+        "buildTarget": "worktree-manager:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "website:build:development",
+          "buildTarget": "worktree-manager:build:development",
           "hmr": true
         },
         "production": {
-          "buildTarget": "website:build:production",
+          "buildTarget": "worktree-manager:build:production",
           "hmr": false
         }
       }
@@ -42,14 +52,14 @@
       "executor": "@nx/vite:preview-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "website:build"
+        "buildTarget": "worktree-manager:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "website:build:development"
+          "buildTarget": "worktree-manager:build:development"
         },
         "production": {
-          "buildTarget": "website:build:production"
+          "buildTarget": "worktree-manager:build:production"
         }
       },
       "dependsOn": ["build"]

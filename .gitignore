@@ -25,6 +25,7 @@ node_modules
 !.vscode/extensions.json
 
 # misc
+/.cache
 /.sass-cache
 /connect.lock
 /coverage
@@ -39,10 +40,18 @@ testem.log
 Thumbs.db
 
 # Environment variables
+.env.dev
+.env.worktree
+.env.local
 apps/api/.env.local
+apps/api/.env.test.local
+apps/web-app/.env.local
+apps/website/.env.local
+*.worktree-backup
 
 # Database storage
 apps/api/data
+.data
 .nx/cache
 .nx/workspace-data
 vite.config.*.timestamp*

@@ -1,0 +1,6 @@
+[tools]
+node = "22"
+
+[env]
+NX_CACHE_DIRECTORY = ".cache/nx"
+npm_config_cache = ".cache/npm"

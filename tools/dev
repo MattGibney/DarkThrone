@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+subcmd_dir="${script_dir}/dev.d"
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") <command> [options]
+
+Commands:
+  up        Set up the development environment (deps, docker, env, migrations, tests)
+  down      Tear down the development environment
+  env       Generate env files and allocate ports only
+  info      Show environment status, service URLs, and database connections
+  caddy     Update Caddy reverse-proxy routes
+  cleanup   Remove orphaned Docker stacks from deleted environments
+  repair    Fix common issues (DNS, Caddy) without a full down/up
+
+Run '$(basename "$0") <command> --help' for command-specific usage.
+EOF
+}
+
+if [[ $# -eq 0 || "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+subcmd="$1"
+shift
+
+subcmd_script="${subcmd_dir}/${subcmd}.sh"
+if [[ ! -f "$subcmd_script" ]]; then
+  echo "Unknown command: ${subcmd}"
+  echo
+  usage
+  exit 1
+fi
+
+export DEV_CMD="./tools/dev ${subcmd}"
+exec bash "$subcmd_script" "$@"

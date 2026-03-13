@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Roboto+Condensed:wght@300;400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Marcellus SC", serif;
+  --font-sans: "Roboto Condensed", sans-serif;
+}
+
+:root {
+  color: #f8fafc;
+  background-color: #090c12;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+}
