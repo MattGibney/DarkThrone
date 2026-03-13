@@ -56,7 +56,16 @@ By default, worktree environments use `darkthrone.test`:
 - API: `http://api.<work-id>.darkthrone.test:8080`
 - Website: `http://site.<work-id>.darkthrone.test:8080`
 
-For wildcard DNS and Caddy setup details, see [`tools/dev.d/LOCAL_DOMAINS.md`](./tools/dev.d/LOCAL_DOMAINS.md).
+Before relying on those hostnames, complete the host-level `dnsmasq` and resolver setup in [`tools/dev.d/LOCAL_DOMAINS.md`](./tools/dev.d/LOCAL_DOMAINS.md), then restart `dnsmasq` and run `./tools/dev caddy`.
+
+Recommended verification:
+
+```bash
+dscacheutil -q host -a name <work-id>.darkthrone.test
+curl -I http://<work-id>.darkthrone.test:8080
+```
+
+If `curl` reports `Could not resolve host`, follow the DNS troubleshooting steps in [`tools/dev.d/LOCAL_DOMAINS.md`](./tools/dev.d/LOCAL_DOMAINS.md) before assuming the app or Caddy is down.
 
 ## Worktree Usage
 

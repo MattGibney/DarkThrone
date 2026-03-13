@@ -64,6 +64,14 @@
       },
       "dependsOn": ["build"]
     },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "configFile": "apps/worktree-manager/vite.config.mts",
+        "reportsDirectory": "coverage/apps/worktree-manager"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

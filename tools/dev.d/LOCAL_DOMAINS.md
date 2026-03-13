@@ -27,7 +27,8 @@ echo "address=/darkthrone.test/127.0.0.1" | sudo tee /opt/homebrew/etc/dnsmasq.d
 
 2a. Ensure dnsmasq loads `.d` configs:
 ```bash
-echo "conf-dir=/opt/homebrew/etc/dnsmasq.d,*.conf" | sudo tee -a /opt/homebrew/etc/dnsmasq.conf
+rg -q '^conf-dir=/opt/homebrew/etc/dnsmasq.d,\*\.conf$' /opt/homebrew/etc/dnsmasq.conf \
+  || echo "conf-dir=/opt/homebrew/etc/dnsmasq.d,*.conf" | sudo tee -a /opt/homebrew/etc/dnsmasq.conf
 ```
 
 3. Configure the macOS resolver:
@@ -41,13 +42,21 @@ echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/darkthrone.test
 brew services restart dnsmasq
 ```
 
-5. Start Caddy once:
+5. Flush the macOS DNS cache so the new resolver is picked up immediately:
+```bash
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+```
+
+6. Start Caddy once:
 ```bash
 ./tools/dev caddy
 ```
 
-Then access an environment via:
+7. Verify DNS and the proxied route before opening the browser:
 ```bash
+dig +short @127.0.0.1 combat-rework.darkthrone.test
+dscacheutil -q host -a name combat-rework.darkthrone.test
 curl -I http://combat-rework.darkthrone.test:8080
 ```
 
@@ -61,6 +70,12 @@ curl -I http://combat-rework.darkthrone.test:8080
 
 ### DNS does not resolve
 
+Check that the resolver file and dnsmasq rule exist:
+```bash
+ls -l /etc/resolver/darkthrone.test
+ls -l /opt/homebrew/etc/dnsmasq.d/darkthrone-test.conf
+```
+
 Check dnsmasq:
 ```bash
 brew services list | rg dnsmasq
@@ -68,13 +83,47 @@ brew services list | rg dnsmasq
 
 Verify dnsmasq answers directly:
 ```bash
-dig @127.0.0.1 combat-rework.darkthrone.test
+dig +short @127.0.0.1 combat-rework.darkthrone.test
 ```
 
-If that works but normal resolution fails, flush the DNS cache:
+If `dig` returns nothing or `NXDOMAIN`, restart dnsmasq first. A stale daemon will keep serving the old config even if the files on disk are correct:
+```bash
+brew services restart dnsmasq
+```
+
+Then flush the DNS cache:
 ```bash
 sudo dscacheutil -flushcache
 sudo killall -HUP mDNSResponder
+```
+
+Re-run the direct and system resolver checks:
+```bash
+dig +short @127.0.0.1 combat-rework.darkthrone.test
+dscacheutil -q host -a name combat-rework.darkthrone.test
+```
+
+If direct dnsmasq lookups work but the hostname still does not resolve normally, inspect the macOS DNS configuration:
+```bash
+scutil --dns | sed -n '/darkthrone.test/,+10p'
+```
+
+### Caddy validates but the browser URL still fails
+
+First verify the route that `./tools/dev caddy` generated:
+```bash
+caddy validate --config .data/caddy/Caddyfile --adapter caddyfile
+```
+
+Then confirm Caddy can reach the upstream app:
+```bash
+./tools/dev info
+curl -I http://127.0.0.1:<web-app-port>
+```
+
+If the Caddyfile validation fails after switching worktrees or re-running `./tools/dev up`, regenerate it:
+```bash
+./tools/dev caddy
 ```
 
 ## Docker Runtime

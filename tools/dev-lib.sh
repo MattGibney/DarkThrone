@@ -156,17 +156,31 @@ collect_worktree_paths() {
 
 collect_env_files() {
   local repo_root="${1:-$REPO_ROOT}"
-  local worktree_path
+  local worktree_path root_env_file root_work_id mirrored_env_file data_env_file
 
   while IFS= read -r worktree_path; do
     [[ -n "$worktree_path" ]] || continue
 
-    if [[ -f "${worktree_path}/.env.dev" ]]; then
-      printf '%s\n' "${worktree_path}/.env.dev"
+    root_env_file="${worktree_path}/.env.dev"
+    root_work_id=""
+    mirrored_env_file=""
+
+    if [[ -f "$root_env_file" ]]; then
+      printf '%s\n' "$root_env_file"
+      root_work_id="$(read_env_value "$root_env_file" "WORK_ID" || true)"
+      if [[ -n "$root_work_id" ]]; then
+        mirrored_env_file="${worktree_path}/.data/${root_work_id}/.env.dev"
+      fi
     fi
 
     if [[ -d "${worktree_path}/.data" ]]; then
-      find "${worktree_path}/.data" -mindepth 2 -maxdepth 2 -name '.env.dev' -print 2>/dev/null
+      while IFS= read -r data_env_file; do
+        [[ -n "$data_env_file" ]] || continue
+        if [[ -n "$mirrored_env_file" && "$data_env_file" == "$mirrored_env_file" ]]; then
+          continue
+        fi
+        printf '%s\n' "$data_env_file"
+      done < <(find "${worktree_path}/.data" -mindepth 2 -maxdepth 2 -name '.env.dev' -print 2>/dev/null)
     fi
   done < <(collect_worktree_paths "$repo_root")
 }
