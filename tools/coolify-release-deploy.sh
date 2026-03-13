@@ -106,6 +106,9 @@ if (( ${#VERSION_ENV_KEYS[@]} == 0 )); then
 fi
 
 echo "Deploying release ${RELEASE_TAG} to ${#APP_UUIDS[@]} Coolify applications."
+if [[ -n "${DEPLOYMENT_TARGET_URL:-}" ]]; then
+  echo "Primary deployment URL: ${DEPLOYMENT_TARGET_URL}"
+fi
 
 for app_uuid in "${APP_UUIDS[@]}"; do
   app_json="$(api "${API_BASE}/applications/${app_uuid}")"
