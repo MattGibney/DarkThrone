@@ -24,6 +24,10 @@ import BankHistoryPage from './pages/main/structures/bank/history';
 import BankWithdrawPage from './pages/main/structures/bank/withdraw';
 import UpgradesScreen from './pages/main/structures/upgrades/upgrades';
 import ArmouryScreen from './pages/main/structures/armoury/armoury';
+import {
+  TURN_REFRESH_BUFFER_MS,
+  getMillisecondsUntilNextTurn,
+} from './libs/turnTiming';
 
 export type SubNavigationItem = {
   name: string;
@@ -171,23 +175,51 @@ export function App() {
   }
 
   useEffect(() => {
-    const initialise = async () => {
-      client.on('userLogin', (user) => {
-        setCurrentUser(user as UserSessionObject);
-      });
-      client.on('userLogout', () => {
-        setCurrentUser(null);
-      });
-      client.on('playerChange', (UserSessionObject) => {
-        setCurrentUser(UserSessionObject as UserSessionObject);
-      });
-      client.on('playerUpdate', fetchCurrentUser);
-
-      fetchCurrentUser();
+    const handleUserLogin = (user: unknown) => {
+      setCurrentUser(user as UserSessionObject);
+    };
+    const handleUserLogout = () => {
+      setCurrentUser(null);
+    };
+    const handlePlayerChange = (user: unknown) => {
+      setCurrentUser(user as UserSessionObject);
+    };
+    const handlePlayerUpdate = () => {
+      void fetchCurrentUser();
     };
 
-    initialise();
+    client.on('userLogin', handleUserLogin);
+    client.on('userLogout', handleUserLogout);
+    client.on('playerChange', handlePlayerChange);
+    client.on('playerUpdate', handlePlayerUpdate);
+
+    void fetchCurrentUser();
+
+    return () => {
+      client.off('userLogin', handleUserLogin);
+      client.off('userLogout', handleUserLogout);
+      client.off('playerChange', handlePlayerChange);
+      client.off('playerUpdate', handlePlayerUpdate);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!currentUser || !client.authenticatedPlayer || !client.serverTime) {
+      return;
+    }
+
+    const timeoutDelay =
+      getMillisecondsUntilNextTurn(client.serverTime) + TURN_REFRESH_BUFFER_MS;
+
+    // Refresh the player snapshot shortly after the backend turn cron runs.
+    const timeoutId = window.setTimeout(() => {
+      void fetchCurrentUser();
+    }, timeoutDelay);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [currentUser]);
 
   if (currentUser === undefined) return null;
 
