@@ -1,4 +1,3 @@
-import { TextDecoder, TextEncoder } from 'util';
+import { TextDecoder, TextEncoder } from 'node:util';
 
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder as typeof global.TextDecoder;
+Object.assign(globalThis, { TextDecoder, TextEncoder });

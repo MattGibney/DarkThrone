@@ -33,7 +33,7 @@ export default class AuthDAO {
         requestBody,
       );
 
-      this.root.emit('userLogin', response.data);
+      this.root.emit('userLogin', response.data.session);
 
       /* TODO: Refactor this, the DAO shouldn't be changing root HTTP headers,
        * or setting local storage values.
@@ -64,7 +64,7 @@ export default class AuthDAO {
         POST_register['Responses'][201]
       >('/auth/register', requestBody);
 
-      this.root.emit('userLogin', response.data);
+      this.root.emit('userLogin', response.data.session);
 
       /* TODO: Refactor this, the DAO shouldn't be changing root HTTP headers,
        * or setting local storage values.
@@ -95,7 +95,7 @@ export default class AuthDAO {
       this.root.serverTime = new Date(response.data.user.serverTime);
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
-      this.root.emit('updateCurrentUser');
+      this.root.emit('updateCurrentUser', response.data);
 
       return response.data.user;
     } catch (error) {
@@ -135,7 +135,7 @@ export default class AuthDAO {
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = response.data.player;
-      this.root.emit('playerChange', response.data.user);
+      this.root.emit('playerChange', response.data);
 
       return response.data.user;
     } catch (error) {
@@ -154,7 +154,7 @@ export default class AuthDAO {
 
       this.root.authenticatedUser = response.data.user;
       this.root.authenticatedPlayer = undefined;
-      this.root.emit('playerChange', response.data.user);
+      this.root.emit('playerChange', response.data);
 
       return response.data.user;
     } catch (error) {

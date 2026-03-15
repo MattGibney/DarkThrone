@@ -30,6 +30,9 @@ import {
 } from '@darkthrone/interfaces';
 
 type PossibleErrorCodes = ExtractErrorCodesForStatuses<POST_register>;
+type RegisterPageErrorCode =
+  | PossibleErrorCodes
+  | 'auth.register.passwordsDoNotMatch';
 
 interface RegisterPageProps {
   client: DarkThroneClient;
@@ -37,9 +40,8 @@ interface RegisterPageProps {
 export default function RegisterPage(props: RegisterPageProps) {
   const navigate = useNavigate();
 
-  const errorTranslations: Record<PossibleErrorCodes, string> = {
+  const errorTranslations: Record<RegisterPageErrorCode, string> = {
     'auth.register.missingParams': 'Please provide both email and password.',
-    'auth.register.invalidParams': 'Please provide both email and password.',
     'auth.register.invalidPassword':
       'Password must be at least 7 characters long and include both upper and lower case letters.',
     'auth.register.passwordsDoNotMatch': 'Passwords do not match.',
@@ -51,7 +53,9 @@ export default function RegisterPage(props: RegisterPageProps) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [errorMessages, setErrorMessages] = useState<PossibleErrorCodes[]>([]);
+  const [errorMessages, setErrorMessages] = useState<RegisterPageErrorCode[]>(
+    [],
+  );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -77,7 +81,7 @@ export default function RegisterPage(props: RegisterPageProps) {
       ) {
         setErrorMessages(
           (error as { errors?: PossibleErrorCodes[] })
-            .errors as PossibleErrorCodes[],
+            .errors as RegisterPageErrorCode[],
         );
       } else {
         setErrorMessages(['server.error']);

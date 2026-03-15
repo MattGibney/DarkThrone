@@ -360,10 +360,13 @@ export default class PlayerModel {
       getRandomNumber(500, 1500) * (0.1 * attackTurns),
     );
 
+    // Completed attacks always spend the requested turns, regardless of outcome.
+    this.attackTurns -= attackTurns;
+
     if (!isVictor) {
       // Grant XP to the defender
       targetPlayer.experience += victorExperience;
-      await targetPlayer.save();
+      await Promise.all([this.save(), targetPlayer.save()]);
 
       // Create War History
       return await this.ctx.modelFactory.warHistory.create(this.ctx, {
@@ -392,11 +395,7 @@ export default class PlayerModel {
     // Grant XP to the attacker
     this.experience += victorExperience;
 
-    // Subtract attack Turns
-    this.attackTurns -= attackTurns;
-
-    this.save();
-    targetPlayer.save();
+    await Promise.all([this.save(), targetPlayer.save()]);
 
     return await this.ctx.modelFactory.warHistory.create(this.ctx, {
       id: warHistoryID,
@@ -604,6 +603,13 @@ export default class PlayerModel {
     displayName: string,
   ): Promise<PlayerNameValidation> {
     const errors: PlayerNameValidationIssue[] = [];
+
+    if (displayName.trim().length === 0) {
+      return {
+        isValid: false,
+        issues: ['player.name.validation.empty'],
+      };
+    }
 
     const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(
       ctx,

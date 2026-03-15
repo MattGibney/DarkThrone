@@ -1,25 +1,54 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Logo } from '@darkthrone/react-components';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@darkthrone/shadcnui/alert';
 import { Input } from '@darkthrone/shadcnui/input';
 import { Button } from '@darkthrone/shadcnui/button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RaceCard, { RaceCardProps } from './components/raceCard';
 import ClassCard, { ClassCardProps } from './components/classCard';
 import { useNavigate } from 'react-router-dom';
 import {
   ExtractErrorCodesForStatuses,
   PlayerClass,
+  PlayerNameValidation,
   PlayerRace,
+  POST_createPlayer,
   POST_validatePlayerName,
 } from '@darkthrone/interfaces';
 import { Field, FieldError, FieldLabel } from '@darkthrone/shadcnui/field';
 import { Label } from '@darkthrone/shadcnui/label';
-import { ArrowLeft } from 'lucide-react';
+import { AlertCircleIcon, ArrowLeft } from 'lucide-react';
 
-type PossibleErrorCodes = ExtractErrorCodesForStatuses<
+type PlayerNameValidationErrorCode = ExtractErrorCodesForStatuses<
   POST_validatePlayerName,
   400
 >;
+type PossibleErrorCodes =
+  | ExtractErrorCodesForStatuses<POST_validatePlayerName, 400 | 500>
+  | ExtractErrorCodesForStatuses<POST_createPlayer, 400 | 500>;
+
+interface PlayerNameStatus extends PlayerNameValidation {
+  validatedName: string;
+}
+
+function isAPIError(error: unknown): error is { errors: PossibleErrorCodes[] } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'errors' in error &&
+    Array.isArray((error as { errors?: unknown }).errors)
+  );
+}
+
+function isPlayerNameValidationError(
+  errorCode: PossibleErrorCodes,
+): errorCode is PlayerNameValidationErrorCode {
+  return errorCode.startsWith('player.name.validation.');
+}
 
 interface CreatePlayerPageProps {
   client: DarkThroneClient;
@@ -33,17 +62,19 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     'player.name.validation.invalidCharacters':
       'Player name must only contain letters, numbers and underscores',
     'player.name.validation.tooShort':
-      'Player name must be longer than 3 characters',
+      'Player name must be at least 3 characters long',
     'player.name.validation.tooLong':
-      'Player name cannot be lonmger than 20 characters',
+      'Player name cannot be longer than 20 characters',
+    'server.error': 'An unexpected server error occurred. Please try again.',
   };
-
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   const [playerName, setPlayerName] = useState<string>('');
   const [playerNameStatus, setPlayerNameStatus] = useState<
-    { isValid: boolean; messages: PossibleErrorCodes[] } | undefined
+    PlayerNameStatus | undefined
   >();
+  const [formErrorMessages, setFormErrorMessages] = useState<
+    PossibleErrorCodes[]
+  >([]);
 
   const [selectedRace, setSelectedRace] = useState<PlayerRace | undefined>(
     undefined,
@@ -52,45 +83,52 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     undefined,
   );
 
-  useEffect(() => {
-    setIsFormValid(
-      playerNameStatus?.isValid === true &&
-        selectedRace !== undefined &&
-        selectedClass !== undefined,
-    );
-  }, [playerNameStatus, selectedRace, selectedClass]);
+  const currentPlayerNameStatus =
+    playerNameStatus?.validatedName === playerName
+      ? playerNameStatus
+      : undefined;
+  const isFormValid =
+    currentPlayerNameStatus?.isValid === true &&
+    selectedRace !== undefined &&
+    selectedClass !== undefined;
 
-  async function validatePlayerName() {
-    if (playerName.length === 0) {
+  async function validatePlayerName(nameToValidate: string) {
+    setFormErrorMessages([]);
+
+    if (nameToValidate.length === 0) {
       setPlayerNameStatus({
+        validatedName: nameToValidate,
         isValid: false,
-        messages: ['player.name.validation.empty'],
+        issues: ['player.name.validation.empty'],
       });
       return;
     }
 
     try {
       const response =
-        await props.client.players.validatePlayerName(playerName);
+        await props.client.players.validatePlayerName(nameToValidate);
 
       setPlayerNameStatus({
+        validatedName: nameToValidate,
         isValid: response.isValid,
-        messages: response.issues,
+        issues: response.issues,
       });
     } catch (error) {
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'errors' in error &&
-        Array.isArray((error as { errors?: unknown }).errors)
-      ) {
-        setPlayerNameStatus({
-          isValid: false,
-          messages: (error as { errors?: PossibleErrorCodes[] })
-            .errors as PossibleErrorCodes[],
-        });
-      }
-      console.error('Error validating player name:', error);
+      const errorMessages: PossibleErrorCodes[] = isAPIError(error)
+        ? error.errors
+        : ['server.error'];
+
+      setPlayerNameStatus({
+        validatedName: nameToValidate,
+        isValid: false,
+        issues: errorMessages.filter(isPlayerNameValidationError),
+      });
+
+      setFormErrorMessages(
+        errorMessages.filter(
+          (message) => !isPlayerNameValidationError(message),
+        ),
+      );
     }
   }
 
@@ -186,11 +224,46 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
   async function handleCreatePlayer(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!playerName || !selectedRace || !selectedClass) return;
+    if (
+      !playerName ||
+      !selectedRace ||
+      !selectedClass ||
+      currentPlayerNameStatus?.isValid !== true
+    ) {
+      return;
+    }
 
-    await props.client.players.create(playerName, selectedRace, selectedClass);
+    try {
+      setFormErrorMessages([]);
+      await props.client.players.create(
+        playerName,
+        selectedRace,
+        selectedClass,
+      );
 
-    navigate('/player-select');
+      navigate('/player-select');
+    } catch (error) {
+      const errorMessages: PossibleErrorCodes[] = isAPIError(error)
+        ? error.errors
+        : ['server.error'];
+      const validationMessages = errorMessages.filter(
+        isPlayerNameValidationError,
+      );
+
+      if (validationMessages.length > 0) {
+        setPlayerNameStatus({
+          validatedName: playerName,
+          isValid: false,
+          issues: validationMessages,
+        });
+      }
+
+      setFormErrorMessages(
+        errorMessages.filter(
+          (message) => !isPlayerNameValidationError(message),
+        ),
+      );
+    }
   }
 
   function handleCancel() {
@@ -219,9 +292,25 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       <div className="sm:mx-auto sm:w-full sm:max-w-120">
         <div className="bg-muted sm:rounded-lg px-6 py-12 sm:px-12">
           <form className="space-y-12" onSubmit={handleCreatePlayer}>
+            {formErrorMessages.length > 0 ? (
+              <Alert variant="destructive" className="text-sm [&>svg]:size-4">
+                <AlertCircleIcon />
+                <AlertTitle>There was a problem</AlertTitle>
+                <AlertDescription>
+                  <ul className="list-inside list-disc text-sm">
+                    {formErrorMessages.map((code) => (
+                      <li key={code}>{errorTranslations[code]}</li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            ) : null}
+
             <Field
               data-invalid={
-                playerNameStatus ? !playerNameStatus.isValid : undefined
+                currentPlayerNameStatus
+                  ? !currentPlayerNameStatus.isValid
+                  : undefined
               }
             >
               <FieldLabel htmlFor="playerName">Player Name</FieldLabel>
@@ -230,15 +319,20 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
                 type="text"
                 required
                 value={playerName}
-                onChange={(e) => setPlayerName(e.target.value)}
-                onBlur={() => validatePlayerName()}
+                onChange={(e) => {
+                  setPlayerName(e.target.value);
+                  setFormErrorMessages([]);
+                }}
+                onBlur={() => validatePlayerName(playerName)}
                 aria-invalid={
-                  playerNameStatus ? !playerNameStatus.isValid : undefined
+                  currentPlayerNameStatus
+                    ? !currentPlayerNameStatus.isValid
+                    : undefined
                 }
               />
-              {playerNameStatus && !playerNameStatus.isValid ? (
+              {currentPlayerNameStatus && !currentPlayerNameStatus.isValid ? (
                 <FieldError>
-                  {playerNameStatus.messages
+                  {currentPlayerNameStatus.issues
                     .map((err) => errorTranslations[err])
                     .join(', ')}
                 </FieldError>

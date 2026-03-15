@@ -2,6 +2,7 @@ import {
   API_Error,
   AuthedPlayerObject,
   AuthenticatedEndpointDefinition,
+  CurrentUserState,
   EndpointDefinition,
   ExtendEndpointDefinition,
   UserSessionObject,
@@ -34,10 +35,8 @@ export type POST_register = ExtendEndpointDefinition<
       201: ValidAuthResponse;
       400: API_Error<
         | 'auth.register.missingParams'
-        | 'auth.register.invalidParams'
         | 'auth.register.emailInUse'
         | 'auth.register.invalidPassword'
-        | 'auth.register.passwordsDoNotMatch'
       >;
     };
   }
@@ -47,10 +46,7 @@ export type GET_currentUser = ExtendEndpointDefinition<
   AuthenticatedEndpointDefinition,
   {
     Responses: {
-      200: {
-        user: UserSessionObject;
-        player: AuthedPlayerObject | undefined;
-      };
+      200: CurrentUserState;
     };
   }
 >;
@@ -86,10 +82,7 @@ export type POST_unassumePlayer = ExtendEndpointDefinition<
   AuthenticatedEndpointDefinition,
   {
     Responses: {
-      200: {
-        user: UserSessionObject;
-        player: null;
-      };
+      200: CurrentUserState;
     };
   }
 >;

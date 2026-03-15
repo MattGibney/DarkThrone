@@ -6,17 +6,31 @@ import WarHistoryController from './daos/warHistory';
 import TrainingDAO from './daos/training';
 import BankingDAO from './daos/banking';
 import type {
+  CurrentUserState,
   AuthedPlayerObject,
   UserSessionObject,
 } from '@darkthrone/interfaces';
 import StructuresDAO from './daos/structures';
 import ArmouryDAO from './daos/armoury';
 
-type EventListener = (...args: unknown[]) => void;
+export type DarkThroneClientEventMap = {
+  userLogin: [user: UserSessionObject];
+  userLogout: [];
+  updateCurrentUser: [state: CurrentUserState];
+  playerChange: [state: CurrentUserState];
+  playerUpdate: [];
+};
+
+type EventName = keyof DarkThroneClientEventMap;
+type EventListener<Event extends EventName> = (
+  ...args: DarkThroneClientEventMap[Event]
+) => void;
 
 export default class DarkThroneClient {
   public http: AxiosInstance;
-  public events: { [event: string]: EventListener[] } = {};
+  public events: Partial<{
+    [Event in EventName]: EventListener<Event>[];
+  }> = {};
 
   public authenticatedUser: UserSessionObject | undefined;
   public authenticatedPlayer: AuthedPlayerObject | undefined;
@@ -62,24 +76,37 @@ export default class DarkThroneClient {
     });
   }
 
-  on(event: string, listener: EventListener) {
-    if (!this.events[event]) {
-      this.events[event] = [];
+  on<Event extends EventName>(event: Event, listener: EventListener<Event>) {
+    const eventListeners = this.events[event] as
+      | EventListener<Event>[]
+      | undefined;
+
+    if (!eventListeners) {
+      this.events[event] = [listener] as (typeof this.events)[Event];
+      return;
     }
-    this.events[event].push(listener);
+
+    eventListeners.push(listener);
   }
 
-  off(event: string, listener: EventListener) {
-    const eventListeners = this.events[event];
+  off<Event extends EventName>(event: Event, listener: EventListener<Event>) {
+    const eventListeners = this.events[event] as
+      | EventListener<Event>[]
+      | undefined;
     if (!eventListeners) return;
 
     this.events[event] = eventListeners.filter(
       (registeredListener) => registeredListener !== listener,
-    );
+    ) as (typeof this.events)[Event];
   }
 
-  emit(event: string, ...args: unknown[]) {
-    const eventListeners = this.events[event];
+  emit<Event extends EventName>(
+    event: Event,
+    ...args: DarkThroneClientEventMap[Event]
+  ) {
+    const eventListeners = this.events[event] as
+      | EventListener<Event>[]
+      | undefined;
     if (eventListeners) {
       eventListeners.forEach((listener) => {
         listener(...args);

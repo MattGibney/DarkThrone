@@ -17,7 +17,7 @@ import WarHistoryView from './pages/main/battle/warHistory/viewHistory';
 import ListWarHistory from './pages/main/battle/warHistory/listHistory';
 import TrainingScreen from './pages/main/battle/training';
 import NewsPage from './pages/main/home/news';
-import { UserSessionObject } from '@darkthrone/interfaces';
+import { CurrentUserState, UserSessionObject } from '@darkthrone/interfaces';
 import environment from './environments/environment';
 import BankDepositPage from './pages/main/structures/bank/deposit';
 import BankHistoryPage from './pages/main/structures/bank/history';
@@ -175,15 +175,12 @@ export function App() {
   }
 
   useEffect(() => {
-    const handleUserLogin = (user: unknown) => {
-      setCurrentUser(user as UserSessionObject);
-    };
+    const handleUserLogin = (user: UserSessionObject) => setCurrentUser(user);
     const handleUserLogout = () => {
       setCurrentUser(null);
     };
-    const handlePlayerChange = (user: unknown) => {
-      setCurrentUser(user as UserSessionObject);
-    };
+    const handlePlayerChange = ({ user }: CurrentUserState) =>
+      setCurrentUser(user);
     const handlePlayerUpdate = () => {
       void fetchCurrentUser();
     };
