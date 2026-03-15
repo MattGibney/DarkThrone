@@ -5,21 +5,48 @@ import {
   armouryUpgrades,
 } from '@darkthrone/game-data';
 import { Button } from '@darkthrone/shadcnui/button';
-import { StructureUpgradeType } from '@darkthrone/interfaces';
+import {
+  ExtractErrorCodesForStatuses,
+  POST_upgradeStructure,
+  StructureUpgradeType,
+} from '@darkthrone/interfaces';
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@darkthrone/shadcnui/card';
+import { InlineErrorAlert } from '../../../../components/inlineErrorAlert';
+import { getApiErrorMessages } from '../../../../libs/apiErrors';
 
 interface UpgradesScreenProps {
   client: DarkThroneClient;
 }
+
+type PossibleErrorCode = ExtractErrorCodesForStatuses<
+  POST_upgradeStructure,
+  400 | 500
+>;
+
 export default function UpgradesScreen(props: UpgradesScreenProps) {
   if (!props.client.authenticatedPlayer) return null;
+
+  const errorTranslations: Record<PossibleErrorCode, string> = {
+    'structure.upgrade.notFound':
+      'There are no more upgrades available for this structure.',
+    'structure.upgrade.notEnoughGold':
+      'You do not have enough gold for this upgrade.',
+    'structure.upgrade.levelRequirementNotMet':
+      'Your player level does not meet this upgrade requirement.',
+    'structure.upgrade.fortificationRequirementNotMet':
+      'Your fortification level does not meet this upgrade requirement.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
 
   const [currentLevels, setCurrentLevels] = useState({
     fortification: 0,
     housing: 0,
     armoury: 0,
   });
+  const [errorMessages, setErrorMessages] = useState<
+    Partial<Record<StructureUpgradeType, PossibleErrorCode[]>>
+  >({});
 
   const upgrades = {
     fortification: {
@@ -45,10 +72,22 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
       housing: props.client.authenticatedPlayer.structureUpgrades.housing,
       armoury: props.client.authenticatedPlayer.structureUpgrades.armoury,
     });
+    setErrorMessages({});
   }, [props.client.authenticatedPlayer.structureUpgrades]);
 
   async function handleUpgrade(type: StructureUpgradeType) {
-    await props.client.structures.upgrade(type);
+    try {
+      setErrorMessages((currentMessages) => ({
+        ...currentMessages,
+        [type]: [],
+      }));
+      await props.client.structures.upgrade(type);
+    } catch (error) {
+      setErrorMessages((currentMessages) => ({
+        ...currentMessages,
+        [type]: getApiErrorMessages<PossibleErrorCode>(error, 'server.error'),
+      }));
+    }
   }
 
   return (
@@ -99,6 +138,10 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
           <h3 className="font-semibold text-lg">Next Upgrade</h3>
           {upgrades.fortification.next ? (
             <>
+              <InlineErrorAlert
+                errors={errorMessages.fortification ?? []}
+                errorTranslations={errorTranslations}
+              />
               <div>
                 <p className="text-foreground font-bold">
                   {upgrades.fortification.next.name}
@@ -176,6 +219,10 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
           <h3 className="font-semibold text-lg">Next Housing</h3>
           {upgrades.housing.next ? (
             <>
+              <InlineErrorAlert
+                errors={errorMessages.housing ?? []}
+                errorTranslations={errorTranslations}
+              />
               <div>
                 <p className="text-foreground font-bold">
                   {upgrades.housing.next.name}
@@ -245,6 +292,10 @@ export default function UpgradesScreen(props: UpgradesScreenProps) {
           <h3 className="font-semibold text-lg">Next Armoury</h3>
           {upgrades.armoury.next ? (
             <>
+              <InlineErrorAlert
+                errors={errorMessages.armoury ?? []}
+                errorTranslations={errorTranslations}
+              />
               <div>
                 <p className="text-foreground font-bold">
                   {upgrades.armoury.next.name}

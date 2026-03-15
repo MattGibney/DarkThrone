@@ -25,6 +25,7 @@ export default {
 
     if (!email || !password) {
       res.status(400).send({ errors: ['auth.login.missingParams'] });
+      return;
     }
 
     const user = await req.ctx.modelFactory.user.fetchByEmail(req.ctx, email);
