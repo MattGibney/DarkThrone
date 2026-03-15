@@ -1,11 +1,15 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Avatar } from '../../../../components/avatar';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
-import { Paginator } from '../../../../libs/pagination';
 import { Pagination } from '@darkthrone/shadcnui/components/pagination';
 import { attackableMinLevel, attackableMaxLevel } from '@darkthrone/game-data';
+import {
+  AsyncPageState,
+  RetryPageState,
+} from '../../../../components/async-page-state';
+import { Button } from '@darkthrone/shadcnui/button';
 
 interface AttackListPageProps {
   client: DarkThroneClient;
@@ -13,54 +17,94 @@ interface AttackListPageProps {
 export default function AttackListPage(props: AttackListPageProps) {
   const navigate = useNavigate();
 
-  const playerID = props.client.authenticatedPlayer?.id;
-  const playerLevel = props.client.authenticatedPlayer?.level;
+  const authenticatedPlayer = props.client.authenticatedPlayer;
   const [searchParams, setSearchParams] = useSearchParams();
   const pageParam = searchParams.get('page');
-  const currentPageNumber = pageParam ? Math.max(1, parseInt(pageParam)) : 1;
+  const currentPageNumber = pageParam
+    ? Math.max(1, Number.parseInt(pageParam, 10) || 1)
+    : 1;
   const pageSize = 100;
-
-  const fetchForPage = useCallback(
-    async (pageNumber: number) => {
-      try {
-        const fetched = await props.client.players.fetchAllPlayers(
-          pageNumber,
-          pageSize,
-        );
-
-        return {
-          items: fetched.items,
-          meta: fetched.meta,
-        };
-      } catch (error) {
-        console.error('Error fetching players for page:', error);
-      }
-    },
-    [props.client.players],
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(
+    'loading',
   );
+  const [players, setPlayers] = useState<PlayerObject[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
 
-  const {
-    setPage,
-    totalItems,
-    data: players,
-  } = Paginator<PlayerObject>({
-    paginationRoute: '/attack',
-    navigate,
+  const loadPlayers = useCallback(async () => {
+    if (!authenticatedPlayer) {
+      setStatus('loading');
+      return;
+    }
+
+    setStatus('loading');
+
+    try {
+      const fetched = await props.client.players.fetchAllPlayers(
+        currentPageNumber,
+        pageSize,
+      );
+
+      if (fetched.items.length === 0 && currentPageNumber > 1) {
+        setSearchParams({ page: '1' });
+        return;
+      }
+
+      setPlayers(fetched.items);
+      setTotalItems(fetched.meta.totalItemCount);
+      setStatus('ready');
+    } catch {
+      setPlayers([]);
+      setTotalItems(0);
+      setStatus('error');
+    }
+  }, [
+    authenticatedPlayer,
     currentPageNumber,
-    fetchForPage,
-  });
+    pageSize,
+    props.client.players,
+    setSearchParams,
+  ]);
+
+  useEffect(() => {
+    void loadPlayers();
+  }, [loadPlayers]);
 
   const handlePageChange = useCallback(
     (page: number) => {
       setSearchParams({ page: page.toString() });
-      setPage(page);
     },
-    [setPage, setSearchParams],
+    [setSearchParams],
   );
 
-  if (!players || !playerID || !playerLevel) {
-    return null;
+  if (!authenticatedPlayer || status === 'loading') {
+    return (
+      <AsyncPageState
+        variant="loading"
+        title="Loading attack targets"
+        description="Fetching the latest list of players you can challenge."
+      />
+    );
   }
+
+  if (status === 'error') {
+    return (
+      <RetryPageState
+        title="We couldn't load the attack list"
+        description="The player list request failed. Try again or head back to your home page."
+        onRetry={() => {
+          void loadPlayers();
+        }}
+        secondaryActions={
+          <Button variant="outline" onClick={() => navigate('/')}>
+            Back to home
+          </Button>
+        }
+      />
+    );
+  }
+
+  const playerID = authenticatedPlayer.id;
+  const playerLevel = authenticatedPlayer.level;
 
   return (
     <main className="grid gap-6 mx-auto max-w-4xl">

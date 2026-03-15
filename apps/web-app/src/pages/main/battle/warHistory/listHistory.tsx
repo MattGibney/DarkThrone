@@ -1,7 +1,12 @@
 import DarkThroneClient from '@darkthrone/client-library';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlayerObject, WarHistoryObject } from '@darkthrone/interfaces';
+import {
+  AsyncPageState,
+  RetryPageState,
+} from '../../../../components/async-page-state';
+import { Button } from '@darkthrone/shadcnui/button';
 
 interface ListWarHistoryProps {
   client: DarkThroneClient;
@@ -11,38 +16,78 @@ export default function ListWarHistory(props: ListWarHistoryProps) {
 
   const [historyItems, setHistoryItems] = useState<WarHistoryObject[]>([]);
   const [players, setPlayers] = useState<PlayerObject[]>([]);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>(
+    'loading',
+  );
+
+  const loadHistory = useCallback(async () => {
+    setStatus('loading');
+
+    try {
+      const historyFetch = await props.client.warHistory.fetchAll();
+      setHistoryItems(historyFetch);
+
+      const attackerIDs = historyFetch.map(
+        (historyItem) => historyItem.attackerID,
+      );
+      const defenderIDs = historyFetch.map(
+        (historyItem) => historyItem.defenderID,
+      );
+      const playerIDsUnique = [...new Set([...attackerIDs, ...defenderIDs])];
+
+      if (playerIDsUnique.length === 0) {
+        setPlayers([]);
+        setStatus('ready');
+        return;
+      }
+
+      const playersFetch =
+        await props.client.players.fetchAllMatchingIDs(playerIDsUnique);
+
+      setPlayers(playersFetch);
+      setStatus('ready');
+    } catch {
+      setHistoryItems([]);
+      setPlayers([]);
+      setStatus('error');
+    }
+  }, [props.client.players, props.client.warHistory]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const historyFetch = await props.client.warHistory.fetchAll();
-        setHistoryItems(historyFetch);
-
-        const attackerIDs = historyFetch.map(
-          (historyItem) => historyItem.attackerID,
-        );
-        const defenderIDs = historyFetch.map(
-          (historyItem) => historyItem.defenderID,
-        );
-
-        const playerIDs = [...attackerIDs, ...defenderIDs];
-        const playerIDsUnique = [...new Set(playerIDs)];
-
-        const playersFetch =
-          await props.client.players.fetchAllMatchingIDs(playerIDsUnique);
-
-        setPlayers(playersFetch);
-      } catch (error) {
-        console.error('Error fetching players for war history:', error);
-      }
-    };
-    fetchData();
-  }, [props.client.players, props.client.warHistory]);
+    void loadHistory();
+  }, [loadHistory]);
 
   function getNameForID(id: string) {
     const player = players.find((player) => player.id === id);
     if (!player) return 'Unknown';
     return player.name;
+  }
+
+  if (status === 'loading') {
+    return (
+      <AsyncPageState
+        variant="loading"
+        title="Loading war history"
+        description="Fetching your recent battle reports."
+      />
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <RetryPageState
+        title="We couldn't load your war history"
+        description="A request failed while loading your battle reports. Try again or return to your home page."
+        onRetry={() => {
+          void loadHistory();
+        }}
+        secondaryActions={
+          <Button variant="outline" onClick={() => navigate('/')}>
+            Back to home
+          </Button>
+        }
+      />
+    );
   }
 
   return (
