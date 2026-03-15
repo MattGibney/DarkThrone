@@ -83,9 +83,7 @@ export default function AttackPlayerPage(props: AttackPlayerPageProps) {
         attackTurns,
       );
 
-      if (attackResponse.isAttackerVictor) {
-        props.client.emit('playerUpdate');
-      }
+      props.client.emit('playerUpdate');
 
       navigate(`/war-history/${attackResponse.id}`);
     } catch (error) {
