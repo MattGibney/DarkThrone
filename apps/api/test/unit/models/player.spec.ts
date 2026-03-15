@@ -314,9 +314,12 @@ describe('Model: Player', () => {
   describe('attackPlayer', () => {
     it('should correctly record war history for a successful attack', async () => {
       const attackerPlayerRow = {
+        ...mockPlayerRow,
         id: 'PLR-01HQP5D6HM1XS3MNAQXZAWP61K',
         race: 'elf',
-        class: 'theif',
+        class: 'thief',
+        attack_turns: 10,
+        experience: 0,
         gold: 100,
       } as unknown as PlayerRow;
       const attackerUnits = [
@@ -328,9 +331,12 @@ describe('Model: Player', () => {
       ] as unknown as PlayerUnitsModel[];
 
       const defenderPlayerRow = {
+        ...mockPlayerRow,
         id: 'PLR-01HQP5DE1ZC99QTZR4AVV0MS7R',
         race: 'goblin',
         class: 'cleric',
+        attack_turns: 6,
+        experience: 0,
         gold: 100,
       } as unknown as PlayerRow;
       const defenderUnits = [
@@ -341,15 +347,11 @@ describe('Model: Player', () => {
         } as unknown as PlayerUnitsModel,
       ] as unknown as PlayerUnitsModel[];
 
+      const warHistoryCreate = jest.fn().mockResolvedValue({});
       const mockCTX = {
-        daoFactory: {
-          player: {
-            update: jest.fn().mockResolvedValue(attackerPlayerRow),
-          },
-        },
         modelFactory: {
           warHistory: {
-            create: jest.fn().mockResolvedValue({}),
+            create: warHistoryCreate,
           },
         },
       } as unknown as Context;
@@ -368,24 +370,110 @@ describe('Model: Player', () => {
         [],
       );
 
+      attacker.save = jest.fn().mockResolvedValue(undefined);
+      defender.save = jest.fn().mockResolvedValue(undefined);
+
       await attacker.attackPlayer(defender, 10);
 
-      expect(mockCTX.modelFactory.warHistory.create).toHaveBeenCalledWith(
-        mockCTX,
+      expect(attacker.attackTurns).toEqual(0);
+      expect(attacker.save).toHaveBeenCalledTimes(1);
+      expect(defender.save).toHaveBeenCalledTimes(1);
+      expect(warHistoryCreate).toHaveBeenCalledWith(mockCTX, {
+        id: expect.any(String),
+        attacker_id: 'PLR-01HQP5D6HM1XS3MNAQXZAWP61K',
+        defender_id: 'PLR-01HQP5DE1ZC99QTZR4AVV0MS7R',
+        attack_turns_used: 10,
+        is_attacker_victor: true,
+        attacker_strength: 18,
+        defender_strength: 3,
+        gold_stolen: expect.any(Number),
+        created_at: expect.any(Date),
+        attacker_experience: expect.any(Number),
+        defender_experience: 0,
+      });
+    });
+
+    it('should spend attack turns and refresh persistence for a failed attack', async () => {
+      const attackerPlayerRow = {
+        ...mockPlayerRow,
+        id: 'PLR-01JNY92QZMGD2B30S6PP0BBQ31',
+        race: 'human',
+        class: 'fighter',
+        attack_turns: 10,
+        experience: 0,
+        gold: 100,
+      } as unknown as PlayerRow;
+      const attackerUnits = [
         {
-          id: expect.any(String),
-          attacker_id: 'PLR-01HQP5D6HM1XS3MNAQXZAWP61K',
-          defender_id: 'PLR-01HQP5DE1ZC99QTZR4AVV0MS7R',
-          attack_turns_used: 10,
-          is_attacker_victor: true,
-          attacker_strength: 18,
-          defender_strength: 3,
-          gold_stolen: expect.any(Number),
-          created_at: expect.any(Date),
-          attacker_experience: expect.any(Number),
-          defender_experience: 0,
+          unitType: 'soldier_1',
+          quantity: 1,
+          calculateAttackStrength: jest.fn().mockReturnValue(4),
+        } as unknown as PlayerUnitsModel,
+      ] as unknown as PlayerUnitsModel[];
+
+      const defenderPlayerRow = {
+        ...mockPlayerRow,
+        id: 'PLR-01JNY93XAW4D8Z4GHQ0T6EN8TN',
+        race: 'elf',
+        class: 'cleric',
+        attack_turns: 8,
+        experience: 0,
+        gold: 100,
+      } as unknown as PlayerRow;
+      const defenderUnits = [
+        {
+          unitType: 'guard_1',
+          quantity: 1,
+          calculateDefenceStrength: jest.fn().mockReturnValue(12),
+        } as unknown as PlayerUnitsModel,
+      ] as unknown as PlayerUnitsModel[];
+
+      const warHistoryCreate = jest.fn().mockResolvedValue({});
+      const mockCTX = {
+        modelFactory: {
+          warHistory: {
+            create: warHistoryCreate,
+          },
         },
+      } as unknown as Context;
+
+      const attacker = new PlayerModel(
+        mockCTX,
+        attackerPlayerRow,
+        attackerUnits,
+        [],
       );
+
+      const defender = new PlayerModel(
+        mockCTX,
+        defenderPlayerRow,
+        defenderUnits,
+        [],
+      );
+
+      attacker.save = jest.fn().mockResolvedValue(undefined);
+      defender.save = jest.fn().mockResolvedValue(undefined);
+
+      await attacker.attackPlayer(defender, 4);
+
+      expect(attacker.attackTurns).toEqual(6);
+      expect(attacker.experience).toEqual(0);
+      expect(attacker.save).toHaveBeenCalledTimes(1);
+      expect(defender.save).toHaveBeenCalledTimes(1);
+      expect(defender.experience).toBeGreaterThan(0);
+      expect(warHistoryCreate).toHaveBeenCalledWith(mockCTX, {
+        id: expect.any(String),
+        attacker_id: 'PLR-01JNY92QZMGD2B30S6PP0BBQ31',
+        defender_id: 'PLR-01JNY93XAW4D8Z4GHQ0T6EN8TN',
+        attack_turns_used: 4,
+        is_attacker_victor: false,
+        attacker_strength: 4,
+        defender_strength: 13,
+        gold_stolen: 0,
+        created_at: expect.any(Date),
+        attacker_experience: 0,
+        defender_experience: expect.any(Number),
+      });
     });
   });
 

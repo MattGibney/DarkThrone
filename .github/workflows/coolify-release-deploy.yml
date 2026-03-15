@@ -20,7 +20,9 @@ jobs:
       (github.event.action == 'published' && github.event.release.prerelease) ||
       (github.event.action == 'released' && !github.event.release.prerelease)
     runs-on: ubuntu-latest
-    environment: ${{ github.event.release.prerelease && 'staging' || 'production' }}
+    environment:
+      name: ${{ github.event.release.prerelease && 'staging' || 'production' }}
+      url: ${{ github.event.release.prerelease && vars.STAGING_DEPLOYMENT_URL || vars.PRODUCTION_DEPLOYMENT_URL }}
     env:
       COOLIFY_APPLICATION_UUIDS: ${{ secrets.COOLIFY_APPLICATION_UUIDS }}
       COOLIFY_DEPLOY_TIMEOUT_SECONDS: ${{ vars.COOLIFY_DEPLOY_TIMEOUT_SECONDS }}
@@ -30,6 +32,7 @@ jobs:
       COOLIFY_URL: ${{ secrets.COOLIFY_URL }}
       COOLIFY_VERSION_ENV_KEYS: ${{ vars.COOLIFY_VERSION_ENV_KEYS }}
       COOLIFY_WAIT_FOR_DEPLOYMENTS: ${{ vars.COOLIFY_WAIT_FOR_DEPLOYMENTS }}
+      DEPLOYMENT_TARGET_URL: ${{ github.event.release.prerelease && vars.STAGING_DEPLOYMENT_URL || vars.PRODUCTION_DEPLOYMENT_URL }}
       RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
       RELEASE_TAG: ${{ github.event.release.tag_name }}
     steps:

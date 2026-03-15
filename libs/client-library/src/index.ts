@@ -69,6 +69,15 @@ export default class DarkThroneClient {
     this.events[event].push(listener);
   }
 
+  off(event: string, listener: EventListener) {
+    const eventListeners = this.events[event];
+    if (!eventListeners) return;
+
+    this.events[event] = eventListeners.filter(
+      (registeredListener) => registeredListener !== listener,
+    );
+  }
+
   emit(event: string, ...args: unknown[]) {
     const eventListeners = this.events[event];
     if (eventListeners) {
