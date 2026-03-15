@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import DarkThroneClient from '@darkthrone/client-library';
 import BankNavigation from './components/bankNavigation';
 
@@ -6,6 +7,14 @@ interface BankDepositPageProps {
 }
 export default function BankHistoryPage(props: BankDepositPageProps) {
   if (!props.client.authenticatedPlayer) return null;
+
+  const sortedDepositHistory = useMemo(
+    () =>
+      [...props.client.authenticatedPlayer.depositHistory].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      ),
+    [props.client.authenticatedPlayer.depositHistory],
+  );
 
   return (
     <main>
@@ -40,34 +49,28 @@ export default function BankHistoryPage(props: BankDepositPageProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {props.client.authenticatedPlayer.depositHistory
-                      .sort(
-                        (a, b) =>
-                          new Date(b.date).getTime() -
-                          new Date(a.date).getTime(),
-                      )
-                      .map((history, historyIdx) => (
-                        <tr key={historyIdx} className="hover:bg-accent/50">
-                          <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
-                            <span className="block sm:hidden">
-                              {new Intl.DateTimeFormat(undefined, {
-                                dateStyle: 'short',
-                              }).format(new Date(history.date))}
-                            </span>
-                            <span className="hidden sm:block">
-                              {new Date(history.date).toLocaleString()}
-                            </span>
-                          </td>
-                          <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-right text-foreground/75">
-                            {new Intl.NumberFormat().format(history.amount)}
-                          </td>
-                          <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
-                            {history.type === 'deposit'
-                              ? 'Deposit'
-                              : 'Withdrawal'}
-                          </td>
-                        </tr>
-                      ))}
+                    {sortedDepositHistory.map((history, historyIdx) => (
+                      <tr key={historyIdx} className="hover:bg-accent/50">
+                        <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
+                          <span className="block sm:hidden">
+                            {new Intl.DateTimeFormat(undefined, {
+                              dateStyle: 'short',
+                            }).format(new Date(history.date))}
+                          </span>
+                          <span className="hidden sm:block">
+                            {new Date(history.date).toLocaleString()}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-right text-foreground/75">
+                          {new Intl.NumberFormat().format(history.amount)}
+                        </td>
+                        <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm font-medium border-b text-foreground/75">
+                          {history.type === 'deposit'
+                            ? 'Deposit'
+                            : 'Withdrawal'}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
