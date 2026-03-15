@@ -1,11 +1,16 @@
 import DarkThroneClient from '@darkthrone/client-library';
 import { Avatar } from '../../../../components/avatar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PlayerObject } from '@darkthrone/interfaces';
 import { attackableLevels } from '@darkthrone/game-data';
 import { Button } from '@darkthrone/shadcnui/button';
 import { Card, CardContent } from '@darkthrone/shadcnui/card';
+import {
+  AsyncPageState,
+  RetryPageState,
+} from '../../../../components/async-page-state';
+import { hasAPIErrorCode } from '../../../../libs/apiErrors';
 
 interface AttackViewPlayerPageProps {
   client: DarkThroneClient;
@@ -15,30 +20,83 @@ export default function AttackViewPlayerPage(props: AttackViewPlayerPageProps) {
 
   const { playerID } = useParams<{ playerID: string }>();
 
-  const [player, setPlayer] = useState<PlayerObject | null | undefined>(
-    undefined,
-  );
+  const [player, setPlayer] = useState<PlayerObject | null>(null);
+  const [status, setStatus] = useState<
+    'loading' | 'ready' | 'notFound' | 'error'
+  >('loading');
 
-  useEffect(() => {
-    const fetchPlayer = async () => {
-      if (playerID === undefined) {
-        setPlayer(null);
-        return;
-      }
+  const loadPlayer = useCallback(async () => {
+    if (!playerID) {
+      setPlayer(null);
+      setStatus('notFound');
+      return;
+    }
 
-      try {
-        const playerFetch = await props.client.players.fetchByID(playerID);
-        setPlayer(playerFetch);
-      } catch {
-        setPlayer(null);
-      }
-    };
-    fetchPlayer();
+    setStatus('loading');
+
+    try {
+      const playerFetch = await props.client.players.fetchByID(playerID);
+      setPlayer(playerFetch);
+      setStatus('ready');
+    } catch (error) {
+      setPlayer(null);
+      setStatus(
+        hasAPIErrorCode(error, 'player.fetchByID.notFound')
+          ? 'notFound'
+          : 'error',
+      );
+    }
   }, [playerID, props.client.players]);
 
-  if (player === undefined) return;
+  useEffect(() => {
+    void loadPlayer();
+  }, [loadPlayer]);
 
-  if (player === null) return <div>Player not found</div>;
+  if (status === 'loading') {
+    return (
+      <AsyncPageState
+        variant="loading"
+        title="Loading player profile"
+        description="Fetching this combat target's latest details."
+      />
+    );
+  }
+
+  if (status === 'notFound') {
+    return (
+      <AsyncPageState
+        variant="notFound"
+        title="Player not found"
+        description="That player no longer exists or the link is incomplete."
+        actions={
+          <Button variant="outline" onClick={() => navigate('/attack')}>
+            Back to attack list
+          </Button>
+        }
+      />
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <RetryPageState
+        title="We couldn't load this player"
+        description="The player request failed before the page could load. Try again or return to the attack list."
+        onRetry={() => {
+          void loadPlayer();
+        }}
+        secondaryActions={
+          <Button variant="outline" onClick={() => navigate('/attack')}>
+            Back to attack list
+          </Button>
+        }
+      />
+    );
+  }
+
+  if (!player) {
+    return null;
+  }
 
   const isViewingSelf = player.id === props.client.authenticatedPlayer?.id;
   const isAttackable = attackableLevels(
