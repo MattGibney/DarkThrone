@@ -2,19 +2,55 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DarkThroneClient from '@darkthrone/client-library';
 import { unitItems } from '@darkthrone/game-data';
-import { CombatUnitType, UnitItemType, UnitType } from '@darkthrone/interfaces';
+import {
+  CombatUnitType,
+  ExtractErrorCodesForStatuses,
+  POST_armouryBuy,
+  POST_armourySell,
+  UnitItemType,
+  UnitType,
+} from '@darkthrone/interfaces';
 import type { UnitItem } from '@darkthrone/interfaces';
 import { Button } from '@darkthrone/shadcnui/button';
 import { Card, CardContent } from '@darkthrone/shadcnui/card';
 import { Input } from '@darkthrone/shadcnui/input';
+import { InlineErrorAlert } from '../../../../components/inlineErrorAlert';
+import { getApiErrorMessages } from '../../../../libs/apiErrors';
 
 interface ArmouryScreenProps {
   client: DarkThroneClient;
 }
+
+type BuyErrorCode = ExtractErrorCodesForStatuses<POST_armouryBuy, 400 | 500>;
+type SellErrorCode = ExtractErrorCodesForStatuses<POST_armourySell, 400 | 500>;
+type PossibleErrorCode = BuyErrorCode | SellErrorCode;
+
 export default function ArmouryScreen(props: ArmouryScreenProps) {
   if (!props.client.authenticatedPlayer) return null;
+  const authenticatedPlayer = props.client.authenticatedPlayer;
+
+  const errorTranslations: Record<PossibleErrorCode, string> = {
+    'armoury.buy.noItemsRequested':
+      'Enter at least one item quantity before buying.',
+    'armoury.buy.nonPositiveQuantity':
+      'Purchase quantities must be greater than zero.',
+    'armoury.buy.invalidItem': 'One of the selected items is invalid.',
+    'armoury.buy.insufficientGold':
+      'You do not have enough gold to buy those items.',
+    'armoury.buy.insufficientArmouryLevel':
+      'Your armoury level is too low for one or more selected items.',
+    'armoury.sell.noItemsRequested':
+      'Enter at least one item quantity before selling.',
+    'armoury.sell.nonPositiveQuantity':
+      'Sale quantities must be greater than zero.',
+    'armoury.sell.invalidItem': 'One of the selected items is invalid.',
+    'armoury.sell.notEnoughItems':
+      'You do not own enough of one or more selected items to sell that quantity.',
+    'server.error': 'An unexpected server error occurred. Please try again.',
+  };
 
   const [quantities, setQuantities] = useState<Record<string, string>>({});
+  const [errorMessages, setErrorMessages] = useState<PossibleErrorCode[]>([]);
   const items: Record<CombatUnitType, Record<UnitItemType, UnitItem[]>> = {
     [UnitType.OFFENCE]: {
       weapon: [],
@@ -66,9 +102,12 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
     {},
   );
   const ownedQuantity = (itemKey: string) =>
-    props.client.authenticatedPlayer?.items.find(
-      (owned) => owned.itemKey === itemKey,
-    )?.quantity ?? 0;
+    authenticatedPlayer.items.find((owned) => owned.itemKey === itemKey)
+      ?.quantity ?? 0;
+  const selectedItems = () =>
+    Object.entries(quantities)
+      .map(([itemKey, value]) => ({ itemKey, quantity: Number(value) }))
+      .filter(({ quantity }) => quantity > 0);
 
   // TODO: Replace this approach with i18n.
   const formatItemName = (key: string) => {
@@ -88,44 +127,55 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
   };
 
   const handleQuantityChange = (itemKey: string, value: string) => {
+    setErrorMessages([]);
+
     if (value === '') {
-      setQuantities({ ...quantities, [itemKey]: '' });
+      setQuantities((currentQuantities) => ({
+        ...currentQuantities,
+        [itemKey]: '',
+      }));
       return;
     }
     const parsed = Number(value);
     if (Number.isNaN(parsed) || parsed < 0) {
-      setQuantities({ ...quantities, [itemKey]: '' });
+      setQuantities((currentQuantities) => ({
+        ...currentQuantities,
+        [itemKey]: '',
+      }));
       return;
     }
-    setQuantities({ ...quantities, [itemKey]: parsed.toString() });
+    setQuantities((currentQuantities) => ({
+      ...currentQuantities,
+      [itemKey]: parsed.toString(),
+    }));
   };
 
-  const summarizeSelection = (action: 'buy' | 'sell') => {
+  const summarizeSelection = (
+    action: 'buy' | 'sell',
+    requestedItems: { itemKey: string; quantity: number }[],
+  ) => {
     let totalGold = 0;
     let totalItems = 0;
 
-    Object.entries(quantities).forEach(([key, value]) => {
-      const qty = Number(value);
-      if (!value || Number.isNaN(qty) || qty <= 0) return;
-      const item = itemLookup[key];
+    requestedItems.forEach(({ itemKey, quantity }) => {
+      const item = itemLookup[itemKey];
       if (!item) return;
       const unitCost = action === 'buy' ? item.buyCost : item.sellCost;
-      totalGold += unitCost * qty;
-      totalItems += qty;
+      totalGold += unitCost * quantity;
+      totalItems += quantity;
     });
 
     return { totalGold, totalItems };
   };
 
-  const confirmAction = (action: 'buy' | 'sell') => {
-    const { totalGold, totalItems } = summarizeSelection(action);
-    if (totalItems === 0) {
-      window.alert(
-        `Enter a quantity to ${action === 'buy' ? 'buy' : 'sell'} before proceeding.`,
-      );
-      return false;
-    }
-
+  const confirmAction = (
+    action: 'buy' | 'sell',
+    requestedItems: { itemKey: string; quantity: number }[],
+  ) => {
+    const { totalGold, totalItems } = summarizeSelection(
+      action,
+      requestedItems,
+    );
     const verb = action === 'buy' ? 'buying' : 'selling';
     const confirmText = `You are ${verb} ${totalItems} item${
       totalItems === 1 ? '' : 's'
@@ -136,27 +186,102 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
     return window.confirm(confirmText);
   };
 
-  async function handleBuy() {
-    if (!confirmAction('buy')) return;
-    const items = Object.entries(quantities)
-      .map(([itemKey, value]) => ({ itemKey, quantity: Number(value) }))
-      .filter(({ quantity }) => quantity > 0);
+  const validateBuySelection = (
+    requestedItems: { itemKey: string; quantity: number }[],
+  ) => {
+    const validationErrors: BuyErrorCode[] = [];
 
-    await props.client.armoury.buy(items);
-    setQuantities({});
+    if (requestedItems.length === 0) {
+      validationErrors.push('armoury.buy.noItemsRequested');
+    }
+
+    const totalCost = requestedItems.reduce((total, { itemKey, quantity }) => {
+      const item = itemLookup[itemKey];
+      return total + (item ? item.buyCost * quantity : 0);
+    }, 0);
+
+    if (totalCost > authenticatedPlayer.gold) {
+      validationErrors.push('armoury.buy.insufficientGold');
+    }
+
+    if (
+      requestedItems.some(
+        ({ itemKey }) =>
+          itemLookup[itemKey].requirements.armouryLevel >
+          authenticatedPlayer.structureUpgrades.armoury,
+      )
+    ) {
+      validationErrors.push('armoury.buy.insufficientArmouryLevel');
+    }
+
+    return validationErrors;
+  };
+
+  const validateSellSelection = (
+    requestedItems: { itemKey: string; quantity: number }[],
+  ) => {
+    const validationErrors: SellErrorCode[] = [];
+
+    if (requestedItems.length === 0) {
+      validationErrors.push('armoury.sell.noItemsRequested');
+    }
+
+    if (
+      requestedItems.some(
+        ({ itemKey, quantity }) => quantity > ownedQuantity(itemKey),
+      )
+    ) {
+      validationErrors.push('armoury.sell.notEnoughItems');
+    }
+
+    return validationErrors;
+  };
+
+  async function handleBuy() {
+    const requestedItems = selectedItems();
+    const validationErrors = validateBuySelection(requestedItems);
+
+    if (validationErrors.length > 0) {
+      setErrorMessages(validationErrors);
+      return;
+    }
+
+    if (!confirmAction('buy', requestedItems)) return;
+
+    try {
+      setErrorMessages([]);
+      await props.client.armoury.buy(requestedItems);
+      setQuantities({});
+    } catch (error) {
+      setErrorMessages(
+        getApiErrorMessages<PossibleErrorCode>(error, 'server.error'),
+      );
+    }
   }
 
   async function handleSell() {
-    if (!confirmAction('sell')) return;
-    const items = Object.entries(quantities)
-      .map(([itemKey, value]) => ({ itemKey, quantity: Number(value) }))
-      .filter(({ quantity }) => quantity > 0);
+    const requestedItems = selectedItems();
+    const validationErrors = validateSellSelection(requestedItems);
 
-    await props.client.armoury.sell(items);
-    setQuantities({});
+    if (validationErrors.length > 0) {
+      setErrorMessages(validationErrors);
+      return;
+    }
+
+    if (!confirmAction('sell', requestedItems)) return;
+
+    try {
+      setErrorMessages([]);
+      await props.client.armoury.sell(requestedItems);
+      setQuantities({});
+    } catch (error) {
+      setErrorMessages(
+        getApiErrorMessages<PossibleErrorCode>(error, 'server.error'),
+      );
+    }
   }
 
-  if (props.client.authenticatedPlayer.structureUpgrades.armoury === 0) {
+  if (authenticatedPlayer.structureUpgrades.armoury === 0) {
     return (
       <main className="mx-auto max-w-4xl">
         <div className="flex flex-col gap-y-8">
@@ -189,21 +314,24 @@ export default function ArmouryScreen(props: ArmouryScreenProps) {
             <div>
               Gold{' '}
               <span className="text-card-foreground font-bold text-md">
-                {new Intl.NumberFormat().format(
-                  props.client.authenticatedPlayer.gold,
-                )}
+                {new Intl.NumberFormat().format(authenticatedPlayer.gold)}
               </span>
             </div>
             <div>
               Current Player Level{' '}
               <span className="text-card-foreground font-bold text-md">
-                {new Intl.NumberFormat().format(
-                  props.client.authenticatedPlayer.level,
-                )}
+                {new Intl.NumberFormat().format(authenticatedPlayer.level)}
               </span>
             </div>
           </CardContent>
         </Card>
+
+        <div>
+          <InlineErrorAlert
+            errors={errorMessages}
+            errorTranslations={errorTranslations}
+          />
+        </div>
 
         <div>
           <div className="flex flex-col gap-y-16">

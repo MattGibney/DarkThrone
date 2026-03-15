@@ -1,8 +1,13 @@
 import request from 'supertest';
 import makeApplication from '../helpers/makeApplication';
 import DaoFactory from '../../../src/daoFactory';
+import UserModel from '../../../src/models/user';
 
 describe('POST_login', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('should return 400 if email is missing', async () => {
     const { application } = makeApplication({});
 
@@ -22,6 +27,31 @@ describe('POST_login', () => {
     expect(res.status).toBe(400);
     expect(res.body.errors).toContain('auth.login.missingParams');
   });
+
+  it.each([
+    {
+      caseName: 'missing email',
+      payload: { password: 'password' },
+    },
+    {
+      caseName: 'missing password',
+      payload: { email: 'test@example.com' },
+    },
+  ])(
+    'should not fetch a user when login params are invalid ($caseName)',
+    async ({ payload }) => {
+      const fetchByEmailSpy = jest
+        .spyOn(UserModel, 'fetchByEmail')
+        .mockResolvedValue(null);
+      const { application } = makeApplication({});
+
+      const res = await request(application).post('/auth/login').send(payload);
+
+      expect(res.status).toBe(400);
+      expect(res.body.errors).toContain('auth.login.missingParams');
+      expect(fetchByEmailSpy).not.toHaveBeenCalled();
+    },
+  );
 
   it('should return 401 if user does not exist', async () => {
     const { application } = makeApplication({
