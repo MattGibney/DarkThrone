@@ -10,6 +10,7 @@ import {
   ExtractErrorCodesForStatuses,
   PlayerClass,
   PlayerRace,
+  PlayerNameValidation,
   POST_validatePlayerName,
 } from '@darkthrone/interfaces';
 import { Field, FieldError, FieldLabel } from '@darkthrone/shadcnui/field';
@@ -35,14 +36,14 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     'player.name.validation.tooShort':
       'Player name must be longer than 3 characters',
     'player.name.validation.tooLong':
-      'Player name cannot be lonmger than 20 characters',
+      'Player name cannot be longer than 20 characters',
   };
 
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
   const [playerName, setPlayerName] = useState<string>('');
   const [playerNameStatus, setPlayerNameStatus] = useState<
-    { isValid: boolean; messages: PossibleErrorCodes[] } | undefined
+    PlayerNameValidation | undefined
   >();
 
   const [selectedRace, setSelectedRace] = useState<PlayerRace | undefined>(
@@ -64,7 +65,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
     if (playerName.length === 0) {
       setPlayerNameStatus({
         isValid: false,
-        messages: ['player.name.validation.empty'],
+        issues: ['player.name.validation.empty'],
       });
       return;
     }
@@ -75,7 +76,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
       setPlayerNameStatus({
         isValid: response.isValid,
-        messages: response.issues,
+        issues: response.issues,
       });
     } catch (error) {
       if (
@@ -86,7 +87,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       ) {
         setPlayerNameStatus({
           isValid: false,
-          messages: (error as { errors?: PossibleErrorCodes[] })
+          issues: (error as { errors?: PossibleErrorCodes[] })
             .errors as PossibleErrorCodes[],
         });
       }
@@ -238,7 +239,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
               />
               {playerNameStatus && !playerNameStatus.isValid ? (
                 <FieldError>
-                  {playerNameStatus.messages
+                  {playerNameStatus.issues
                     .map((err) => errorTranslations[err])
                     .join(', ')}
                 </FieldError>

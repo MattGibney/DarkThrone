@@ -605,6 +605,13 @@ export default class PlayerModel {
   ): Promise<PlayerNameValidation> {
     const errors: PlayerNameValidationIssue[] = [];
 
+    if (displayName.trim().length === 0) {
+      return {
+        isValid: false,
+        issues: ['player.name.validation.empty'],
+      };
+    }
+
     const existingPlayer = await ctx.modelFactory.player.fetchByDisplayName(
       ctx,
       displayName,
