@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   ExtractErrorCodesForStatuses,
   PlayerClass,
+  PlayerNameValidation,
   PlayerRace,
   POST_createPlayer,
   POST_validatePlayerName,
@@ -30,10 +31,8 @@ type PossibleErrorCodes =
   | ExtractErrorCodesForStatuses<POST_validatePlayerName, 400 | 500>
   | ExtractErrorCodesForStatuses<POST_createPlayer, 400 | 500>;
 
-interface PlayerNameStatus {
+interface PlayerNameStatus extends PlayerNameValidation {
   validatedName: string;
-  isValid: boolean;
-  messages: PossibleErrorCodes[];
 }
 
 function isAPIError(error: unknown): error is { errors: PossibleErrorCodes[] } {
@@ -100,7 +99,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       setPlayerNameStatus({
         validatedName: nameToValidate,
         isValid: false,
-        messages: ['player.name.validation.empty'],
+        issues: ['player.name.validation.empty'],
       });
       return;
     }
@@ -112,14 +111,24 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
       setPlayerNameStatus({
         validatedName: nameToValidate,
         isValid: response.isValid,
-        messages: response.issues,
+        issues: response.issues,
       });
     } catch (error) {
+      const errorMessages: PossibleErrorCodes[] = isAPIError(error)
+        ? error.errors
+        : ['server.error'];
+
       setPlayerNameStatus({
         validatedName: nameToValidate,
         isValid: false,
-        messages: isAPIError(error) ? error.errors : ['server.error'],
+        issues: errorMessages.filter(isPlayerNameValidationError),
       });
+
+      setFormErrorMessages(
+        errorMessages.filter(
+          (message) => !isPlayerNameValidationError(message),
+        ),
+      );
     }
   }
 
@@ -234,7 +243,9 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
       navigate('/player-select');
     } catch (error) {
-      const errorMessages = isAPIError(error) ? error.errors : ['server.error'];
+      const errorMessages: PossibleErrorCodes[] = isAPIError(error)
+        ? error.errors
+        : ['server.error'];
       const validationMessages = errorMessages.filter(
         isPlayerNameValidationError,
       );
@@ -243,7 +254,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
         setPlayerNameStatus({
           validatedName: playerName,
           isValid: false,
-          messages: validationMessages,
+          issues: validationMessages,
         });
       }
 
@@ -321,7 +332,7 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
               />
               {currentPlayerNameStatus && !currentPlayerNameStatus.isValid ? (
                 <FieldError>
-                  {currentPlayerNameStatus.messages
+                  {currentPlayerNameStatus.issues
                     .map((err) => errorTranslations[err])
                     .join(', ')}
                 </FieldError>

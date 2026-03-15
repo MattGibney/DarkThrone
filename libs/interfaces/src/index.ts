@@ -222,6 +222,11 @@ export type ValidAuthResponse = {
   token: string;
 };
 
+export type CurrentUserState = {
+  user: UserSessionObject;
+  player?: AuthedPlayerObject;
+};
+
 export type StructureUpgrade = {
   name: string;
   cost: number;

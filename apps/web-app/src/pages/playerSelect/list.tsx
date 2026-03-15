@@ -30,7 +30,6 @@ const playerListErrorTranslations: Record<PlayerListErrorCode, string> = {
 
 const assumePlayerErrorTranslations: Record<AssumePlayerErrorCode, string> = {
   'auth.unauthorized': 'Your session expired. Please sign in again.',
-  'auth.forbidden': 'You do not have permission to switch players.',
   'auth.assumePlayer.missingParams':
     'We could not switch to that player. Please try again.',
   'auth.assumePlayer.notAllowed':
