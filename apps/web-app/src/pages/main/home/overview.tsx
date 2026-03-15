@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DarkThroneClient from '@darkthrone/client-library';
-import { levelXPArray, UnitTypes } from '@darkthrone/game-data';
+import { UnitTypes } from '@darkthrone/game-data';
 import { UnitType } from '@darkthrone/interfaces';
 import {
   Card,
@@ -11,6 +11,7 @@ import {
 } from '@darkthrone/shadcnui/card';
 import { Avatar } from '../../../components/avatar';
 import Stat from '../../../components/home/Stat';
+import { getExperienceProgress } from '../../../libs/experienceProgress';
 import { formatTimeUntilNextTurn } from '../../../libs/turnTiming';
 
 interface OverviewPageProps {
@@ -49,13 +50,8 @@ export default function OverviewPage(props: OverviewPageProps) {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )[0];
 
-  const currentLevelIndex = Math.max(0, player.level - 1);
-  const nextLevelXP =
-    levelXPArray[currentLevelIndex] ?? levelXPArray[levelXPArray.length - 1];
-  const xpRemaining = Math.max(0, nextLevelXP - player.experience);
-  const xpProgress = nextLevelXP
-    ? Math.min(100, (player.experience / nextLevelXP) * 100)
-    : 0;
+  const { xpIntoLevel, xpProgress, xpRemaining, xpRequiredForLevel } =
+    getExperienceProgress(player.level, player.experience);
 
   const [currentTime, setCurrentTime] = useState(
     props.client.serverTime ? new Date(props.client.serverTime) : undefined,
@@ -176,8 +172,8 @@ export default function OverviewPage(props: OverviewPageProps) {
             <div className="flex items-center justify-between text-sm text-card-foreground/60">
               <span>Experience</span>
               <span>
-                {formatNumber.format(player.experience)} /{' '}
-                {formatNumber.format(nextLevelXP)}
+                {formatNumber.format(xpIntoLevel)} /{' '}
+                {formatNumber.format(xpRequiredForLevel)}
               </span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-card-foreground/10">
