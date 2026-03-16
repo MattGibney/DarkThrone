@@ -7,4 +7,4 @@
 - `tools/dev.d/manager-server.mjs` is the data source for `apps/worktree-manager`; when its `/worktrees` contract changes, keep the dashboard tests aligned.
 - `collect_env_files()` must not emit both the root `.env.dev` and the mirrored `.data/<work-id>/.env.dev` for the same environment, or generated Caddy routes will duplicate and fail validation.
 - `tools/dev.d/LOCAL_DOMAINS.md` should keep the macOS setup idempotent and explicitly cover `dnsmasq` restarts, DNS cache flushes, and verification commands for `Could not resolve host` failures.
-- `tools/deploy-script.ts` is deprecated. Use `tools/coolify-release-deploy.sh` for GitHub release-driven Coolify deployments, and keep it aligned with `.github/workflows/coolify-release-deploy.yml`.
+- Coolify deployments are managed outside the repo as branch-based apps. `develop` maps to staging and `main` maps to production; do not add repo-local tag/release deployment helpers unless that model changes.
