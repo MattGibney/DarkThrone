@@ -7,3 +7,5 @@
 - Worktree routing: the default domain base is `darkthrone.test`, with the game UI on `<work-id>.darkthrone.test`, the API on `api.<work-id>.darkthrone.test`, and the marketing site on `site.<work-id>.darkthrone.test`.
 - Operator tooling: `npx nx run worktree-manager:serve` starts the local worktree dashboard backed by `tools/dev.d/manager-server.mjs`. Keep the dashboard payload and the manager server in sync.
 - Deployments: `tools/deploy-script.ts` is deprecated and should not be used as a source of truth. Release deployments are driven by `.github/workflows/coolify-release-deploy.yml` and `tools/coolify-release-deploy.sh`.
+- Release versioning: deployed surfaces should read the published release tag from `RELEASE_TAG`, with `COOLIFY_BRANCH` only as a compatibility fallback for older Coolify env setups.
+- Shared code scope: do not create a new Nx library for tiny cross-app helpers. Keep trivial environment-resolution logic local unless the shared surface is substantial enough to justify package overhead.

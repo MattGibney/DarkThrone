@@ -24,6 +24,7 @@ const allowedHosts = [
 
 export default defineConfig({
   root: __dirname,
+  envPrefix: ['VITE_', 'RELEASE_TAG', 'COOLIFY_BRANCH'],
   build: {
     outDir: '../../dist/apps/website',
     reportCompressedSize: true,

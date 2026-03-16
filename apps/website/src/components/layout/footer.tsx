@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Logo } from '@darkthrone/react-components';
 import { screens } from '../../app/app';
 import NavigationLink from '../navigationLink';
@@ -60,6 +61,12 @@ export default function Footer() {
           </ul>
         </div> */}
       </div>
+
+      {environment.releaseTag ? (
+        <div className="max-w-5xl mx-auto mt-8 text-center text-sm text-foreground/50">
+          Release {environment.releaseTag}
+        </div>
+      ) : null}
     </div>
   );
 }
