@@ -78,36 +78,20 @@ For parallel workstreams:
 
 The tooling derives the work ID from the worktree path when possible and allocates isolated ports and data directories under `.data/<work-id>/`.
 
-## Release Deployments
+## Deployments
 
-The repo now includes a GitHub Actions workflow for release-driven Coolify deploys at [`./.github/workflows/coolify-release-deploy.yml`](./.github/workflows/coolify-release-deploy.yml).
+Deployments are branch-based in Coolify:
 
-Deployment routing is based on the GitHub release event:
+- `develop` deploys to staging
+- `main` deploys to production
 
-- publish a prerelease to deploy the tagged version to the `staging` GitHub environment,
-- publish a full release, or promote a prerelease to a full release, to deploy the tagged version to the `production` GitHub environment.
-
-The workflow uses the published release tag, updates one or more application environment variables in Coolify, and then triggers a rebuild/redeploy for each configured application UUID. By default it updates both `RELEASE_TAG` and `COOLIFY_BRANCH` so deployed surfaces can read the canonical tag while older Coolify setups keep working. You can add extra keys such as `APP_VERSION` through a GitHub environment variable.
-
-Required GitHub environment secrets for both `staging` and `production`:
-
-- `COOLIFY_URL`: base URL for the Coolify instance, for example `https://coolify.example.com`
-- `COOLIFY_TOKEN`: Coolify API token
-- `COOLIFY_APPLICATION_UUIDS`: comma-separated or newline-separated Coolify application UUIDs for `api`, `web-app`, and `website`
-
-Optional GitHub environment variables for both `staging` and `production`:
-
-- `COOLIFY_VERSION_ENV_KEYS`: comma-separated env keys to set to the release tag. Defaults to `RELEASE_TAG,COOLIFY_BRANCH`.
-- `COOLIFY_FORCE_REBUILD`: `true` or `false`. Defaults to `false`.
-- `COOLIFY_WAIT_FOR_DEPLOYMENTS`: `true` or `false`. Defaults to `true`.
-- `COOLIFY_DEPLOY_TIMEOUT_SECONDS`: max wait time when polling deployment status. Defaults to `1800`.
-- `COOLIFY_POLL_INTERVAL_SECONDS`: polling interval in seconds. Defaults to `10`.
+The repo no longer uses GitHub release or tag-driven deployment automation. Configure the staging and production applications in Coolify to track their respective branches directly, and let Coolify handle deploy-on-push or manual redeploys from those branches.
 
 Recommended Coolify setup:
 
-- keep the database out of `COOLIFY_APPLICATION_UUIDS`; release publishes should redeploy the git-backed apps, not the database,
-- disable any conflicting auto-deploy-on-push behavior for these release-managed applications,
-- make sure each application can resolve the published git tag you intend to deploy.
+- point staging apps at `develop` and production apps at `main`
+- keep the database out of the git-backed application deploy flow
+- avoid reintroducing tag or release procedures unless the deployment model changes again
 
 ## Legacy Minimal Setup
 
