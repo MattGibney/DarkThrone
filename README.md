@@ -87,7 +87,7 @@ Deployment routing is based on the GitHub release event:
 - publish a prerelease to deploy the tagged version to the `staging` GitHub environment,
 - publish a full release, or promote a prerelease to a full release, to deploy the tagged version to the `production` GitHub environment.
 
-The workflow uses the published release tag, updates one or more application environment variables in Coolify, and then triggers a rebuild/redeploy for each configured application UUID. By default it updates `COOLIFY_BRANCH`, which fits the existing tag-based workaround, but you can add extra keys such as `APP_VERSION` through a GitHub environment variable.
+The workflow uses the published release tag, updates one or more application environment variables in Coolify, and then triggers a rebuild/redeploy for each configured application UUID. By default it updates both `RELEASE_TAG` and `COOLIFY_BRANCH` so deployed surfaces can read the canonical tag while older Coolify setups keep working. You can add extra keys such as `APP_VERSION` through a GitHub environment variable.
 
 Required GitHub environment secrets for both `staging` and `production`:
 
@@ -97,7 +97,7 @@ Required GitHub environment secrets for both `staging` and `production`:
 
 Optional GitHub environment variables for both `staging` and `production`:
 
-- `COOLIFY_VERSION_ENV_KEYS`: comma-separated env keys to set to the release tag. Defaults to `COOLIFY_BRANCH`.
+- `COOLIFY_VERSION_ENV_KEYS`: comma-separated env keys to set to the release tag. Defaults to `RELEASE_TAG,COOLIFY_BRANCH`.
 - `COOLIFY_FORCE_REBUILD`: `true` or `false`. Defaults to `false`.
 - `COOLIFY_WAIT_FOR_DEPLOYMENTS`: `true` or `false`. Defaults to `true`.
 - `COOLIFY_DEPLOY_TIMEOUT_SECONDS`: max wait time when polling deployment status. Defaults to `1800`.

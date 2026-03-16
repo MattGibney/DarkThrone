@@ -117,7 +117,7 @@ const application = (
   });
 
   app.get('/healthcheck', (req, res) => {
-    res.send({ message: 'OK', commitHash: '__COMMIT_HASH__' });
+    res.send({ message: 'OK', releaseTag: config.releaseTag });
   });
 
   app.use(router);

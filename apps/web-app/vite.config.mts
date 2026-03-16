@@ -25,6 +25,7 @@ const allowedHosts = [
 export default defineConfig({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/web-app',
+  envPrefix: ['VITE_', 'RELEASE_TAG', 'COOLIFY_BRANCH'],
 
   server: {
     port: Number.isFinite(devPort) ? devPort : 4200,
