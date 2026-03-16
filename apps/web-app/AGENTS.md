@@ -11,3 +11,4 @@
 - API mutations in player-facing forms should catch structured `{ errors: [...] }` responses and render them inline. Reuse `apps/web-app/src/libs/apiErrors.ts` and `apps/web-app/src/components/inlineErrorAlert.tsx` instead of re-implementing ad hoc parsing/UI per screen.
 - Attacks mutate the authenticated player even on defeat, so `apps/web-app/src/pages/main/battle/attack/attackPlayer.tsx` should emit `playerUpdate` after any successful `/attack` response, not only victories.
 - Create-player name validation must stay tied to the exact string that was validated. When the input changes, stale validation results must not keep the submit button enabled or suppress inline create errors for the current value.
+- Keep guided onboarding separate from the overview dashboard. The overview should remain a status summary, while any step-by-step onboarding flow lives in its own dedicated surface.

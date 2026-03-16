@@ -1,4 +1,5 @@
 import { PlayerClass, PlayerObject, PlayerRace } from '@darkthrone/interfaces';
+import { newPlayerStartingState } from '@darkthrone/game-data';
 import { Knex } from 'knex';
 import { Logger } from 'pino';
 import { ulid } from 'ulid';
@@ -160,7 +161,7 @@ export default class PlayerDao {
     displayName: string,
     selectedRace: PlayerRace,
     selectedClass: PlayerClass,
-  ): Promise<PlayerRow> {
+  ): Promise<PlayerRow | null> {
     const playerID = `PLR-${ulid()}`;
     try {
       // the only existing issue with this is having multiple users
@@ -181,7 +182,12 @@ export default class PlayerDao {
           display_name: displayName,
           race: selectedRace,
           class: selectedClass,
+          attack_turns: newPlayerStartingState.attackTurns,
+          gold: newPlayerStartingState.gold,
+          gold_in_bank: newPlayerStartingState.goldInBank,
+          experience: newPlayerStartingState.experience,
           overall_rank: rank,
+          structureUpgrades: { ...newPlayerStartingState.structureUpgrades },
         })
         .returning('*');
 

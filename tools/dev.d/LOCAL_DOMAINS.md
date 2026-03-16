@@ -12,8 +12,64 @@ By default the base domain is `darkthrone.test`. You can override it with `LOCAL
 If Caddy is running on the host, the upstream defaults to `127.0.0.1`. Override with `CADDY_UPSTREAM_HOST` if needed.
 By default Caddy listens on `8080` to avoid requiring root. Override with `CADDY_HTTP_PORT` if needed.
 
+If you use several local projects at once, prefer a shared `.test` resolver instead
+of a project-specific `darkthrone.test` resolver. That lets `69aa.darkthrone.test`,
+`api.other-app.test`, and any other `*.test` hostnames coexist on the same machine.
+
 ## macOS Setup (dnsmasq + Caddy)
 
+### Option A: Shared `.test` resolver (recommended for multiple local projects)
+
+1. Install dependencies:
+```bash
+brew install dnsmasq caddy
+```
+
+2. Configure dnsmasq to resolve every `*.test` hostname to `127.0.0.1`:
+```bash
+sudo mkdir -p /opt/homebrew/etc/dnsmasq.d
+echo "address=/.test/127.0.0.1" | sudo tee /opt/homebrew/etc/dnsmasq.d/test.conf
+```
+
+2a. Ensure dnsmasq loads `.d` configs:
+```bash
+rg -q '^conf-dir=/opt/homebrew/etc/dnsmasq.d,\*\.conf$' /opt/homebrew/etc/dnsmasq.conf \
+  || echo "conf-dir=/opt/homebrew/etc/dnsmasq.d,*.conf" | sudo tee -a /opt/homebrew/etc/dnsmasq.conf
+```
+
+3. Configure the macOS resolver for `.test`:
+```bash
+sudo mkdir -p /etc/resolver
+echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/test
+```
+
+4. Restart dnsmasq and flush DNS caches:
+```bash
+sudo brew services restart dnsmasq
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+```
+
+5. Start or reload Caddy:
+```bash
+./tools/dev caddy
+```
+
+6. Verify resolution:
+```bash
+dscacheutil -q host -a name 69aa.darkthrone.test
+curl -I http://69aa.darkthrone.test:8080
+```
+
+This setup works even if DarkThrone keeps using `darkthrone.test` as its base
+domain, because `69aa.darkthrone.test` still ends with `.test`.
+
+If you want DarkThrone itself to use shorter hosts like `69aa.test`, set:
+```bash
+LOCAL_DOMAIN_BASE=test
+```
+
+### Option B: Project-specific `darkthrone.test` resolver
 1. Install dependencies:
 ```bash
 brew install dnsmasq caddy
@@ -39,7 +95,7 @@ echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/darkthrone.test
 
 4. Restart dnsmasq:
 ```bash
-brew services restart dnsmasq
+sudo brew services restart dnsmasq
 ```
 
 5. Flush the macOS DNS cache so the new resolver is picked up immediately:
@@ -60,6 +116,11 @@ dscacheutil -q host -a name combat-rework.darkthrone.test
 curl -I http://combat-rework.darkthrone.test:8080
 ```
 
+This suffix-specific setup does not interfere with other local project domains.
+For example, `/etc/resolver/darkthrone.test` can coexist with
+`/etc/resolver/set1.test`, and matching dnsmasq rules for both domains can
+point at the same local dnsmasq instance on `127.0.0.1`.
+
 ## Common Issues
 
 ### Caddy is not running
@@ -79,6 +140,21 @@ ls -l /opt/homebrew/etc/dnsmasq.d/darkthrone-test.conf
 Check dnsmasq:
 ```bash
 brew services list | rg dnsmasq
+```
+
+If `brew services list` shows `dnsmasq` as `error` or `loaded: true` but
+`running: false`, it was likely started as a user LaunchAgent and failed to
+bind port `53`. Re-register it as a root service:
+```bash
+brew services stop dnsmasq
+sudo brew services start dnsmasq
+```
+
+If `sudo brew services start dnsmasq` says the service is "already started"
+after switching scopes, that usually means the root plist exists but is not
+actually loaded. Restart it instead:
+```bash
+sudo brew services restart dnsmasq
 ```
 
 Verify dnsmasq answers directly:

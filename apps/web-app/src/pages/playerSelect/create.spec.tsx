@@ -20,9 +20,13 @@ type MockPlayersClient = {
   create: jest.Mock<Promise<PlayerObject>, [string, PlayerRace, PlayerClass]>;
 };
 
-function makeClient(players: MockPlayersClient): DarkThroneClient {
+function makeClient(
+  players: MockPlayersClient,
+  auth: { assumePlayer: jest.Mock } = { assumePlayer: jest.fn() },
+): DarkThroneClient {
   return {
     players,
+    auth,
   } as unknown as DarkThroneClient;
 }
 
@@ -104,5 +108,46 @@ describe('CreatePlayerPage', () => {
 
     expect(submitButton.disabled).toBe(true);
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('assumes the new player and sends them to the overview after creation', async () => {
+    const players = {
+      validatePlayerName: jest.fn().mockResolvedValue({
+        isValid: true,
+        issues: [],
+      }),
+      create: jest.fn().mockResolvedValue({
+        id: 'player-1',
+      } as PlayerObject),
+    };
+    const assumePlayer = jest.fn().mockResolvedValue({});
+
+    render(<CreatePlayerPage client={makeClient(players, { assumePlayer })} />);
+
+    const playerNameInput = screen.getByLabelText('Player Name');
+    const submitButton = screen.getByRole('button', { name: /create player/i });
+
+    fillRequiredSelections();
+
+    fireEvent.change(playerNameInput, { target: { value: 'FreshStart' } });
+    fireEvent.blur(playerNameInput);
+
+    await waitFor(() => {
+      expect(submitButton.disabled).toBe(false);
+    });
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(players.create).toHaveBeenCalledWith(
+        'FreshStart',
+        'human',
+        'fighter',
+      );
+    });
+    await waitFor(() => {
+      expect(assumePlayer).toHaveBeenCalledWith('player-1');
+      expect(mockNavigate).toHaveBeenCalledWith('/overview');
+    });
   });
 });
