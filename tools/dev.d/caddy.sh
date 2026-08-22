@@ -94,6 +94,7 @@ if ! command -v caddy >/dev/null 2>&1; then
 fi
 
 if caddy reload --config "$caddy_file" --adapter caddyfile >/dev/null 2>&1; then
+  check_dns_for_known_envs "$repo_root"
   exit 0
 fi
 
@@ -107,4 +108,4 @@ if ! pgrep -x caddy >/dev/null 2>&1; then
   exit 1
 fi
 
-check_dns "${WORK_ID:-}"
+check_dns_for_known_envs "$repo_root"

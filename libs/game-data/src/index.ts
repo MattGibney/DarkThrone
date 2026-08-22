@@ -10,6 +10,19 @@ import {
   CombatUnitType,
 } from '@darkthrone/interfaces';
 
+export const newPlayerStartingState = {
+  gold: 20000,
+  goldInBank: 0,
+  attackTurns: 1000,
+  citizens: 100,
+  experience: 0,
+  structureUpgrades: {
+    fortification: 0,
+    housing: 0,
+    armoury: 0,
+  },
+} as const;
+
 export const UnitTypes: { [k: string]: Unit } = {
   citizen: {
     name: 'Citizen',

@@ -206,3 +206,25 @@ check_dns() {
     echo "Local domains OK (${test_host} -> ${resolved})"
   fi
 }
+
+check_dns_for_known_envs() {
+  local repo_root="${1:-$REPO_ROOT}"
+  local env_file work_id
+  local seen=()
+
+  while IFS= read -r env_file; do
+    [[ -f "$env_file" ]] || continue
+
+    work_id="$(read_env_value "$env_file" WORK_ID || true)"
+    if [[ -z "$work_id" ]]; then
+      continue
+    fi
+
+    if [[ ${#seen[@]} -gt 0 ]] && contains "$work_id" "${seen[@]}"; then
+      continue
+    fi
+
+    check_dns "$work_id"
+    seen+=("$work_id")
+  done < <(collect_env_files "$repo_root")
+}

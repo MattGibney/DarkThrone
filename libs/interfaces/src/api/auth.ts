@@ -38,6 +38,7 @@ export type POST_register = ExtendEndpointDefinition<
         | 'auth.register.emailInUse'
         | 'auth.register.invalidPassword'
       >;
+      403: API_Error<'auth.register.closed'>;
     };
   }
 >;

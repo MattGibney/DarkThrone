@@ -143,6 +143,13 @@ export default {
         selectedRace,
         selectedClass,
       );
+      if (!player) {
+        res.status(500).json({
+          errors: ['server.error'],
+        });
+        return;
+      }
+
       res.status(201).json(await player.serialise());
     },
   ),

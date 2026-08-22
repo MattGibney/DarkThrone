@@ -24,6 +24,7 @@ import {
   fortificationUpgrades,
   housingUpgrades,
   levelXPArray,
+  newPlayerStartingState,
   structureUpgrades,
   unitItems,
 } from '@darkthrone/game-data';
@@ -572,7 +573,7 @@ export default class PlayerModel {
     displayName: string,
     selectedRace: PlayerRace,
     selectedClass: PlayerClass,
-  ): Promise<PlayerModel> {
+  ): Promise<PlayerModel | null> {
     const playerRow = await ctx.daoFactory.player.create(
       ctx.logger,
       ctx.authedUser.model.id,
@@ -580,11 +581,13 @@ export default class PlayerModel {
       selectedRace,
       selectedClass,
     );
+    if (!playerRow) return null;
+
     await ctx.daoFactory.playerUnits.create(
       ctx.logger,
       playerRow.id,
       'citizen',
-      100,
+      newPlayerStartingState.citizens,
     );
 
     const playerUnits = await ctx.modelFactory.playerUnits.fetchUnitsForPlayer(

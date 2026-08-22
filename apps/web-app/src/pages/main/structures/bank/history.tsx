@@ -6,15 +6,18 @@ interface BankDepositPageProps {
   client: DarkThroneClient;
 }
 export default function BankHistoryPage(props: BankDepositPageProps) {
-  if (!props.client.authenticatedPlayer) return null;
+  const authenticatedPlayer = props.client.authenticatedPlayer;
+  const depositHistory = authenticatedPlayer?.depositHistory;
 
   const sortedDepositHistory = useMemo(
     () =>
-      [...props.client.authenticatedPlayer.depositHistory].sort(
+      [...(depositHistory ?? [])].sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
       ),
-    [props.client.authenticatedPlayer.depositHistory],
+    [depositHistory],
   );
+
+  if (!authenticatedPlayer) return null;
 
   return (
     <main>

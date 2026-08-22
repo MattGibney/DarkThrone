@@ -8,7 +8,6 @@ import {
   POST_logout,
   POST_assumePlayer,
   POST_unassumePlayer,
-  ExtractErrorCodesForStatuses,
 } from '@darkthrone/interfaces';
 import { protectPrivateAPI } from '../middleware/protectAuthenticatedRoutes';
 
@@ -64,77 +63,10 @@ export default {
   },
 
   POST_register: async (
-    req: TypedRequest<POST_register>,
+    _req: TypedRequest<POST_register>,
     res: TypedResponse<POST_register>,
   ) => {
-    let { email, password } = req.body;
-
-    if (!email) email = '';
-    email = email.trim().toLowerCase();
-
-    const apiErrors: ExtractErrorCodesForStatuses<POST_register, 400>[] = [];
-    if (!email) {
-      apiErrors.push('auth.register.missingParams');
-    }
-    if (!password) password = '';
-
-    if (
-      password.length < 7 ||
-      password.toUpperCase() === password ||
-      password.toLowerCase() === password
-    ) {
-      apiErrors.push('auth.register.invalidPassword');
-    }
-
-    if (apiErrors.length > 0) {
-      res.status(400).send({ errors: apiErrors });
-      return;
-    }
-
-    const existingUser = await req.ctx.modelFactory.user.fetchByEmail(
-      req.ctx,
-      email,
-    );
-    if (existingUser) {
-      res.status(400).send({
-        errors: ['auth.register.emailInUse'],
-      });
-      return;
-    }
-
-    const newUser = await req.ctx.modelFactory.user.create(
-      req.ctx,
-      email,
-      password,
-    );
-    if (!newUser) {
-      req.ctx.logger.error('Failed to create new user during registration');
-      res.status(500).send({
-        errors: ['server.error'],
-      });
-      return;
-    }
-
-    const newSession = await req.ctx.modelFactory.userSession.create(
-      req.ctx,
-      newUser,
-      false,
-    );
-    if (!newSession) {
-      req.ctx.logger.error(
-        'Failed to create session for new user during registration',
-      );
-      res.status(500).send({
-        errors: ['server.error'],
-      });
-      return;
-    }
-
-    const authResponse: ValidAuthResponse = {
-      session: await newSession.serialise(),
-      token: newSession.token,
-    };
-    res.status(201).send(authResponse);
+    res.status(403).send({ errors: ['auth.register.closed'] });
   },
 
   GET_currentUser: protectPrivateAPI(

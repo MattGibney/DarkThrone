@@ -3,6 +3,7 @@ import { Context } from '../../../src/app';
 import PlayerModel from '../../../src/models/player';
 import PlayerUnitsModel from '../../../src/models/playerUnits';
 import UserModel from '../../../src/models/user';
+import { newPlayerStartingState } from '@darkthrone/game-data';
 
 const mockPlayerRow: PlayerRow = {
   id: 'PLR-01HQH3NXAG7CASHPCETDC4HE0V',
@@ -666,6 +667,44 @@ describe('Model: Player', () => {
       expect(paginator.totalItemCount).toBe(1);
       expect(paginator.items.length).toBe(1);
       expect(paginator.items[0]).toBeInstanceOf(PlayerModel);
+    });
+  });
+
+  describe('(static) create', () => {
+    it('creates starter citizens for a newly created player', async () => {
+      const mockCTX = {
+        authedUser: {
+          model: {
+            id: 'USR-1',
+          },
+        },
+        logger: {},
+        daoFactory: {
+          player: {
+            create: jest.fn().mockResolvedValue(mockPlayerRow),
+          },
+          playerUnits: {
+            create: jest.fn().mockResolvedValue({}),
+          },
+        },
+        modelFactory: {
+          playerUnits: {
+            fetchUnitsForPlayer: jest.fn().mockResolvedValue([]),
+          },
+          playerItems: {
+            fetchItemsForPlayer: jest.fn().mockResolvedValue([]),
+          },
+        },
+      } as unknown as Context;
+
+      await PlayerModel.create(mockCTX, 'Starter', 'human', 'fighter');
+
+      expect(mockCTX.daoFactory.playerUnits.create).toHaveBeenCalledWith(
+        mockCTX.logger,
+        mockPlayerRow.id,
+        'citizen',
+        newPlayerStartingState.citizens,
+      );
     });
   });
 });

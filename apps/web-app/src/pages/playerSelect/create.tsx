@@ -235,13 +235,17 @@ export default function CreatePlayerPage(props: CreatePlayerPageProps) {
 
     try {
       setFormErrorMessages([]);
-      await props.client.players.create(
+      const createdPlayer = await props.client.players.create(
         playerName,
         selectedRace,
         selectedClass,
       );
-
-      navigate('/player-select');
+      try {
+        await props.client.auth.assumePlayer(createdPlayer.id);
+        navigate('/overview');
+      } catch {
+        navigate('/player-select');
+      }
     } catch (error) {
       const errorMessages: PossibleErrorCodes[] = isAPIError(error)
         ? error.errors
