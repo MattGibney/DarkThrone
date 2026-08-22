@@ -27,6 +27,16 @@ describe('BankHistoryPage', () => {
     ({ default: BankHistoryPage } = await import('./history'));
   });
 
+  it('renders nothing while the authenticated player is unavailable', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/bank/history']}>
+        <BankHistoryPage client={{} as DarkThroneClient} />
+      </MemoryRouter>,
+    );
+
+    expect(container.innerHTML).toBe('');
+  });
+
   it('renders a sorted copy without mutating deposit history', () => {
     const depositHistory: DepositHistory[] = [
       {

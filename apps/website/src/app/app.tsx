@@ -23,7 +23,7 @@ export const screens: { [k: string]: NavigationItem } = {
 
   // External Links
   play: {
-    name: 'Play Now',
+    name: 'Login',
     href: environment.webAppUrl,
     element: Outlet,
     isExternal: true,

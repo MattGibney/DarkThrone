@@ -46,7 +46,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Play
+            Login
           </a>
         </Button>
       </div>
@@ -70,13 +70,11 @@ export default function HomePage() {
         >
           <h1 className="font-display text-4xl mb-6">About the project</h1>
           <p className="text-foreground/80">
-            DarkThrone Reborn is a re-creation of the classic MMO Dark Throne,
-            originally created by Lazarus Software. That game is gone now but
-            this project aims to bring back it back in spirit. Our primary goal
-            is to create a game that emulates the same experience as the
-            original, a spiritual successor. Afterwards, the goal is to
-            continually add additional features with the backing of the
-            community to push this game into the future.
+            DarkThrone Reborn is an open-source re-creation of the classic MMO
+            Dark Throne, originally created by Lazarus Software. The project
+            will close on 1 October 2026, but its source and development history
+            will remain available to anyone interested in learning from it or
+            carrying the work forward.
           </p>
         </div>
       </div>
@@ -108,8 +106,8 @@ export default function HomePage() {
               Built for Mobile
             </h2>
             <p className="text-center text-foreground/60">
-              First class mobile support for play on the go. With options in the
-              future to expand into native mobile applications.
+              First-class mobile support for playing on the go from a phone or
+              tablet.
             </p>
           </div>
           <div className="w-1/3 px-6">
@@ -118,8 +116,8 @@ export default function HomePage() {
               Community focused
             </h2>
             <p className="text-center text-foreground/60">
-              The community will have a strong voice in shaping the future of
-              the game with feature suggestions and voting.
+              The project has always been open source, preserving its code and
+              history for the wider Dark Throne community.
             </p>
           </div>
         </div>

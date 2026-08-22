@@ -226,7 +226,7 @@ export function App() {
         <Route element={<AuthLayout />}>
           {/* <Route path="/" element={<RedirectTo path />} /> */}
           <Route path="/login" element={<LoginPage client={client} />} />
-          <Route path="/register" element={<RegisterPage client={client} />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<div>Forgot Password</div>} />
           {/* <Route path="/reset-password" element={<div>Reset Password</div>} />
           <Route path="/verify-email" element={<div>Verify Email</div>} /> */}

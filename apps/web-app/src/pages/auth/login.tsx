@@ -24,7 +24,7 @@ import {
 import { AlertCircleIcon } from 'lucide-react';
 
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/layout/footer';
 import {
   ExtractErrorCodesForStatuses,
@@ -159,13 +159,7 @@ export default function LoginPage(props: LoginPageProps) {
                     Login
                   </Button>
                   <FieldDescription className="text-center">
-                    Not a member?{' '}
-                    <Link
-                      to="/register"
-                      className="font-semibold leading-6 text-yellow-600 hover:text-yellow-500"
-                    >
-                      Create an account now
-                    </Link>
+                    New registrations are closed.
                   </FieldDescription>
                 </Field>
               </FieldGroup>
