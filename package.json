@@ -70,7 +70,7 @@
     "@nx/vite": "22.5.4",
     "@nx/vitest": "22.5.4",
     "@nx/web": "22.5.4",
-    "@nx/webpack": "22.5.4",
+    "@nx/webpack": "22.6.3",
     "@nx/workspace": "22.5.4",
     "@swc-node/register": "1.11.1",
     "@swc/cli": "0.8.0",
