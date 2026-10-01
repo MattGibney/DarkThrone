@@ -7,10 +7,10 @@ describe('SunsetNotice', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: 'DarkThrone Reborn will close on 1 October 2026',
+        name: 'DarkThrone Reborn closed on 1 October 2026',
       }),
     ).toBeTruthy();
-    expect(screen.getByText(/New registrations are closed/)).toBeTruthy();
+    expect(screen.getByText(/game servers are now offline/i)).toBeTruthy();
     expect(
       screen
         .getByRole('link', { name: /continue the project on GitHub/i })

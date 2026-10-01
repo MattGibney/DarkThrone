@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '@darkthrone/shadcnui/dropdown-menu';
 import { Avatar } from '../avatar';
-import { globalNavigation } from '../../app';
+import { globalNavigation } from '../../navigation';
 
 function pathMatches(pattern: string, pathname: string) {
   const regexPattern = pattern.replace(/:[^/]+/g, '[^/]+');

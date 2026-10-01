@@ -1,6 +1,6 @@
 import { environment } from '../../environments/environment';
 import { Logo } from '@darkthrone/react-components';
-import { screens } from '../../app/app';
+import { screens } from '../../navigation';
 import NavigationLink from '../navigationLink';
 
 export default function Footer() {

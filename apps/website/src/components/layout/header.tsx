@@ -1,4 +1,4 @@
-import { screens } from '../../app/app';
+import { screens } from '../../navigation';
 import NavigationLink from '../navigationLink';
 
 export default function Header() {

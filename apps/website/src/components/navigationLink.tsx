@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { NavigationItem } from '../app/app';
+import { NavigationItem } from '../navigation';
 
 interface NavigationLinkProps {
   linkData: NavigationItem;

@@ -5,7 +5,7 @@ import {
 } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, NavLink } from 'react-router-dom';
-import { navigation, screens } from '../../app/app';
+import { navigation, screens } from '../../navigation';
 import { Logo } from '@darkthrone/react-components';
 
 export default function NavigationBar() {

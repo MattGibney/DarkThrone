@@ -13,11 +13,11 @@ export function SunsetNotice({ className = '' }: SunsetNoticeProps) {
     >
       <div className="mx-auto max-w-5xl space-y-2">
         <h2 id="sunset-notice-title" className="font-display text-xl">
-          DarkThrone Reborn will close on 1 October 2026
+          DarkThrone Reborn closed on 1 October 2026
         </h2>
         <p className="text-sm text-foreground/80">
-          New registrations are closed. Existing players can continue playing
-          until the shutdown date.
+          The game servers are now offline. Thank you to everyone who played and
+          supported the project.
         </p>
         <p className="text-sm text-foreground/80">
           DarkThrone Reborn has always been open source. You can{' '}
